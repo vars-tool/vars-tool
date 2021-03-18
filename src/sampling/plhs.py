@@ -3,7 +3,7 @@ import numpy as np
 from . import slhs
 
 
-def plhs(sp:int, params:int, slices:int, seed=None, _iter=10, criterion='maximin') -> Tuple[np.ndarray, np.ndarray]:
+def plhs(sp:int, params:int, slices:int, seed=None, iterations=10, criterion='maximin') -> Tuple[np.ndarray, np.ndarray]:
     '''
     Description:
     ------------
@@ -30,8 +30,8 @@ def plhs(sp:int, params:int, slices:int, seed=None, _iter=10, criterion='maximin
     
     Returns:
     --------
-    :return slhs_sample_x: the final slhs sample array based on 'x' criterion
-    :rtype slhs_sample_x: np.array
+    :return plhs_sample_x: the final slhs sample array based on 'x' criterion
+    :rtype plhs_sample_x: np.array
     
     
     References:
@@ -47,13 +47,26 @@ def plhs(sp:int, params:int, slices:int, seed=None, _iter=10, criterion='maximin
     Contributors:
     -------------
     Sheikholeslami, Razi, (2017): algorithm, code in MATLAB (c)
-    Razavi, Saman, (2017): supervision
+    Razavi, Saman, (2017): algorithm code in MATLAB (c), supervision
     Keshavarz, Kasra, (2021): code in Python 3
     Matott, Shawn, (2019): code in C/++
     '''
+    
     slice_sp = sp // slices
     
-    for it in range(_iter):
+    # iterate given the number of iterations and choose the best sample
+    slhs_list = []
+    plhs_list = []
+    
+    for _iter in range(iterations):
+        if seed:
+            seed += seed
+        slhs_list.append(slhs(sp, params, slices, seed, iterations, criterion)[0])
+        plhs_list.append(_greedy_plhs(sp, slices, slhs_list[_iter]))
+    
+    cost_f_posteriori = [trial[-1] for trial in plhs_list]
+    min_cost_idx = cost_f_posteriori.index(min(cost_f_posteriori))
+    plhs_sample = plhs_list[min_cost_idx][0] # first returned item
     
     # This does not make sense to me. User can decide what to do
     # regarding the number of iterations and choosing the best
@@ -77,7 +90,7 @@ def _greedy_plhs(sp:int, slices:int, sample:np.array) -> Tuple[np.array, np.arra
     :type sp: int, np.int32, or np.int64
     :param slices: number of slices
     :type slices: int, np.int32, or np.int64
-    :param sample: the sampled matrix\array
+    :param sample: the sampled matrix array
     :type sample: np.array
 
 
