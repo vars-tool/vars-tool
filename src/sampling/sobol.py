@@ -1,4 +1,4 @@
-
+import numpy as np
 #==============================================================================
 # The following code is based on the Sobol sequence generator by Frances
 # Y. Kuo and Stephen Joe. The license terms are provided below.
