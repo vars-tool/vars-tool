@@ -7,10 +7,10 @@ listed as follows:
 A formal list of references is printed under the docstrings of each
 corresponding algorithm.
 '''
+
 import numpy as np
 
-
-def halton(sp:int, params:int, seed:int=None, scramble:bool=False) -> np.ndarray:
+def halton(sp:int, params:int, seed:int=None, scramble:bool=False, skip:int=1000, leap:int=101) -> np.ndarray:
     '''
     Description:
     ------------
@@ -31,12 +31,16 @@ def halton(sp:int, params:int, seed:int=None, scramble:bool=False) -> np.ndarray
     :type seed: {None, int, np.int32, np.int64, `numpy.random.Generator`}, optional
     :param scramble: scrambling flag, defaults to ``False``
     :type scramble: bool, optional
+    :param skip: the number of points to skip
+    :type skip: {int, numpy.int32, numpy.int64}, optional
+    :param leap: the interval of picking values
+    :type leap: {int, numpy.int32, numpy.int64}, optional
     
     
     Returns:
     --------
     :return halton_seq: the halton sequence array
-    :rtype halton_seq: np.ndarray
+    :rtype halton_seq: numpy.ndarray
     
     
     References:
@@ -76,12 +80,14 @@ def halton(sp:int, params:int, seed:int=None, scramble:bool=False) -> np.ndarray
     
     # Generate a sample using a Van der Corput sequence per dimension.
     # important to have ``type(bdim) == int`` for performance reason
-    sample = [_van_der_corput(sp=sp, base=int(bdim), start_index=0,
+    sample = [_van_der_corput(sp=sp*(leap+1)+skip, base=int(bdim), start_index=0,
                              scramble=scramble,
                              seed=seed)
               for bdim in _n_primes(params)]
     
-    halton_sample = np.array(sample).T.reshape(sp, params)
+    halton_sample = np.array(sample).T.reshape(sp*(leap+1)+skip, params)
+    
+    halton_sample = halton_sample[0+skip:halton_sample.shape[0]:(leap+1),:]
     
     return halton_sample
 
@@ -241,3 +247,4 @@ def _gen_primes(threshold:int) -> list:
     primes = np.array([2] + [number for number in numbers if number])
     
     return primes
+

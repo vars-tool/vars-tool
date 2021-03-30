@@ -2,199 +2,6 @@ import numpy as np
 from typing import Tuple
 from itertools import combinations
 
-def plhs(sp:int, params:int, slices:int, seed:int=None, iterations:int=10, criterion:str='maximin') -> Tuple[np.ndarray, np.ndarray]:
-    '''
-    Description:
-    ------------
-    This function optimizes SLHS samples based on [1] and [2]
-    
-    
-    Arguments:
-    ----------
-    :param sp: number of sampling points
-    :type sp: int, np.int32, or np.int64
-    :param params: number of parameters/factors/variables
-    :type params: int, np.int32, or np.int64
-    :param slices: the number of slices
-    :type slices: int, np.int32, or np.int64
-    :param seed: seed number for randomization
-    :type seed: int, np.int32, np.int64
-    :param iterations: number of iterations
-    :type iterations: int, np.int32, or np.int64, optional
-    :param criterion: the criterion for assessing the quality of sample points
-                      the available options are: 'maximin' and 'correlation',
-                      defaults to 'maximin'
-    :type criterion: str, optional
-    
-    
-    Returns:
-    --------
-    :return plhs_sample_x: the final slhs sample array based on 'x' criterion
-    :rtype plhs_sample_x: np.array
-    
-    
-    References:
-    -----------
-    .. [1] Ba, S., Myers, W.R., Brenneman, W.A., 2015. Optimal sliced Latin
-           hypercube designs. Technometrics 57 (4), 479e487.
-           http://dx.doi.org/10.1080/00401706.2014.957867
-    .. [2] Sheikholeslami, R., & Razavi, S. (2017). Progressive Latin Hypercube 
-           Sampling: An efficient approach for robust sampling-based analysis of 
-           environmental models. Environmental modelling & software, 93, 109-126
-    
-    
-    Contributors:
-    -------------
-    Sheikholeslami, Razi, (2017): algorithm, code in MATLAB (c)
-    Razavi, Saman, (2017): algorithm code in MATLAB (c), supervision
-    Keshavarz, Kasra, (2021): code in Python 3
-    Matott, Shawn, (2019): code in C/++
-    '''
-    
-    slice_sp = sp // slices
-    
-    # iterate given the number of iterations and choose the best sample
-    slhs_list = []
-    plhs_list = []
-    
-    for _iter in range(iterations):
-        if seed:
-            seed += seed
-        slhs_list.append(slhs(sp, params, slices, seed, iterations, criterion)[0])
-        plhs_list.append(_greedy_plhs(sp, slices, slhs_list[_iter]))
-    
-    cost_f_posteriori = [trial[-1] for trial in plhs_list]
-    min_cost_idx = cost_f_posteriori.index(min(cost_f_posteriori))
-    plhs_sample = plhs_list[min_cost_idx][0] # first returned item
-    plhs_sample_slices = plhs_sample.reshape((slices, slice_sp, params))
-    
-    # This does not make sense to me. User can decide what to do
-    # regarding the number of iterations and choosing the best
-    # sample!
-
-    return plhs_sample, plhs_sample_slices
-
-
-def slhs(sp, params, slices, seed=None, iterations=20, criterion='maximin') -> Tuple[np.ndarray, np.ndarray]:
-    '''
-    Description:
-    ------------
-    This function created SLHS samples, based on [1] and [2]. In
-    order to find optimal ordering of slices the KNN method is 
-    utilized.
-    
-    
-    Arguments:
-    ----------
-    :param sp: number of sample points
-    :type sp: one of int, np.int32, np.int64
-    :param params: number of parameters/variables/factors
-    :type params: one of int, np.int32, np.int64
-    :param slices: number of slices
-    :type slices: one of int, np.int32, np.int64
-    :param seed: seed number for randomization
-    :type seed: int, np.int32, np.int64, optional
-    :param _iter: maximum iteration number 
-    :type _iter: int, np.int32, np.int64, optional
-    :param criterion: the criterion for assessing the quality of sample points;
-                      the available options are: 'maximin' and 'correlation',
-                      defaults to 'maximin'
-    :type criterion: str
-    
-    
-    Returns:
-    --------
-    :return slhs_sample_x: the final slhs sample array based on 'x' criterion
-    :rtype slhs_sample_x: np.array
-    :return slhs_sample_x_slice: the final slhs sample array slices based on
-                                 'x' criterion
-    :rtype slhs_sample_x_slice: np.array
-    
-    
-    References:
-    -----------
-    .. [1] Ba, S., Myers, W.R., Brenneman, W.A., 2015. Optimal sliced Latin
-           hypercube designs. Technometrics 57 (4), 479e487.
-           http://dx.doi.org/10.1080/00401706.2014.957867
-    .. [2] Sheikholeslami, R., & Razavi, S. (2017). Progressive Latin Hypercube 
-           Sampling: An efficient approach for robust sampling-based analysis of 
-           environmental models. Environmental modelling & software, 93, 109-126
-    
-    
-    Contributors:
-    -------------
-    Sheikholeslami, Razi, (2017): algorithm, code in MATLAB (c) vars-tool
-    Razavi, Saman, (2017): supervision, vars-tool
-    Keshavarz, Kasra, (2021): code in Python 3
-    Matott, Shawn, (2019): code in C/++
-    
-    '''
-
-    # define the seed number
-    if seed:
-        np.random.seed(seed)
-
-
-    # Check the inputs and raise appropriate exceptions
-    msg_crt = ("'{}' is not defined; available options: 'maximin', 'correlation'")
-    if type(criterion) is not str:
-        raise TypeError(msg_crt.format(str(criterion)))
-    if criterion not in ['maximin', 'correlation']:
-        raise ValueError(msg_crt.format(criterion))
-    
-    # calculate the number of slices
-    slice_sp = sp // slices # to get int
-    
-    # Check the criterion
-    if criterion == 'maximin':
-        best_sample = _sampler(sp, params, slices)
-        best_sub_sample = best_sample.reshape((slices, slice_sp, params))
-        best_sample_cost = _get_min_distance(best_sample, k=3)
-        best_sub_sample_cost = _get_min_distance_sub(best_sub_sample)
-        cost_func = np.mean([best_sample_cost, best_sub_sample_cost])
-        
-        for it in range(iterations):
-            new_sample = _sampler(sp, params, slices)
-            new_sub_sample = new_sample.reshape((slices, slice_sp, params))
-            new_sample_cost = _get_min_distance(new_sample)
-            new_sub_sample_cost = _get_min_distance_sub(new_sub_sample)
-            new_cost_func = np.mean([new_sample_cost, new_sub_sample_cost])
-            
-            # check the cost function value
-            if new_cost_func > cost_func:
-                best_sample = new_sample
-                cost_func = new_cost_func
-        
-        slhs_sample_maximin = best_sample
-        slhs_sample_maximin_slice = slhs_sample_maximin.reshape((slices, slice_sp, params))
-
-        return slhs_sample_maximin, slhs_sample_maximin_slice
-
-    elif criterion == 'correlation':
-        best_sample = _sampler(sp, params, slices)
-        best_sub_sample = best_sample.reshape((slices, slice_sp, params))
-        best_sample_cost = _get_corr(best_sample)
-        best_sub_sample_cost = _get_corr_sub(best_sub_sample)
-        cost_func = np.mean([best_sample_cost, best_sub_sample_cost])
-        
-        for it in range(iterations):
-            new_sample = _sampler(sp, params, slices)
-            new_sub_sample = new_sample.reshape((slices, slice_sp, params))
-            new_sample_cost = _get_corr(new_sample)
-            new_sub_sample_cost = _get_corr_sub(new_sub_sample)
-            new_cost_func = np.mean([new_sample_cost, new_sub_sample_cost])
-            
-            # check the cost function value
-            if new_cost_func < cost_func:
-                best_sample = new_sample
-                cost_func = new_cost_func
-        
-        slhs_sample_correl = best_sample
-        slhs_sample_correl_slice = slhs_sample_correl.reshape((slices, slice_sp, params))
-
-        return slhs_sample_correl, slhs_sample_correl_slice    
-
-
 def _greedy_plhs(sp:int, slices:int, sample:np.array) -> Tuple[np.array, np.array, float, float]:
     '''
     Description:
@@ -648,17 +455,18 @@ def _get_min_distance_sub(arr:np.ndarray, k:int=3) -> float:
     '''
     Description:
     ------------
-    Calculates the minimum Euclidean distance between sample points as a measure
-    of sparsity of the sampling space in each slice. The returned value is aver-
+    This functions calculates the minimum Euclidean distance
+    between sample points as a measure of sparsity of the
+    sampling space in each slice. The returned value is aver-
     aged amongst the minimum value of the slices.
     
     
     Arguments:
     ----------
     :param arr: the input array of any size
-    :type arr: np.array, n x m dimension
-    :param k: the number of neightbors
-    :type k: int, np.int32, np.int64
+    :type arr: np.ndarray
+    :param k: the number of nearest neightbors
+    :type k: int, np.int32, or np.int64, defaults to `3`
     
     
     Returns:
@@ -668,3 +476,195 @@ def _get_min_distance_sub(arr:np.ndarray, k:int=3) -> float:
     '''
     
     return np.mean(np.array([_get_min_distance(x, k) for x in arr]))
+
+def plhs(sp:int, params:int, slices:int, seed:int=None, iterations:int=10, criterion:str='maximin') -> Tuple[np.ndarray, np.ndarray]:
+    '''
+    Description:
+    ------------
+    This function optimizes SLHS samples based on [1] and [2]
+    
+    
+    Arguments:
+    ----------
+    :param sp: number of sampling points
+    :type sp: int, np.int32, or np.int64
+    :param params: number of parameters/factors/variables
+    :type params: int, np.int32, or np.int64
+    :param slices: the number of slices
+    :type slices: int, np.int32, or np.int64
+    :param seed: seed number for randomization
+    :type seed: int, np.int32, np.int64
+    :param iterations: number of iterations
+    :type iterations: int, np.int32, or np.int64, optional
+    :param criterion: the criterion for assessing the quality of sample points
+                      the available options are: 'maximin' and 'correlation',
+                      defaults to 'maximin'
+    :type criterion: str, optional
+    
+    
+    Returns:
+    --------
+    :return plhs_sample_x: the final slhs sample array based on 'x' criterion
+    :rtype plhs_sample_x: np.array
+    
+    
+    References:
+    -----------
+    .. [1] Ba, S., Myers, W.R., Brenneman, W.A., 2015. Optimal sliced Latin
+           hypercube designs. Technometrics 57 (4), 479e487.
+           http://dx.doi.org/10.1080/00401706.2014.957867
+    .. [2] Sheikholeslami, R., & Razavi, S. (2017). Progressive Latin Hypercube 
+           Sampling: An efficient approach for robust sampling-based analysis of 
+           environmental models. Environmental modelling & software, 93, 109-126
+    
+    
+    Contributors:
+    -------------
+    Sheikholeslami, Razi, (2017): algorithm, code in MATLAB (c)
+    Razavi, Saman, (2017): algorithm code in MATLAB (c), supervision
+    Keshavarz, Kasra, (2021): code in Python 3
+    Matott, Shawn, (2019): code in C/++
+    '''
+    
+    # defining the number of sampling points in each slice
+    slice_sp = sp // slices
+    
+    # starting point for selecting the minimum cost function
+    f_best = 0
+    
+    # iterate given the number of iterations and choose the best sample
+    
+    for _iter in range(iterations):
+        
+        if seed:
+            seed += 50
+
+        plhs_candidate, plhs_candidate_slices, _, f_candidate = _greedy_plhs(sp, slices, \
+                                                                            slhs(sp, params, slices, seed, iterations, criterion)[0])
+        
+        if f_candidate < f_best:
+            f_best = f_candidate
+            plhs_sample = plhs_candidate.copy()
+            plhs_sample_slices = plhs_candidate_slices.copy()
+
+    return plhs_sample, plhs_sample_slices
+
+
+def slhs(sp, params, slices, seed=None, iterations=20, criterion='maximin') -> Tuple[np.ndarray, np.ndarray]:
+    '''
+    Description:
+    ------------
+    This function created SLHS samples, based on [1] and [2]. In
+    order to find optimal ordering of slices the KNN method is 
+    utilized.
+    
+    
+    Arguments:
+    ----------
+    :param sp: number of sample points
+    :type sp: one of int, np.int32, np.int64
+    :param params: number of parameters/variables/factors
+    :type params: one of int, np.int32, np.int64
+    :param slices: number of slices
+    :type slices: one of int, np.int32, np.int64
+    :param seed: seed number for randomization
+    :type seed: int, np.int32, np.int64, optional
+    :param _iter: maximum iteration number 
+    :type _iter: int, np.int32, np.int64, optional
+    :param criterion: the criterion for assessing the quality of sample points;
+                      the available options are: 'maximin' and 'correlation',
+                      defaults to 'maximin'
+    :type criterion: str
+    
+    
+    Returns:
+    --------
+    :return slhs_sample_x: the final slhs sample array based on 'x' criterion
+    :rtype slhs_sample_x: np.array
+    :return slhs_sample_x_slice: the final slhs sample array slices based on
+                                 'x' criterion
+    :rtype slhs_sample_x_slice: np.array
+    
+    
+    References:
+    -----------
+    .. [1] Ba, S., Myers, W.R., Brenneman, W.A., 2015. Optimal sliced Latin
+           hypercube designs. Technometrics 57 (4), 479e487.
+           http://dx.doi.org/10.1080/00401706.2014.957867
+    .. [2] Sheikholeslami, R., & Razavi, S. (2017). Progressive Latin Hypercube 
+           Sampling: An efficient approach for robust sampling-based analysis of 
+           environmental models. Environmental modelling & software, 93, 109-126
+    
+    
+    Contributors:
+    -------------
+    Sheikholeslami, Razi, (2017): algorithm, code in MATLAB (c) vars-tool
+    Razavi, Saman, (2017): supervision, vars-tool
+    Keshavarz, Kasra, (2021): code in Python 3
+    Matott, Shawn, (2019): code in C/++
+    
+    '''
+
+    # define the seed number
+    if seed:
+        np.random.seed(seed)
+
+
+    # Check the inputs and raise appropriate exceptions
+    msg_crt = ("'{}' is not defined; available options: 'maximin', 'correlation'")
+    if type(criterion) is not str:
+        raise TypeError(msg_crt.format(str(criterion)))
+    if criterion not in ['maximin', 'correlation']:
+        raise ValueError(msg_crt.format(criterion))
+    
+    # calculate the number of slices
+    slice_sp = sp // slices # to get int
+    
+    # Check the criterion
+    if criterion == 'maximin':
+        best_sample = _sampler(sp, params, slices)
+        best_sub_sample = best_sample.reshape((slices, slice_sp, params))
+        best_sample_cost = _get_min_distance(best_sample, k=3)
+        best_sub_sample_cost = _get_min_distance_sub(best_sub_sample)
+        cost_func = np.mean([best_sample_cost, best_sub_sample_cost])
+        
+        for it in range(iterations):
+            new_sample = _sampler(sp, params, slices)
+            new_sub_sample = new_sample.reshape((slices, slice_sp, params))
+            new_sample_cost = _get_min_distance(new_sample)
+            new_sub_sample_cost = _get_min_distance_sub(new_sub_sample)
+            new_cost_func = np.mean([new_sample_cost, new_sub_sample_cost])
+            
+            # check the cost function value
+            if new_cost_func > cost_func:
+                best_sample = new_sample
+                cost_func = new_cost_func
+        
+        slhs_sample_maximin = best_sample
+        slhs_sample_maximin_slice = slhs_sample_maximin.reshape((slices, slice_sp, params))
+
+        return slhs_sample_maximin, slhs_sample_maximin_slice
+
+    elif criterion == 'correlation':
+        best_sample = _sampler(sp, params, slices)
+        best_sub_sample = best_sample.reshape((slices, slice_sp, params))
+        best_sample_cost = _get_corr(best_sample)
+        best_sub_sample_cost = _get_corr_sub(best_sub_sample)
+        cost_func = np.mean([best_sample_cost, best_sub_sample_cost])
+        
+        for it in range(iterations):
+            new_sample = _sampler(sp, params, slices)
+            new_sub_sample = new_sample.reshape((slices, slice_sp, params))
+            new_sample_cost = _get_corr(new_sample)
+            new_sub_sample_cost = _get_corr_sub(new_sub_sample)
+            new_cost_func = np.mean([new_sample_cost, new_sub_sample_cost])
+            
+            # check the cost function value
+            if new_cost_func < cost_func:
+                best_sample = new_sample
+                cost_func = new_cost_func
+        
+        slhs_sample_correl = best_sample
+        slhs_sample_correl_slice = slhs_sample_correl.reshape((slices, slice_sp, params))
+
+        return slhs_sample_correl, slhs_sample_correl_slice    
