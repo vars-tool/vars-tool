@@ -89,7 +89,7 @@ def star_vars(star_centres:np.ndarray, delta_h:float=0.1, parameters=[], rettype
         # star_points
         dict_of_points = _star_sampler_dict(star_centres, delta_h, parameters)
         if rettype=='DataFrame':
-            import pandas as pd # import pandas here to avoid overhead if rettype=='dict'
+            from pandas import concat # import pandas here to avoid overhead if rettype=='dict'
             return pd.concat({key:pd.concat({k:pd.DataFrame(d) for k, d in value.items()}) for key,value in dict_of_points.items()})
         return dict_of_points
     
