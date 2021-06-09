@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy  as np
-import varstool.sampling.starvars as sv
+import sampling.starvars as sv
+import sa.SA as sens_analysis
+
 
 
 import matplotlib.pyplot as plt
@@ -54,7 +56,7 @@ class Model(Protocol):
 
     def __next__(self, ): ...
 
-
+class VARS(object):
     __doc__ = """VARS object"""
 
     #-------------------------------------------
