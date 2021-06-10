@@ -5,7 +5,7 @@ from decimal import Decimal
 from typing import Dict
 
 
-def star_vars(star_centres:np.ndarray, delta_h:float=0.1, parameters=[], rettype:str='dict', precision=10) -> np.ndarray:
+def star(star_centres:np.ndarray, delta_h:float=0.1, parameters=[], rettype:str='dict', precision=10) -> np.ndarray:
     '''
     Description:
     ------------

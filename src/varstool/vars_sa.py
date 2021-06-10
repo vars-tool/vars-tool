@@ -1,20 +1,15 @@
 import pandas as pd
 import numpy  as np
 import sampling.starvars as sv
-import sa.SA as sens_analysis
-
-
-
+import sa.SA as sens_analysis # this is vague - correct it if you can
 import matplotlib.pyplot as plt
 
 from typing import (
-    List,
     Dict,
     Optional,
     Tuple,
     Union,
     Callable,
-    Sequence,
     Any,
 )
 
@@ -25,6 +20,10 @@ from typing_extensions import (
 from collections.abc import (
     Iterable,
 )
+
+
+__all__ = ["VARS", "GVARS", "DVARS", "Sampler", "Model"]
+
 
 class Sampler(Protocol):
     __doc__ = """A sampling class the returns random numbers based
@@ -56,6 +55,7 @@ class Model(Protocol):
 
     def __next__(self, ): ...
 
+
 class VARS(object):
     __doc__ = """VARS object"""
 
@@ -79,9 +79,9 @@ class VARS(object):
     ) -> None:
 
         # initialize values
+        self.parameters = parameters
         self.delta_h = delta_h
         self.num_stars = num_stars
-
         self.star_centres = 5
         self.star_points  = 7
 
@@ -94,6 +94,7 @@ class VARS(object):
     def from_text(cls, input_text_file):
 
         return cls()
+
 
     #-------------------------------------------
     # Representators
@@ -109,11 +110,12 @@ class VARS(object):
 
         return
 
+
     #-------------------------------------------
     # Core properties
     @property
     def centres(self, ):
-        return self._star_centres
+        return self.__star_centres
 
     @centres.setter
     def centres(self, new_centres):
@@ -127,22 +129,23 @@ class VARS(object):
     def points(self, new_points):
         self.__star_points = new_points
 
+
     #-------------------------------------------
-    # Core Functions
+    # Core functions
     @staticmethod
     def generate_star(star_centres):
 
         # generate star points using star.py functions
-        star_points = sv.star_vars(star_centres, delta_h=self.delta_h, rettype='DataFrame')
+        return sv.star_vars(star_centres, delta_h=self.delta_h, rettype='DataFrame')
 
-        # figure out way to return this?
 
-    def plot(self, ):
+    def _plot(self, ):
 
         # make similar plots as the matlab plots showing the important
         # SA results from analysis
 
-        return
+        pass
+
 
     def run_online(self, ):
         # create instance of sampler to get star centers
@@ -154,6 +157,7 @@ class VARS(object):
         # figure out a way to return results
         return
 
+
     def run_offline(star_points,):
 
         # do analysis on offline formatted star points
@@ -162,10 +166,13 @@ class VARS(object):
 
         return
 
+
 class GVARS(VARS):
     def __init__(self, ):
         super().__init__()
 
+
 class DVARS(VARS):
     def __init__(self, ):
         super().__init__()
+

@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
 
-from star import star_vars
 from itertools import combinations
+
 
 def ishigami(x, a=7, b=0.05):
     '''Ishigami test function'''
@@ -16,6 +17,7 @@ def ishigami(x, a=7, b=0.05):
 
     return np.sin(x[0]) + a*(np.sin(x[1])**2) + b*(x[2]**4)*np.sin(x[0])
 
+
 # helper functions
 def apply_unique(func, df, axis=1, *args, **kwargs):
     '''Apply a function to unique rows of a DataFrame
@@ -27,21 +29,6 @@ def apply_unique(func, df, axis=1, *args, **kwargs):
     applied_df.index = df.index
 
     return applied_df
-
-
-def scale(df, bounds, axis=1, *args, **kwargs):
-    '''scale the sampled matrix
-    bounds is a dict with ['ub', 'lb'] keys
-    the values are lists of the upper and lower bounds
-    of the parameters/variables/factors'''
-
-    # numpy equivalent for math operations
-    bounds_np = {key:np.array(value) for key,value in bounds.items()}
-
-    if axis:
-        return df * (bounds_np['ub'] - bounds_np['lb']) + bounds_np['lb']
-    else:
-        return df.T * (bounds_np['ub'] - bounds_np['lb']) + bounds_np['lb']
 
 
 def pairs_h(iterable):
@@ -82,6 +69,7 @@ e_covariogram = lambda cov_section_all: cov_section_all.groupby(level=[1,2]).mea
 '''sobol (total order) sensitivity measure equivalent evaluated over all sections'''
 sobol_eq = lambda gamma, ecov, variance: ((gamma + ecov) / variance).loc[:,1]
 
+
 # ivars function
 def ivars(variogram_array, scale, delta_h):
     '''generate Integrated Variogram Across a Range of Scales (IVARS)
@@ -104,6 +92,3 @@ def ivars(variogram_array, scale, delta_h):
         ivars += 0.5*(y_int[i+1] + y_int[i]) * (x_int[i+1] - x_int[i])
 
     return ivars
-
-# alias
-idx = pd.IndexSlice
