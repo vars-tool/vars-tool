@@ -1,3 +1,6 @@
+import warnings
+import decimal
+
 import pandas as pd
 import numpy  as np
 import sampling.starvars as sv
@@ -27,7 +30,7 @@ __all__ = ["VARS", "GVARS", "DVARS", "Sampler", "Model"]
 
 class Sampler(Protocol):
     __doc__ = """A sampling class the returns random numbers based
-    on **kwargs variables"""
+    on **kwargs arguments"""
 
     def __init__(
         self,
@@ -64,38 +67,94 @@ class VARS(object):
 
     def __init__(
         self,
-        parameters: Dict[str, Tuple[float, float]] = None,
-        delta_h: Optional[float] = 0.1,
-        num_stars: Optional[int] = 100,
-        ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5),
-        sampler: Sampler = None,
-        model: Model = None,
-        seed: Optional[int] = 123456789,
-        bootstrap_flag: Optional[bool] = False,
-        bootstrap_size: Optional[int]  = 1000,
-        bootstrap_ci: Optional[int] = 0.9,
-        report_verbose: Optional[bool] = False,
-        report_freq: int = 10,
+        parameters: Dict[Union[str, int], Tuple[float, float]] = None, # name and bounds
+        delta_h: Optional[float] = 0.1, # delta_h for star sampling
+        num_stars: Optional[int] = 100, # number of star points
+        ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
+        sampler: Sampler = None, # sampling method for star centres
+        model: Model = None, # model (function) to run for each star point
+        seed: Optional[int] = 123456789, # randomization state
+        bootstrap_flag: Optional[bool] = False, # bootstrapping flag
+        bootstrap_size: Optional[int]  = 1000, # bootstrapping size
+        bootstrap_ci: Optional[int] = 0.9, # bootstrap confidence interval
+        report_verbose: Optional[bool] = False, # reporting - using tqdm??
+        report_freq: int = 10, # not sure whether we should include this?
     ) -> None:
 
         # initialize values
         self.parameters = parameters
         self.delta_h = delta_h
         self.num_stars = num_stars
-        self.star_centres = 5
-        self.star_points  = 7
+        self.ivars_scales = ivars_scales
+        self.star_centres = None # no default value required
+        self.star_points  = None # no default value required
+        self.seed = seed
+        self.bootstrap_size = bootstrap_size
+        self.bootstrap_ci = bootstrap_ci
+        self.report_verbose = report_verbose
 
-        # default value for report_freq is 10
-        if report_freq is None:
-            self.report_freq  = 10
-        else:
-            selt.report_freq = report_freq
 
-        # default value for the ivars scales is 0.1, 0.3, and 0.5
-        if ivars_scales is None:
+        # Check input arguments
+        ## default value for the IVARS scales are 0.1, 0.3, and 0.5
+        if not self.ivars_scales:
+            warnings.warn(
+                "IVARS scales are not valid, default values of (0.1, 0.3, 0.5)"
+                "will be considered.",
+                UserWarning,
+                stacklevel=1
+            )
             self.ivars_scales = (0.1, 0.3, 0.5)
-        else:
-            self.ivars_sclaes = ivars_scales
+        ## if there is any value in IVARS scales that is greater than 0.5
+        if any(i for i in self.ivars_scales if i > 0.5):
+            warning.warn(
+                "IVARS scales greater than 0.5 are not recommended.",
+                UserWarning,
+                stacklevel=1
+            )
+        ## if delta_h is not a factor of 1, NaNs or ZeroDivison might happen
+        if (decimal.Decimal(str(1)) % decimal.Decimal(str(self.delta_h))) != 0:
+            warning.warn(
+                "If delta_h is not a factor of 1, NaNs and ZeroDivisionError are probable. "
+                "It is recommended to change `delta_h` to a divisible number by 1.",
+                RuntimeWarning,
+                stacklevel=1
+            )
+        ## if delta_h is not between 0 and 1
+        if ((delta_h <= 0) or (delta_h >=1 )):
+            raise ValueError(
+                "`delta_h` must be greater than 0 and less than 1."
+            )
+
+
+        ## check the dtypes and instances
+        ### `parameters`
+        if not isinstance(parameters, dict):
+            raise ValueError(
+                "`parameters` should be of type `dict`; the keys must be"
+                "their names, and values must be the lower and upper bounds"
+                "of their factor space."
+            )
+        ### `sampler`
+        if not isinstance(sampler, Sampler):
+            raise ValueError(
+                "`sampler` algorithm must be of type varstool.Sampler."
+            )
+        ### `model`
+        if not isinstance(model, Model):
+            raise ValueError(
+                "`model` must be of type varstool.Model."
+            )
+
+
+
+
+
+
+
+
+
+
+
 
         # default value for seed is 123456789
         if seed is None:
@@ -127,10 +186,12 @@ class VARS(object):
         else:
             self.report_verbose = report_verbose
 
+
     @classmethod
     def from_dict(cls, input_dict):
 
         return cls()
+
 
     @classmethod
     def from_text(cls, input_text_file):
@@ -319,3 +380,4 @@ class GVARS(VARS):
 class DVARS(VARS):
     def __init__(self, ):
         super().__init__()
+
