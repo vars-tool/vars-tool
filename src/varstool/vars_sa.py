@@ -52,15 +52,9 @@ class Model(Protocol):
     __doc__ = """A wrapper class for a function of interest"""
 
     def __init__(
-<<<<<<< HEAD
         self, 
         func: Callable = None,
         unkown_options: Dict = None,
-=======
-        self,
-        func: Callable,
-        unkown_options: Dict[str, str] = None,
->>>>>>> db92b55dfc81d6216b9c65d3523842807250c40a
     ) -> None:
 
         # check whether the input is a callable
@@ -211,12 +205,12 @@ class VARS(object):
             )
 
         ### `sampler`
-<<<<<<< HEAD
         if sampler:
             if not isinstance(sampler, Sampler):
                 raise ValueError(
                     "`sampler` algorithm must be of type varstool.Sampler."
                 )
+        self.sampler = sampler
 
         ### `model`
         if model:
@@ -224,20 +218,7 @@ class VARS(object):
                 raise ValueError(
                     "`model` must be of type varstool.Model."
                 )
-=======
-        if not isinstance(sampler, Sampler):
-            raise ValueError(
-                "`sampler` algorithm must be of type varstool.Sampler."
-            )
-        self.sampler = sampler
-
-        ### `model`
-        if not isinstance(model, Model):
-            raise ValueError(
-                "`model` must be of type varstool.Model."
-            )
         self.model = model
->>>>>>> db92b55dfc81d6216b9c65d3523842807250c40a
 
         # adding anything else here?!
 
@@ -308,11 +289,7 @@ class VARS(object):
     def generate_star(star_centres, delta_h, param_names=[]):
 
         # generate star points using star.py functions
-<<<<<<< HEAD
         star_points = starvars(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
-=======
-        star_points = sv.star(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
->>>>>>> db92b55dfc81d6216b9c65d3523842807250c40a
 
         # figure out way to return this?
         return star_points  # for now will just do this
@@ -335,19 +312,11 @@ class VARS(object):
         self.points(starvars(star_centres=self.centres(), delta_h=self.delta_h, parameters=param_names, rettype='DataFrame'))
 
         # apply model to the generated star points
-<<<<<<< HEAD
         df = vars_funcs.apply_unique(self.model, self.points())
-=======
-        df = vf.apply_unique(self.model(), self.points())
->>>>>>> db92b55dfc81d6216b9c65d3523842807250c40a
         df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h'
-<<<<<<< HEAD
-        pair_df = df[self.model.__name__].groupby(level=[0,1]).apply(vars_funcs.section_df)
-=======
-        pair_df = df[self.model.repr()].groupby(level=[0,1]).apply(vf.section_df)
->>>>>>> db92b55dfc81d6216b9c65d3523842807250c40a
+        pair_df = df[self.model.repr()].groupby(level=[0,1]).apply(vars_funcs.section_df)
         pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # get mu_star value
@@ -366,49 +335,26 @@ class VARS(object):
         cov_section_all.unstack(level=1)
 
         # variogram calculation
-<<<<<<< HEAD
-        variogram_value = vars_funcs.variogram(pair_df)
-        variogram_value.unstack(level=0)
-
-        # morris calculation
-        morris_values = vars_funcs.morris_eq(pair_df)
-        morris_values[0].unstack(level=0)
-
-        # overall covariogram calculation
-        covariogram_value = vars_funcs.covariogram(pair_df, mu_overall)
-        covariogram_value.unstack(level=0)
-
-        # expected value of the overall covariogram calculation
-        e_covariogram_value = vars_funcs.e_covariogram(cov_section_all)
-        e_covariogram_value.unstack(level=0)
-
-        # sobol calculation
-        sobol_value = vars_funcs.sobol_eq(variogram_value, e_covariogram_value, var_overall)
-
-        # IVARS calculation
-        ivars_df = pd.DataFrame.from_dict({scale: variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
-=======
-        self.variogram_value = vf.variogram(pair_df)
+        self.variogram_value = vars_funcs.variogram(pair_df)
         self.variogram_value.unstack(level=0)
 
         # morris calculation
-        self.morris_values = vf.morris_eq(pair_df)
+        self.morris_values = vars_funcs.morris_eq(pair_df)
         self.morris_values[0].unstack(level=0)
 
         # overall covariogram calculation
-        self.covariogram_value = vf.covariogram(pair_df, mu_overall)
+        self.covariogram_value = vars_funcs.covariogram(pair_df, mu_overall)
         self.covariogram_value.unstack(level=0)
 
         # expected value of the overall covariogram calculation
-        self.e_covariogram_value = vf.e_covariogram(cov_section_all)
+        self.e_covariogram_value = vars_funcs.e_covariogram(cov_section_all)
         self.e_covariogram_value.unstack(level=0)
 
         # sobol calculation
-        self.sobol_value = vf.sobol_eq(self.variogram_value, self.e_covariogram_value, var_overall)
+        self.sobol_value = vars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, var_overall)
 
         # IVARS calculation
-        self.ivars_df = pd.DataFrame.from_dict({scale: self.variogram_value.groupby(level=0).apply(vf.ivars, scale=scale, delta_h=self.delta_h) \
->>>>>>> db92b55dfc81d6216b9c65d3523842807250c40a
+        self.ivars_df = pd.DataFrame.from_dict({scale: self.variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
              for scale in self.ivars_scales}, 'index')
 
 
@@ -438,21 +384,7 @@ class VARS(object):
                 bootstrapped_sobol = vars_funcs.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram, bootstrapped_var)
 
                 bootstrapped_ivars_df = pd.DataFrame.from_dict(
-<<<<<<< HEAD
-                    {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=delta_h) \
-                     for scale in ivars_values}, 'index')
-                # gamma (for reference delete these comments later)
-                result_bs_variogram.append(bootstrapped_variogram)
-                # Ecov
-                result_bs_ecovariogram.append(bootstrapped_ecovariogram)
-                # var samples
-                result_bs_var.append(bootstrapped_var)
-                #ST
-                result_bs_sobol.append(bootstrapped_sobol)
-                #IVARS
-                result_bs_ivars_df.append(bootstrapped_ivars_df)
-=======
-                    {scale: bootstrapped_variogram.groupby(level=0).apply(vf.ivars, scale=scale, delta_h=self.delta_h) \
+                    {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                      for scale in self.ivars_scales}, 'index')
 
                 # attatch new results to previous results (order does not matter here)
@@ -463,7 +395,6 @@ class VARS(object):
             # need to do data manipulation to variogram and sobol results
             # in order sort all the parameters independently
             #TODO
->>>>>>> db92b55dfc81d6216b9c65d3523842807250c40a
 
             # sort the bootstrapping results
             result_bs_variogram.sort_values([param_names])
