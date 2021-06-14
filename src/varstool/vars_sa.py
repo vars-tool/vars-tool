@@ -17,7 +17,7 @@ from typing import (
 )
 
 from typing_extensions import (
-    Protocol,
+    Protocol, runtime_checkable
 )
 
 from collections.abc import (
@@ -27,7 +27,7 @@ from collections.abc import (
 
 __all__ = ["VARS", "GVARS", "DVARS", "Sampler", "Model"]
 
-
+@runtime_checkable
 class Sampler(Protocol):
     __doc__ = """A sampling class the returns random numbers based
     on **kwargs arguments"""
@@ -42,12 +42,12 @@ class Sampler(Protocol):
 
         # initialize instance values
         self.callback = callback
-        self.kwargs   = size_kwargs
+        self.kwargs   = kwargs
 
     def __call__(self, ) -> Union[Iterable, float]:
         return self.callback(**self.kwargs)
 
-
+@runtime_checkable
 class Model(Protocol):
     __doc__ = """A model class that runs the model in a iteration
     (if needed) and returns values"""
@@ -106,14 +106,14 @@ class VARS(object):
             self.ivars_scales = (0.1, 0.3, 0.5)
         ## if there is any value in IVARS scales that is greater than 0.5
         if any(i for i in self.ivars_scales if i > 0.5):
-            warning.warn(
+            warnings.warn(
                 "IVARS scales greater than 0.5 are not recommended.",
                 UserWarning,
                 stacklevel=1
             )
         ## if delta_h is not a factor of 1, NaNs or ZeroDivison might happen
         if (decimal.Decimal(str(1)) % decimal.Decimal(str(self.delta_h))) != 0:
-            warning.warn(
+            warnings.warn(
                 "If delta_h is not a factor of 1, NaNs and ZeroDivisionError are probable. "
                 "It is recommended to change `delta_h` to a divisible number by 1.",
                 RuntimeWarning,
@@ -226,10 +226,10 @@ class VARS(object):
     #-------------------------------------------
     # Core functions
     @staticmethod
-    def generate_star(star_centres):
+    def generate_star(star_centres, delta_h, param_names=[]):
 
         # generate star points using star.py functions
-        star_points = sv.star_vars(star_centres, delta_h=delta_h, parameters=parameters, rettype='DataFrame')
+        star_points = sv.star_vars(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
 
         # figure out way to return this?
         return star_points  # for now will just do this
