@@ -3,9 +3,10 @@ import decimal
 
 import pandas as pd
 import numpy  as np
-import sampling.starvars as sv
-import sa.vars_funcs as vf
 import matplotlib.pyplot as plt
+
+from .sampling import starvars
+from .sa import vars_funcs
 
 from typing import (
     Dict,
@@ -26,9 +27,6 @@ from collections.abc import (
 )
 
 
-__all__ = ["VARS", "GVARS", "DVARS", "Sampler", "Model"]
-
-
 @runtime_checkable
 class Sampler(Protocol):
     __doc__ = """A sampling class the returns random numbers based
@@ -36,10 +34,9 @@ class Sampler(Protocol):
 
     def __init__(
         self,
-        callback: Callable = None,
+        func: Callable = None,
         seed: Optional[int] = None,
-        args: Any = None,
-        kwargs: Dict[str, Any] = None,
+        unknown_options: Dict[str, Any] = None,
     ) -> None:
 
         # initialize instance values
@@ -56,8 +53,8 @@ class Model(Protocol):
 
     def __init__(
         self, 
-        func: Callable,
-        unkown_options: Dict[str, str] = None,
+        func: Callable = None,
+        unkown_options: Dict = None,
     ) -> None:
         
         # check whether the input is a callable
@@ -71,20 +68,21 @@ class Model(Protocol):
         else:
             self.unknown_options = {}
 
-    def __repr__(self, ):
+    def __repr__(self, ) -> str:
         """official representation"""
         return "wrapped function: "+self.func.__name__
 
-    def __str__(self, ):
+    def __str__(self, ) -> str:
         """the name of the wrapper function"""
         return self.func.__name__
 
     def __call__(
         self,
         params,
-        options: Dict[str, ...] = None,
+        options: Dict = None,
     ) -> Union[Iterable, float, int]:
 
+        # check if params is array-like object
         assert isinstance(params, \
             (pd.DataFrame, pd.Series, np.array, list, tuple))
 
@@ -102,7 +100,7 @@ class VARS(object):
 
     def __init__(
         self,
-        parameters: Dict[Union[str, int], Tuple[float, float]] = None, # name and bounds
+        parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         num_stars: Optional[int] = 100, # number of star points
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
@@ -121,8 +119,8 @@ class VARS(object):
         self.delta_h = delta_h
         self.num_stars = num_stars
         self.ivars_scales = ivars_scales
-        self.star_centres = None # no default value required
-        self.star_points  = None # no default value required
+        self.__star_centres = None # no default value required
+        self.__star_points  = None # no default value required
         self.seed = seed
         self.bootstrap_flag = bootstrap_flag
         self.bootstrap_size = bootstrap_size
@@ -134,7 +132,7 @@ class VARS(object):
         ## default value for the IVARS scales are 0.1, 0.3, and 0.5
         if not self.ivars_scales:
             warnings.warn(
-                "IVARS scales are not valid, default values of (0.1, 0.3, 0.5)"
+                "IVARS scales are not valid, default values of (0.1, 0.3, 0.5) \n"
                 "will be considered.",
                 UserWarning,
                 stacklevel=1
@@ -152,7 +150,7 @@ class VARS(object):
         ## if delta_h is not a factor of 1, NaNs or ZeroDivison might happen
         if (decimal.Decimal(str(1)) % decimal.Decimal(str(self.delta_h))) != 0:
             warnings.warn(
-                "If delta_h is not a factor of 1, NaNs and ZeroDivisionError are probable. "
+                "If delta_h is not a factor of 1, NaNs and ZeroDivisionError are probable. \n"
                 "It is recommended to change `delta_h` to a divisible number by 1.",
                 RuntimeWarning,
                 stacklevel=1
@@ -207,16 +205,18 @@ class VARS(object):
             )
 
         ### `sampler`
-        if not isinstance(sampler, Sampler):
-            raise ValueError(
-                "`sampler` algorithm must be of type varstool.Sampler."
-            )
+        if sampler:
+            if not isinstance(sampler, Sampler):
+                raise ValueError(
+                    "`sampler` algorithm must be of type varstool.Sampler."
+                )
 
         ### `model`
-        if not isinstance(model, Model):
-            raise ValueError(
-                "`model` must be of type varstool.Model."
-            )
+        if model:
+            if not isinstance(model, Model):
+                raise ValueError(
+                    "`model` must be of type varstool.Model."
+                )
 
         # adding anything else here?!
 
@@ -287,7 +287,7 @@ class VARS(object):
     def generate_star(star_centres, delta_h, param_names=[]):
 
         # generate star points using star.py functions
-        star_points = sv.star_vars(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
+        star_points = starvars(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
 
         # figure out way to return this?
         return star_points  # for now will just do this
@@ -307,16 +307,16 @@ class VARS(object):
         self.centres(sample())
 
         # generate star points
-        self.points(sv.star(star_centres=self.centres(), delta_h=self.delta_h, parameters=param_names, rettype='DataFrame'))
+        self.points(starvars(star_centres=self.centres(), delta_h=self.delta_h, parameters=param_names, rettype='DataFrame'))
 
         # apply model to the generated star points
-        df = vf.apply_unique(self.model, self.points())
+        df = vars_funcs.apply_unique(self.model, self.points())
         df.index.names = ['centre', 'param', 'points']
 
         # possibly do some data manipulation here not sure yet
 
         # get paired values for each section based on 'h'
-        pair_df = df[self.model.__name__].groupby(level=[0,1]).apply(vf.section_df)
+        pair_df = df[self.model.__name__].groupby(level=[0,1]).apply(vars_funcs.section_df)
         pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # get mu_star value?
@@ -333,30 +333,30 @@ class VARS(object):
         # also possibly add data manipulation to pair_df and mu_star_df not sure
 
         # sectional covariogram calculation
-        cov_section_all = vf.cov_section(pair_df, mu_star_df)
+        cov_section_all = vars_funcs.cov_section(pair_df, mu_star_df)
         cov_section_all.unstack(level=1)
 
         # variogram calculation
-        variogram_value = vf.variogram(pair_df)
+        variogram_value = vars_funcs.variogram(pair_df)
         variogram_value.unstack(level=0)
 
         # morris calculation
-        morris_values = vf.morris_eq(pair_df)
+        morris_values = vars_funcs.morris_eq(pair_df)
         morris_values[0].unstack(level=0)
 
         # overall covariogram calculation
-        covariogram_value = vf.covariogram(pair_df, mu_overall)
+        covariogram_value = vars_funcs.covariogram(pair_df, mu_overall)
         covariogram_value.unstack(level=0)
 
         # expected value of the overall covariogram calculation
-        e_covariogram_value = vf.e_covariogram(cov_section_all)
+        e_covariogram_value = vars_funcs.e_covariogram(cov_section_all)
         e_covariogram_value.unstack(level=0)
 
         # sobol calculation
-        sobol_value = vf.sobol_eq(variogram_value, e_covariogram_value, var_overall)
+        sobol_value = vars_funcs.sobol_eq(variogram_value, e_covariogram_value, var_overall)
 
         # IVARS calculation
-        ivars_df = pd.DataFrame.from_dict({scale: variogram_value.groupby(level=0).apply(vf.ivars, scale=scale, delta_h=self.delta_h) \
+        ivars_df = pd.DataFrame.from_dict({scale: variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
              for scale in self.ivars_scales}, 'index')
 
         # create result data frames for if bootstrapping is chosen to be done (might be better way to do this)
@@ -378,18 +378,18 @@ class VARS(object):
                 bootstrapped_cov_section_all = pd.concat([cov_section_all.loc[pd.IndexSlice[i, :]] for i in bootstrap_rand])
 
                 # calculating variogram, ecovariogram, variance, mean, Sobol, and IVARS values
-                bootstrapped_variogram = vf.variogram(bootstrapped_pairdf)
+                bootstrapped_variogram = vars_funcs.variogram(bootstrapped_pairdf)
 
-                bootstrapped_ecovariogram = vf.e_covariogram(bootstrapped_cov_section_all)
+                bootstrapped_ecovariogram = vars_funcs.e_covariogram(bootstrapped_cov_section_all)
 
                 bootstrapped_var = bootstrapped_df[self.model.__name__].unique().var(ddof=1)
 
-                bootstrapped_sobol = vf.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram, bootstrapped_var)
+                bootstrapped_sobol = vars_funcs.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram, bootstrapped_var)
 
                 ivars_values = [0.1, 0.3, 0.5]
                 delta_h = 0.1
                 bootstrapped_ivars_df = pd.DataFrame.from_dict(
-                    {scale: bootstrapped_variogram.groupby(level=0).apply(vf.ivars, scale=scale, delta_h=delta_h) \
+                    {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=delta_h) \
                      for scale in ivars_values}, 'index')
                 # gamma (for reference delete these comments later)
                 result_bs_variogram.append(bootstrapped_variogram)
