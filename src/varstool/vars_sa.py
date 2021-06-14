@@ -17,7 +17,8 @@ from typing import (
 )
 
 from typing_extensions import (
-    Protocol, runtime_checkable
+    Protocol,
+    runtime_checkable,
 )
 
 from collections.abc import (
@@ -26,6 +27,7 @@ from collections.abc import (
 
 
 __all__ = ["VARS", "GVARS", "DVARS", "Sampler", "Model"]
+
 
 @runtime_checkable
 class Sampler(Protocol):
@@ -47,16 +49,49 @@ class Sampler(Protocol):
     def __call__(self, ) -> Union[Iterable, float]:
         return self.callback(**self.kwargs)
 
+
 @runtime_checkable
 class Model(Protocol):
-    __doc__ = """A model class that runs the model in a iteration
-    (if needed) and returns values"""
+    __doc__ = """A wrapper class for a function of interest"""
 
-    def __init__(self, ): ...
+    def __init__(
+        self, 
+        func: Callable,
+        unkown_options: Dict[str, str] = None,
+    ) -> None:
+        
+        # check whether the input is a callable
+        assert callable(func)
+        self.func = func
+        
+        # unkown_options must be a dict
+        assert isinstance(unkown_options, dict)
+        if unknown_options:
+            self.unknown_options = unkown_options
+        else:
+            self.unknown_options = {}
 
-    def __iter__(self, ): ...
+    def __repr__(self, ):
+        """official representation"""
+        return "wrapped function: "+self.func.__name__
 
-    def __next__(self, ): ...
+    def __str__(self, ):
+        """the name of the wrapper function"""
+        return self.func.__name__
+
+    def __call__(
+        self,
+        params,
+        options: Dict[str, ...] = None,
+    ) -> Union[Iterable, float, int]:
+
+        assert isinstance(params, \
+            (pd.DataFrame, pd.Series, np.array, list, tuple))
+
+        if options:
+            self.unknown_options = options
+
+        return self.func(params, **self.unknown_options)
 
 
 class VARS(object):
@@ -89,6 +124,7 @@ class VARS(object):
         self.star_centres = None # no default value required
         self.star_points  = None # no default value required
         self.seed = seed
+        self.bootstrap_flag = bootstrap_flag
         self.bootstrap_size = bootstrap_size
         self.bootstrap_ci = bootstrap_ci
         self.report_verbose = report_verbose
@@ -104,6 +140,7 @@ class VARS(object):
                 stacklevel=1
             )
             self.ivars_scales = (0.1, 0.3, 0.5)
+
         ## if there is any value in IVARS scales that is greater than 0.5
         if any(i for i in self.ivars_scales if i > 0.5):
             warnings.warn(
@@ -111,6 +148,7 @@ class VARS(object):
                 UserWarning,
                 stacklevel=1
             )
+
         ## if delta_h is not a factor of 1, NaNs or ZeroDivison might happen
         if (decimal.Decimal(str(1)) % decimal.Decimal(str(self.delta_h))) != 0:
             warnings.warn(
@@ -119,18 +157,45 @@ class VARS(object):
                 RuntimeWarning,
                 stacklevel=1
             )
+
         ## if delta_h is not between 0 and 1
         if ((delta_h <= 0) or (delta_h >=1 )):
             raise ValueError(
                 "`delta_h` must be greater than 0 and less than 1."
             )
-        ## check seed dtype
-        if not isinstance(seed, int):
-            warning.warn(
-                "`seed` must be an integer greater than zero."
-                "Being set to default value, i.e., 123456789"
+
+        ## check if num_stars is a positive integer
+        if ((not isinstance(num_stars, (int, np.int32, np.int64))) or \
+            (num_stars < 0)):
+            raise ValueError(
+                "`num_stars` must be a positive integer."
             )
 
+        ## check seed dtype and sign
+        if ((not isinstance(seed, int)) or (seed < 0)):
+            warning.warn(
+                "`seed` must be an integer greater than zero."
+                " value is set to default, i.e., 123456789"
+            )
+            self.seed = 123456789
+
+        ## check bootstrap dtype and sign
+        if ((not isinstance(bootstrap_size, int)) or (bootstrap_size < 1)):
+            raise ValueError(
+                "`bootstrap_size` must be an integer greater than one."
+                " value is set to default, i.e., 1000"
+            )
+
+        ## check bootstrap ci dtype, value and sign
+        if ((not isinstance(bootstrap_ci, float)) or \
+            (bootstrap_ci <= 0) or \
+            (bootstrap_ci >= 1)):
+            warnings.warn(
+                "bootstrap condifence interval (CI) must be a float"
+                " within (0, 1) interval. Setting `boostrap_ci` value"
+                " to default, i.e., 0.9"
+            )
+            self.bootstrap_ci = 0.9
 
         ## check the dtypes and instances
         ### `parameters`
@@ -140,54 +205,25 @@ class VARS(object):
                 "their names, and values must be the lower and upper bounds"
                 "of their factor space."
             )
+
         ### `sampler`
         if not isinstance(sampler, Sampler):
             raise ValueError(
                 "`sampler` algorithm must be of type varstool.Sampler."
             )
+
         ### `model`
         if not isinstance(model, Model):
             raise ValueError(
                 "`model` must be of type varstool.Model."
             )
 
-
-        # default value for seed is 123456789
-        if seed is None:
-            self.seed = 123456789
-        else:
-            self.seed = seed
-
-        # default value for bootstrap flag is false
-        if bootstrap_flag is None:
-            self.bootstrap_flag = False
-        else:
-            self.bootstrap_flag = bootstrap_flag
-
-        # default value for bootstrap size is 1000
-        if bootstrap_size is None:
-            self.bootstrap_size = 1000
-        else:
-            self.bootstrap_size = bootstrap_size
-
-        # default bootstrap confidence interval is 0.9
-        if bootstrap_ci is None:
-            self.bootstrap_ci = 0.9
-        else:
-            self.bootstrap_ci = bootstrap_ci
-
-        # default value for report_verbose is false
-        if report_verbose is None:
-            self.report_verbose = False
-        else:
-            self.report_verbose = report_verbose
-
+        # adding anything else here?!
 
     @classmethod
     def from_dict(cls, input_dict):
 
         return cls()
-
 
     @classmethod
     def from_text(cls, input_text_file):
@@ -212,12 +248,22 @@ class VARS(object):
 
     #-------------------------------------------
     # Core properties
+    
+    ## using dunder variables for avoiding confusion with 
+    ## D-/GVARS sublcasses.
+
     @property
     def centres(self, ):
         return self.__star_centres
 
     @centres.setter
     def centres(self, new_centres):
+        if not isinstance(new_centres, \
+            (pd.DataFrame, pd.Series, np.array, list, tuple)):
+            raise TypeError(
+                "new_centres must be an array-like object: "
+                "pandas.Dataframe, pandas.Series, numpy.array, list, tuple"
+            )
         self.__star_centres = new_centres
 
     @property
@@ -226,6 +272,12 @@ class VARS(object):
 
     @points.setter
     def points(self, new_points):
+        if not isinstance(new_points, \
+            (pd.DataFrame, pd.Series, np.array, list, tuple)):
+            raise TypeError(
+                "new_points must be an array-like object: "
+                "pandas.Dataframe, pandas.Series, numpy.array, list, tuple"
+            )
         self.__star_points = new_points
 
 
@@ -358,14 +410,14 @@ class VARS(object):
             result_bs_ivars_df.sort()
 
             # calculating the confidence interval limits
-            variogram_upp = result_bs_variogram*
-            variogram_low =
+            # variogram_upp = result_bs_variogram*
+            # variogram_low =
 
-            sobol_upp =
-            sobol_low =
+            # sobol_upp =
+            # sobol_low =
 
-            ivars_low =
-            ivars_upp =
+            # ivars_low =
+            # ivars_upp =
 
 
             # return results in a dictionary ***not finished yet also not sure if it should be a dict
