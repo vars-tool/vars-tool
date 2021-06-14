@@ -146,16 +146,6 @@ class VARS(object):
             )
 
 
-
-
-
-
-
-
-
-
-
-
         # default value for seed is 123456789
         if seed is None:
             self.seed = 123456789
@@ -255,22 +245,26 @@ class VARS(object):
 
     def run_online(self, ):
         # create instance of sampler to get star centers (random numbers)
-        sample = Sampler(self.sampler, self.parameters)
+        sample = Sampler(self.sampler, self.parameters)  # this might not be needed?
         self.centres(sample())
 
         # generate star points
-        self.points(sv.star_vars(star_centres=self.centres(), delta_h=self.delta_h, parameters=param_names, rettype='DataFrame'))
+        self.points(sv.star(star_centres=self.centres(), delta_h=self.delta_h, parameters=param_names, rettype='DataFrame'))
 
         # apply model to the generated star points
         df = vf.apply_unique(self.model, self.points())
+        df.index.names = ['centre', 'param', 'points']
 
         # possibly do some data manipulation here not sure yet
 
         # get paired values for each section based on 'h'
         pair_df = df[self.model.__name__].groupby(level=[0,1]).apply(vf.section_df)
+        pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # get mu_star value?
         mu_star_df = df[self.model.__name__].groupby(level=[0,1]).mean()
+        mu_star_df.index.names = ['centre', 'param']
+        mu_star_df.unstack(level=1)
 
         # overall mean of the unique evaluated function value over all star points
         mu_overall = df[self.model.__name__].unique().mean()
@@ -282,18 +276,23 @@ class VARS(object):
 
         # sectional covariogram calculation
         cov_section_all = vf.cov_section(pair_df, mu_star_df)
+        cov_section_all.unstack(level=1)
 
         # variogram calculation
         variogram_value = vf.variogram(pair_df)
+        variogram_value.unstack(level=0)
 
         # morris calculation
         morris_values = vf.morris_eq(pair_df)
+        morris_values[0].unstack(level=0)
 
         # overall covariogram calculation
         covariogram_value = vf.covariogram(pair_df, mu_overall)
+        covariogram_value.unstack(level=0)
 
         # expected value of the overall covariogram calculation
         e_covariogram_value = vf.e_covariogram(cov_section_all)
+        e_covariogram_value.unstack(level=0)
 
         # sobol calculation
         sobol_value = vf.sobol_eq(variogram_value, e_covariogram_value, var_overall)
@@ -302,45 +301,68 @@ class VARS(object):
         ivars_df = pd.DataFrame.from_dict({scale: variogram_value.groupby(level=0).apply(vf.ivars, scale=scale, delta_h=self.delta_h) \
              for scale in self.ivars_scales}, 'index')
 
-        # gotta make sure this is in a for loop and fix the note book displays to work in .py maybe?
+        # create result data frames for if bootstrapping is chosen to be done (might be better way to do this)
+        result_bs_variogram = pd.DataFrame()
+        result_bs_ecovariogram = pd.DataFrame()
+        result_bs_var = pd.DataFrame()
+        result_bs_sobol = pd.DataFrame()
+        result_bs_ivars_df = pd.DataFrame()
+
         if self.bootstrap_flag:
-            # bootstrapping to get CIs
-            # specify random sequence by sampling with replacement
-            bootstrap_rand = np.random.choice(list(range(0, 10)), size=len(range(0, 10)), replace=True).tolist()
-            bootstrapped_pairdf = pd.concat([pair_df.loc[pd.IndexSlice[i, :, :, :], :] for i in bootstrap_rand])
-            bootstrapped_df = pd.concat([df.loc[pd.IndexSlice[i, :, :], :] for i in bootstrap_rand])
-            display(bootstrapped_pairdf)
-            display(bootstrap_rand)
+            for iter in range(0, self.bootstrap_size):
+                # bootstrapping to get CIs
+                # specify random sequence by sampling with replacement
+                bootstrap_rand = np.random.choice(list(range(0, 10)), size=len(range(0, 10)), replace=True).tolist()
+                bootstrapped_pairdf = pd.concat([pair_df.loc[pd.IndexSlice[i, :, :, :], :] for i in bootstrap_rand])
+                bootstrapped_df = pd.concat([df.loc[pd.IndexSlice[i, :, :], :] for i in bootstrap_rand])
 
-            # calculating sectional covariograms
-            bootstrapped_cov_section_all = pd.concat([cov_section_all.loc[pd.IndexSlice[i, :]] for i in bootstrap_rand])
-            display('sectional variogram:')
-            display(bootstrapped_cov_section_all)
-            display(bootstrap_rand)
+                # calculating sectional covariograms
+                bootstrapped_cov_section_all = pd.concat([cov_section_all.loc[pd.IndexSlice[i, :]] for i in bootstrap_rand])
 
-            # calculating variogram, ecovariogram, variance, mean, Sobol, and IVARS values
-            bootstrapped_variogram = vf.variogram(bootstrapped_pairdf)
-            display('variogram:')
-            display(bootstrapped_variogram.unstack(level=0))
+                # calculating variogram, ecovariogram, variance, mean, Sobol, and IVARS values
+                bootstrapped_variogram = vf.variogram(bootstrapped_pairdf)
 
-            bootstrapped_ecovariogram = vf.e_covariogram(bootstrapped_cov_section_all)
-            display('E(covariogram):')
-            display(bootstrapped_ecovariogram.unstack(level=0))
+                bootstrapped_ecovariogram = vf.e_covariogram(bootstrapped_cov_section_all)
 
-            bootstrapped_var = bootstrapped_df[self.model.__name__].unique().var(ddof=1)
-            display('variance:', bootstrapped_var)
+                bootstrapped_var = bootstrapped_df[self.model.__name__].unique().var(ddof=1)
 
-            bootstrapped_sobol = vf.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram, bootstrapped_var)
-            display('sobol:', bootstrapped_sobol)
+                bootstrapped_sobol = vf.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram, bootstrapped_var)
 
-            ivars_values = [0.1, 0.3, 0.5]
-            delta_h = 0.1
-            boostrapped_ivars_df = pd.DataFrame.from_dict(
-                {scale: bootstrapped_variogram.groupby(level=0).apply(vf.ivars, scale=scale, delta_h=delta_h) \
-                 for scale in ivars_values}, 'index')
-            display('ivars:', boostrapped_ivars_df)
+                ivars_values = [0.1, 0.3, 0.5]
+                delta_h = 0.1
+                bootstrapped_ivars_df = pd.DataFrame.from_dict(
+                    {scale: bootstrapped_variogram.groupby(level=0).apply(vf.ivars, scale=scale, delta_h=delta_h) \
+                     for scale in ivars_values}, 'index')
+                # gamma (for reference delete these comments later)
+                result_bs_variogram.append(bootstrapped_variogram)
+                # Ecov
+                result_bs_ecovariogram.append(bootstrapped_ecovariogram)
+                # var samples
+                result_bs_var.append(bootstrapped_var)
+                #ST
+                result_bs_sobol.append(bootstrapped_sobol)
+                #IVARS
+                result_bs_ivars_df.append(bootstrapped_ivars_df)
 
-            # return results in a dictionary ***not finished yet
+            # sort the bootstrapping results
+            result_bs_variogram.sort()
+            result_bs_ecovariogram.sort()
+            result_bs_var.sort()
+            result_bs_sobol.sort()
+            result_bs_ivars_df.sort()
+
+            # calculating the confidence interval limits
+            variogram_upp = result_bs_variogram*
+            variogram_low =
+
+            sobol_upp =
+            sobol_low =
+
+            ivars_low =
+            ivars_upp =
+
+
+            # return results in a dictionary ***not finished yet also not sure if it should be a dict
             return {
                 'Directional_Variogram': 1,
                 'Directional_Covariogram': 1,
@@ -380,4 +402,3 @@ class GVARS(VARS):
 class DVARS(VARS):
     def __init__(self, ):
         super().__init__()
-
