@@ -124,6 +124,12 @@ class VARS(object):
             raise ValueError(
                 "`delta_h` must be greater than 0 and less than 1."
             )
+        ## check seed dtype
+        if not isinstance(seed, int):
+            warning.warn(
+                "`seed` must be an integer greater than zero."
+                "Being set to default value, i.e., 123456789"
+            )
 
 
         ## check the dtypes and instances
