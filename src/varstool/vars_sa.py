@@ -170,7 +170,7 @@ class VARS(object):
 
         ## check seed dtype and sign
         if ((not isinstance(seed, int)) or (seed < 0)):
-            warning.warn(
+            warnings.warn(
                 "`seed` must be an integer greater than zero."
                 " value is set to default, i.e., 123456789"
             )
@@ -305,7 +305,7 @@ class VARS(object):
     # param_names is the name of the model parameters might need a better name
     def run_online(self, param_names=[]):
         # call sampler to get star centres
-        self.centres(sampler())
+        self.centres(self.sampler())
 
         # generate star points
         self.points(starvars(star_centres=self.centres(), delta_h=self.delta_h, parameters=param_names, rettype='DataFrame'))
@@ -315,39 +315,33 @@ class VARS(object):
         df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h'
-        pair_df = df[self.model.repr()].groupby(level=[0,1]).apply(vars_funcs.section_df)
+        pair_df = df[self.model.__name__].groupby(level=[0,1]).apply(vars_funcs.section_df)
         pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # get mu_star value
-        mu_star_df = df[self.model.repr()].groupby(level=[0,1]).mean()
+        mu_star_df = df[self.model.__name__].groupby(level=[0,1]).mean()
         mu_star_df.index.names = ['centre', 'param']
-        mu_star_df.unstack(level=1)
 
         # overall mean of the unique evaluated function value over all star points
-        mu_overall = df[self.model.repr()].unique().mean()
+        mu_overall = df[self.model.__name__].unique().mean()
 
         # overall variance of the unique evaluated function over all star points
-        var_overall = df[self.model.repr()].unique().var(ddof=1)
+        var_overall = df[self.model.__name__].unique().var(ddof=1)
 
         # sectional covariogram calculation
         cov_section_all = vars_funcs.cov_section(pair_df, mu_star_df)
-        cov_section_all.unstack(level=1)
 
         # variogram calculation
         self.variogram_value = vars_funcs.variogram(pair_df)
-        self.variogram_value.unstack(level=0)
 
         # morris calculation
         self.morris_values = vars_funcs.morris_eq(pair_df)
-        self.morris_values[0].unstack(level=0)
 
         # overall covariogram calculation
         self.covariogram_value = vars_funcs.covariogram(pair_df, mu_overall)
-        self.covariogram_value.unstack(level=0)
 
         # expected value of the overall covariogram calculation
         self.e_covariogram_value = vars_funcs.e_covariogram(cov_section_all)
-        self.e_covariogram_value.unstack(level=0)
 
         # sobol calculation
         self.sobol_value = vars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, var_overall)
@@ -356,14 +350,13 @@ class VARS(object):
         self.ivars_df = pd.DataFrame.from_dict({scale: self.variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
              for scale in self.ivars_scales}, 'index')
 
-
         if self.bootstrap_flag:
             # create result dataframes/series if bootstrapping is chosen to be done
             result_bs_variogram = pd.Series(dtype='float64')
             result_bs_sobol = pd.Series(dtype='float64')
             result_bs_ivars_df = pd.DataFrame()
 
-            for iter in range(0, self.bootstrap_size):
+            for i in range(0, self.bootstrap_size):
                 # bootstrapping to get CIs
                 # specify random sequence by sampling with replacement
                 bootstrap_rand = np.random.choice(list(range(0, 10)), size=len(range(0, 10)), replace=True).tolist()
@@ -386,30 +379,36 @@ class VARS(object):
                     {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                      for scale in self.ivars_scales}, 'index')
 
+                # unstack variogram for finding confidence interval limits
+                bootstrapped_variogram_df = bootstrapped_variogram.unstack(level=0)
+
+                # swap sobol results rows and columns so that results concat nicely
+                bootstrapped_sobol_df = bootstrapped_sobol.to_frame().transpose()
+
                 # attatch new results to previous results (order does not matter here)
-                result_bs_variogram = pd.concat([bootstrapped_variogram, result_bs_variogram])
-                result_bs_sobol = pd.concat([bootstrapped_sobol, result_bs_sobol])
+                result_bs_variogram = pd.concat([bootstrapped_variogram_df, result_bs_variogram])
+                result_bs_sobol = pd.concat([bootstrapped_sobol_df, result_bs_sobol])
                 result_bs_ivars_df = pd.concat([bootstrapped_ivars_df, result_bs_ivars_df])
 
-            # need to do data manipulation to variogram and sobol results
-            # in order sort all the parameters independently
-            #TODO
+            # calculate upper and low confidence interval limits for variogram results
 
-            # sort the bootstrapping results
-            result_bs_variogram.sort_values([param_names])
-            result_bs_sobol.sort_values([param_names])
-            result_bs_ivars_df.sort_values([param_names])
-
-            # calculating the confidence interval limits for variogram/sobol results
-            self.variogram_low = result_bs_variogram.iloc[self.bootstrap_size*(1-self.bootstrap_ci)/2]
-            self.variogram_upp = result_bs_variogram.iloc[self.bootstrap_size*(1 - ((1 - self.bootstrap_ci)/2))]
-
-            self.sobol_low = result_bs_sobol.iloc[self.bootstrap_size*(1-self.bootstrap_ci)/2]
-            self.sobol_upp = result_bs_sobol.iloc[self.bootstrap_size*(1 - ((1 - self.bootstrap_ci)/2))]
+            # calculate upper and low confidence interval limits for sobol results in a nice looking format
+            self.sobol_low = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2).rename('').to_frame().transpose()
+            self.sobol_upp = result_bs_sobol.quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename('').to_frame().transpose()
 
             # calculate upper and lower confidence interval limits of the ivars values
-            self.ivars_low = result_bs_ivars_df.quantile((1-self.bootstrap_ci)/2)
-            self.ivars_upp = result_bs_ivars_df.quantile(1-((1-self.bootstrap_ci)/2))
+            self.ivars_low = pd.DataFrame()
+            self.ivars_upp = pd.DataFrame()
+            for scale in self.ivars_scales:
+                self.ivars_low = pd.concat(
+                    [self.ivars_low, result_bs_ivars_df.loc[scale].quantile((1 - self.bootstrap_ci) / 2).rename(scale).to_frame()], axis=1)
+                self.ivars_upp = pd.concat(
+                    [self.ivars_upp, result_bs_ivars_df.loc[scale].quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename(scale).to_frame()],
+                    axis=1)
+
+            # transpose the results to get them in the right format
+            self.ivars_low = self.ivars_low.transpose()
+            self.ivars_upp = self.ivars_upp.transpose()
 
 
     def run_offline(star_points,):
