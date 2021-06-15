@@ -393,9 +393,9 @@ class VARS(object):
 
             # calculate upper and low confidence interval limits for variogram results
 
-            # calculate upper and low confidence interval limits for sobol results
-            self.sobol_low = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2)
-            self.sobol_upp = result_bs_sobol.quantile(1 - ((1 - self.bootstrap_ci) / 2))
+            # calculate upper and low confidence interval limits for sobol results in a nice looking format
+            self.sobol_low = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2).rename('').to_frame().transpose()
+            self.sobol_upp = result_bs_sobol.quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename('').to_frame().transpose()
 
             # calculate upper and lower confidence interval limits of the ivars values
             self.ivars_low = pd.DataFrame()
