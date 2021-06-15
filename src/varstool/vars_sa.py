@@ -352,9 +352,9 @@ class VARS(object):
              for scale in self.ivars_scales}, 'index')
 
         if self.bootstrap_flag:
-            # create result dataframes/series if bootstrapping is chosen to be done
-            result_bs_variogram = pd.Series(dtype='float64')
-            result_bs_sobol = pd.Series(dtype='float64')
+            # create result dataframes if bootstrapping is chosen to be done
+            result_bs_variogram = pd.DataFrame()
+            result_bs_sobol = pd.DataFrame()
             result_bs_ivars_df = pd.DataFrame()
 
             for i in range(0, self.bootstrap_size):
@@ -391,7 +391,7 @@ class VARS(object):
                 result_bs_sobol = pd.concat([bootstrapped_sobol_df, result_bs_sobol])
                 result_bs_ivars_df = pd.concat([bootstrapped_ivars_df, result_bs_ivars_df])
 
-            # calculate upper and low confidence interval limits for variogram results
+            # calculate upper and lower confidence interval limits for variogram results
             self.variogram_low = pd.DataFrame()
             self.variogram_upp = pd.DataFrame()
             # iterate through each h value
@@ -411,7 +411,7 @@ class VARS(object):
             self.variogram_low = self.variogram_low.transpose()
             self.variogram_upp = self.variogram_upp.transpose()
 
-            # calculate upper and low confidence interval limits for sobol results in a nice looking format
+            # calculate upper and lower confidence interval limits for sobol results in a nice looking format
             self.sobol_low = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2).rename('').to_frame().transpose()
             self.sobol_upp = result_bs_sobol.quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename('').to_frame().transpose()
 
@@ -440,6 +440,9 @@ class VARS(object):
 
         return
 
+    def __factor_ranking(self, SAindices):
+        """ """
+        SAindices.sort()
 
 class GVARS(VARS):
     def __init__(self, ):
