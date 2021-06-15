@@ -380,7 +380,7 @@ class VARS(object):
                     {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                      for scale in self.ivars_scales}, 'index')
 
-                # unstack variogram for finding confidence interval limits
+                # unstack variogram so that results concat nicely
                 bootstrapped_variogram_df = bootstrapped_variogram.unstack(level=0)
 
                 # swap sobol results rows and columns so that results concat nicely
@@ -392,6 +392,24 @@ class VARS(object):
                 result_bs_ivars_df = pd.concat([bootstrapped_ivars_df, result_bs_ivars_df])
 
             # calculate upper and low confidence interval limits for variogram results
+            self.variogram_low = pd.DataFrame()
+            self.variogram_upp = pd.DataFrame()
+            # iterate through each h value
+            for h in np.unique(result_bs_variogram.index.values).tolist():
+                # find all confidence interval limits for each h value
+                self.variogram_low = pd.concat(
+                    [self.variogram_low, result_bs_variogram.loc[h].quantile((1 - 0.9) / 2).rename(h).to_frame()], axis=1)
+                self.variogram_upp = pd.concat(
+                    [self.variogram_upp, result_bs_variogram.loc[h].quantile(1 - ((1 - 0.9) / 2)).rename(h).to_frame()],
+                    axis=1)
+
+            # index value name is h?? not sure if this should be changed later
+            self.variogram_low.index.names = ['h']
+            self.variogram_upp.index.names = ['h']
+
+            # transpose to get into correct format
+            self.variogram_low = self.variogram_low.transpose()
+            self.variogram_upp = self.variogram_upp.transpose()
 
             # calculate upper and low confidence interval limits for sobol results in a nice looking format
             self.sobol_low = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2).rename('').to_frame().transpose()
@@ -400,7 +418,9 @@ class VARS(object):
             # calculate upper and lower confidence interval limits of the ivars values
             self.ivars_low = pd.DataFrame()
             self.ivars_upp = pd.DataFrame()
+            # iterate through each IVARS scale
             for scale in self.ivars_scales:
+                # find confidence interval limits for each scale
                 self.ivars_low = pd.concat(
                     [self.ivars_low, result_bs_ivars_df.loc[scale].quantile((1 - self.bootstrap_ci) / 2).rename(scale).to_frame()], axis=1)
                 self.ivars_upp = pd.concat(
