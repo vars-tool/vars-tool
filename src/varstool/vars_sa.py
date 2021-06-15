@@ -440,9 +440,15 @@ class VARS(object):
 
         return
 
-    def __factor_ranking(self, SAindices):
-        """ """
-        SAindices.sort()
+    def _factor_ranking(self, factors):
+        # gather indices for sorting factor in descending order
+        temp = np.argsort(factors)[::-1]
+        # create an array the same shape and type as temp
+        ranks = np.empty_like(temp)
+        # rank factors with highest value being the lowest rank
+        ranks[temp] = np.arange(len(factors))
+        return ranks
+
 
 class GVARS(VARS):
     def __init__(self, ):
