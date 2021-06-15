@@ -380,38 +380,31 @@ class VARS(object):
                     {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                      for scale in self.ivars_scales}, 'index')
 
-                # unstack variogram for sorting later on
+                # unstack variogram for finding confidence interval limits
                 bootstrapped_variogram_df = bootstrapped_variogram.unstack(level=0)
+
+                # swap sobol results rows and columns so that results concat nicely
+                bootstrapped_sobol_df = bootstrapped_sobol.to_frame().transpose()
 
                 # attatch new results to previous results (order does not matter here)
                 result_bs_variogram = pd.concat([bootstrapped_variogram_df, result_bs_variogram])
-                result_bs_sobol = pd.concat([bootstrapped_sobol, result_bs_sobol])
+                result_bs_sobol = pd.concat([bootstrapped_sobol_df, result_bs_sobol])
                 result_bs_ivars_df = pd.concat([bootstrapped_ivars_df, result_bs_ivars_df])
 
-            # need to do data manipulation to variogram and sobol results
-            # in order sort all the parameters independently
-            #TODO
+            # calculate upper and low confidence interval limits for variogram results
 
-
-            # result_bs_variogram.sort_values(param_names) # not finished
-            # result_bs_sobol.sort_values(param_names) # not finished
-
-            # calculating the confidence interval limits for variogram/sobol results
-            # this part needs to be fixed also
-            # self.variogram_low = result_bs_variogram.iloc[self.bootstrap_size*(1-self.bootstrap_ci)/2]
-            # self.variogram_upp = result_bs_variogram.iloc[self.bootstrap_size*(1 - ((1 - self.bootstrap_ci)/2))]
-
-            # self.sobol_low = result_bs_sobol.iloc[self.bootstrap_size*(1-self.bootstrap_ci)/2]
-            # self.sobol_upp = result_bs_sobol.iloc[self.bootstrap_size*(1 - ((1 - self.bootstrap_ci)/2))]
+            # calculate upper and low confidence interval limits for sobol results
+            self.sobol_low = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2)
+            self.sobol_upp = result_bs_sobol.quantile(1 - ((1 - self.bootstrap_ci) / 2))
 
             # calculate upper and lower confidence interval limits of the ivars values
             self.ivars_low = pd.DataFrame()
             self.ivars_upp = pd.DataFrame()
             for scale in self.ivars_scales:
                 self.ivars_low = pd.concat(
-                    [self.ivars_low, result_bs_ivars_df.loc[scale].quantile((1 - 0.9) / 2).rename(scale).to_frame()], axis=1)
+                    [self.ivars_low, result_bs_ivars_df.loc[scale].quantile((1 - self.bootstrap_ci) / 2).rename(scale).to_frame()], axis=1)
                 self.ivars_upp = pd.concat(
-                    [self.ivars_upp, result_bs_ivars_df.loc[scale].quantile(1 - ((1 - 0.9) / 2)).rename(scale).to_frame()],
+                    [self.ivars_upp, result_bs_ivars_df.loc[scale].quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename(scale).to_frame()],
                     axis=1)
 
             # transpose the results to get them in the right format

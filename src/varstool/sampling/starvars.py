@@ -80,7 +80,7 @@ def star(star_centres:np.ndarray, delta_h:float=0.1, parameters=[], rettype:str=
     # check `rettype` in inner if clauses
     if star_centres.ndim == 1:
         # star_points
-        dict_of_points = _star_sampler_dict(star_centres.reshape(1, star_centers.size), delta_h, parameters)
+        dict_of_points = _star_sampler_dict(star_centres.reshape(1, star_centres.size), delta_h, parameters)
         if rettype=='DataFrame':
             return pd.concat({key:pd.concat({k:pd.DataFrame(d) for k, d in value.items()}) for key,value in dict_of_points.items()})
         return dict_of_points
