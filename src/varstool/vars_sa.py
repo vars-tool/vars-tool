@@ -29,13 +29,12 @@ from collections.abc import (
 
 @runtime_checkable
 class Sampler(Protocol):
-    __doc__ = """A sampling class the returns random numbers based
-    on **kwargs arguments"""
+    __doc__ = """A wrapper class for a sampling algorithm of interest"""
 
     def __init__(
         self,
         func: Callable = None,
-        seed: Optional[int] = None,
+        known_options: Dict = None
         unknown_options: Dict[str, Any] = None,
     ) -> None:
 
@@ -54,7 +53,7 @@ class Model(Protocol):
     def __init__(
         self, 
         func: Callable = None,
-        unkown_options: Dict = None,
+        unkown_options: Dict[str, Any] = None,
     ) -> None:
 
         # check whether the input is a callable
