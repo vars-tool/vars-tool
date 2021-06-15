@@ -171,7 +171,7 @@ class VARS(object):
 
         ## check seed dtype and sign
         if ((not isinstance(seed, int)) or (seed < 0)):
-            warning.warn(
+            warnings.warn(
                 "`seed` must be an integer greater than zero."
                 " value is set to default, i.e., 123456789"
             )
@@ -404,17 +404,14 @@ class VARS(object):
             # self.sobol_low = result_bs_sobol.iloc[self.bootstrap_size*(1-self.bootstrap_ci)/2]
             # self.sobol_upp = result_bs_sobol.iloc[self.bootstrap_size*(1 - ((1 - self.bootstrap_ci)/2))]
 
-            # sort IVARS bootstrapp results
-            result_bs_ivars_df_sorted = result_bs_ivars_df.sort_values(param_names)
-
             # calculate upper and lower confidence interval limits of the ivars values
             self.ivars_low = pd.DataFrame()
             self.ivars_upp = pd.DataFrame()
             for scale in self.ivars_scales:
                 self.ivars_low = pd.concat(
-                    [self.ivars_low, result_bs_ivars_df_sorted.loc[scale].quantile((1 - 0.9) / 2).rename(scale).to_frame()], axis=1)
+                    [self.ivars_low, result_bs_ivars_df.loc[scale].quantile((1 - 0.9) / 2).rename(scale).to_frame()], axis=1)
                 self.ivars_upp = pd.concat(
-                    [self.ivars_upp, result_bs_ivars_df_sorted.loc[scale].quantile(1 - ((1 - 0.9) / 2)).rename(scale).to_frame()],
+                    [self.ivars_upp, result_bs_ivars_df.loc[scale].quantile(1 - ((1 - 0.9) / 2)).rename(scale).to_frame()],
                     axis=1)
 
             # transpose the results to get them in the right format
