@@ -33,7 +33,7 @@ class Model():
     def __init__(
         self, 
         func: Callable = None,
-        unknown_options: Dict[str, Any] = None,
+        unknown_options: Dict[str, Any] = {},
     ) -> None:
 
         # check whether the input is a callable
@@ -44,8 +44,6 @@ class Model():
         assert isinstance(unknown_options, dict)
         if unknown_options:
             self.unknown_options = unknown_options
-        else:
-            self.unknown_options = {}
 
     def __repr__(self, ) -> str:
         """official representation"""
