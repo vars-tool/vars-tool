@@ -6,8 +6,8 @@ import numpy  as np
 #import numpy.typing as npt # let's further investigate this
 import matplotlib.pyplot as plt
 
-from sampling import starvars
-from sa import vars_funcs
+from .sampling import starvars
+from .sa import vars_funcs
 
 from typing import (
     Dict,
