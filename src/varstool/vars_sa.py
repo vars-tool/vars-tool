@@ -19,7 +19,6 @@ from typing import (
 )
 
 from typing_extensions import (
-    Protocol,
     runtime_checkable,
 )
 
@@ -28,8 +27,7 @@ from collections.abc import (
 )
 
 
-@runtime_checkable
-class Model(Protocol):
+class Model():
     __doc__ = """A wrapper class for a function of interest"""
 
     def __init__(
