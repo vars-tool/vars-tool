@@ -1,12 +1,12 @@
 import numpy as np
-import numpy.typing as npt
+#import numpy.typing as npt # let's not consider this rn
 import pandas as pd
 
 from decimal import Decimal
 from typing import Dict
 
 
-def star(star_centres:npt.ArrayLike, delta_h:float=0.1, parameters=[], rettype:str='dict', precision=10) -> np.ndarray:
+def star(star_centres:pd.DataFrame, delta_h:float=0.1, parameters:list=[], rettype:str='dict', precision:int=10) -> np.ndarray:
     '''
     Description:
     ------------
