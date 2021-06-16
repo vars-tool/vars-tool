@@ -62,7 +62,7 @@ class Model():
 
         # check if params is an array-like object
         assert isinstance(params, 
-            (pd.DataFrame, pd.Series, np.array, List, Tuple))
+            (pd.DataFrame, pd.Series, np.ndarray, List, Tuple))
 
         if options:
             self.unknown_options = options
@@ -224,7 +224,7 @@ class VARS(object):
     @centres.setter
     def centres(self, new_centres):
         if not isinstance(new_centres, 
-              (pd.DataFrame, pd.Series, np.array, List, Tuple)):
+              (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
             raise TypeError(
                 "new_centres must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
@@ -238,7 +238,7 @@ class VARS(object):
     @points.setter
     def points(self, new_points):
         if not isinstance(new_points, 
-              (pd.DataFrame, pd.Series, np.array, List, Tuple)):
+              (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
             raise TypeError(
                 "new_points must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
