@@ -43,6 +43,8 @@ class Model():
 
         # unkown_options must be a dict
         assert isinstance(unknown_options, dict)
+        self.unknown_options = {}
+        
         if unknown_options:
             self.unknown_options = unknown_options
 
