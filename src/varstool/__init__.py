@@ -18,10 +18,3 @@ from varstool.vars_sa import (
     DVARS,
     Model,
 )
-
-from varstool.sampling import (
-    lhs,
-    plhs,
-    
-
-)
