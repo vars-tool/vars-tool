@@ -276,18 +276,18 @@ class VARS(object):
         df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h'
-        pair_df = df[self.model.__name__].groupby(level=[0,1]).apply(vars_funcs.section_df)
+        pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df)
         pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # get mu_star value
-        mu_star_df = df[self.model.__name__].groupby(level=[0,1]).mean()
+        mu_star_df = df[str(self.model)].groupby(level=[0,1]).mean()
         mu_star_df.index.names = ['centre', 'param']
 
         # overall mean of the unique evaluated function value over all star points
-        mu_overall = df[self.model.__name__].unique().mean()
+        mu_overall = df[str(self.model)].unique().mean()
 
         # overall variance of the unique evaluated function over all star points
-        var_overall = df[self.model.__name__].unique().var(ddof=1)
+        var_overall = df[str(self.model)].unique().var(ddof=1)
 
         # sectional covariogram calculation
         cov_section_all = vars_funcs.cov_section(pair_df, mu_star_df)
@@ -399,6 +399,7 @@ class VARS(object):
         # figure out a way to return results
 
         return
+
 
     def _factor_ranking(self, factors):
         # gather indices for sorting factor in descending order
