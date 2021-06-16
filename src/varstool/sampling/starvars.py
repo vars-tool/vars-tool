@@ -5,7 +5,7 @@ from decimal import Decimal
 from typing import Dict
 
 
-def star(star_centres:np.ndarray, delta_h:float=0.1, parameters=[], rettype:str='dict', precision=10) -> np.ndarray:
+def star(star_centres:np.ArrayLike, delta_h:float=0.1, parameters=[], rettype:str='dict', precision=10) -> np.ndarray:
     '''
     Description:
     ------------
@@ -19,11 +19,11 @@ def star(star_centres:np.ndarray, delta_h:float=0.1, parameters=[], rettype:str=
 
     Arguments:
     ----------
-    :param centres: the 2d array (n, m) containing sample sets
+    :param star_centres: the 2d array (n, m) containing sample sets
                     ``n`` is the number of sample sets and
                     ``m`` is the number of parameters/factors/
                     variables
-    :type centres: np.ndarray
+    :type star_centres: np.ndarray
     :param delta_h: sampling resolution, defaults to 0.1
     :type delta_h: float
     :param parameters: parameter names

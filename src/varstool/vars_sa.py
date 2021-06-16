@@ -28,32 +28,13 @@ from collections.abc import (
 
 
 @runtime_checkable
-class Sampler(Protocol):
-    __doc__ = """A wrapper class for a sampling algorithm of interest"""
-
-    def __init__(
-        self,
-        func: Callable = None,
-        known_options: Dict = None
-        unknown_options: Dict[str, Any] = None,
-    ) -> None:
-
-        # initialize instance values
-        self.callback = callback
-        self.kwargs   = kwargs
-
-    def __call__(self, ) -> Union[Iterable, float]:
-        return self.callback(**self.kwargs)
-
-
-@runtime_checkable
 class Model(Protocol):
     __doc__ = """A wrapper class for a function of interest"""
 
     def __init__(
         self, 
         func: Callable = None,
-        unkown_options: Dict[str, Any] = None,
+        unknown_options: Dict[str, Any] = None,
     ) -> None:
 
         # check whether the input is a callable
@@ -61,9 +42,9 @@ class Model(Protocol):
         self.func = func
 
         # unkown_options must be a dict
-        assert isinstance(unkown_options, dict)
+        assert isinstance(unknown_options, dict)
         if unknown_options:
-            self.unknown_options = unkown_options
+            self.unknown_options = unknown_options
         else:
             self.unknown_options = {}
 
@@ -99,11 +80,10 @@ class VARS(object):
 
     def __init__(
         self,
+        __star_centres: np.ArrayLike,  # sampled star centres (random numbers) used to create star points
         parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
-        num_stars: Optional[int] = 100, # number of star points
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
-        sampler: Sampler = None, # sampling method for star centres
         model: Model = None, # model (function) to run for each star point
         seed: Optional[int] = 123456789, # randomization state
         bootstrap_flag: Optional[bool] = False, # bootstrapping flag
@@ -116,9 +96,8 @@ class VARS(object):
         # initialize values
         self.parameters = parameters
         self.delta_h = delta_h
-        self.num_stars = num_stars
         self.ivars_scales = ivars_scales
-        self.__star_centres = None # no default value required
+        self.__star_centres = __star_centres
         self.__star_points  = None # no default value required
         self.seed = seed
         self.bootstrap_flag = bootstrap_flag
@@ -126,8 +105,10 @@ class VARS(object):
         self.bootstrap_ci = bootstrap_ci
         self.report_verbose = report_verbose
 
-
         # Check input arguments
+        # ***add error checking, and possibily default value for star centres?
+
+
         ## default value for the IVARS scales are 0.1, 0.3, and 0.5
         if not self.ivars_scales:
             warnings.warn(
@@ -159,13 +140,6 @@ class VARS(object):
         if ((delta_h <= 0) or (delta_h >=1 )):
             raise ValueError(
                 "`delta_h` must be greater than 0 and less than 1."
-            )
-
-        ## check if num_stars is a positive integer
-        if ((not isinstance(num_stars, (int, np.int32, np.int64))) or \
-            (num_stars < 0)):
-            raise ValueError(
-                "`num_stars` must be a positive integer."
             )
 
         ## check seed dtype and sign
@@ -202,14 +176,6 @@ class VARS(object):
                 "their names, and values must be the lower and upper bounds"
                 "of their factor space."
             )
-
-        ### `sampler`
-        if sampler:
-            if not isinstance(sampler, Sampler):
-                raise ValueError(
-                    "`sampler` algorithm must be of type varstool.Sampler."
-                )
-        self.sampler = sampler
 
         ### `model`
         if model:
@@ -259,8 +225,7 @@ class VARS(object):
 
     @centres.setter
     def centres(self, new_centres):
-        if not isinstance(new_centres, \
-            (pd.DataFrame, pd.Series, np.array, list, tuple)):
+        if not isinstance(new_centres, np.ArrayLike):
             raise TypeError(
                 "new_centres must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, list, tuple"
@@ -273,8 +238,7 @@ class VARS(object):
 
     @points.setter
     def points(self, new_points):
-        if not isinstance(new_points, \
-            (pd.DataFrame, pd.Series, np.array, list, tuple)):
+        if not isinstance(new_points, np.ArrayLike):
             raise TypeError(
                 "new_points must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, list, tuple"
@@ -304,8 +268,6 @@ class VARS(object):
 
     # param_names is the name of the model parameters might need a better name
     def run_online(self, param_names=[]):
-        # call sampler to get star centres
-        self.centres(self.sampler())
 
         # generate star points
         self.points(starvars(star_centres=self.centres(), delta_h=self.delta_h, parameters=param_names, rettype='DataFrame'))
