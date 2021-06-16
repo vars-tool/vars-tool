@@ -77,7 +77,7 @@ def ivars(variogram_array, scale, delta_h):
     '''generate Integrated Variogram Across a Range of Scales (IVARS)
     by approximating area using right trapezoids having width of `delta_h`
     and hights of variogram values'''
-    num_h  = len(variogram_value.index.levels[-1].to_list())
+    num_h  = len(variogram_array.index.levels[-1].to_list())
     x_bench= np.arange(start=0, stop=delta_h*(num_h+1), step=delta_h)
     x_int  = np.arange(start=0, stop=(scale*10+1)/10, step=delta_h)
 

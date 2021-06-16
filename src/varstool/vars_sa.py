@@ -6,8 +6,8 @@ import numpy  as np
 import numpy.typing as npt
 import matplotlib.pyplot as plt
 
-from .sampling import starvars
-from .sa import vars_funcs
+from sampling import starvars
+from sa import vars_funcs
 
 from typing import (
     Dict,
@@ -80,7 +80,7 @@ class VARS(object):
 
     def __init__(
         self,
-        __star_centres: npt.ArrayLike,  # sampled star centres (random numbers) used to create star points
+        star_centres: npt.ArrayLike,  # sampled star centres (random numbers) used to create star points
         parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
@@ -97,7 +97,7 @@ class VARS(object):
         self.parameters = parameters
         self.delta_h = delta_h
         self.ivars_scales = ivars_scales
-        self.__star_centres = __star_centres
+        self.__star_centres = star_centres
         self.__star_points  = None # no default value required
         self.seed = seed
         self.bootstrap_flag = bootstrap_flag
@@ -252,7 +252,7 @@ class VARS(object):
     def generate_star(star_centres, delta_h, param_names=[]):
 
         # generate star points using star.py functions
-        star_points = starvars(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
+        star_points = starvars.star(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
 
         # figure out way to return this?
         return star_points  # for now will just do this
@@ -270,10 +270,10 @@ class VARS(object):
     def run_online(self, param_names=[]):
 
         # generate star points
-        self.points(starvars(star_centres=self.centres(), delta_h=self.delta_h, parameters=param_names, rettype='DataFrame'))
+        self.__star_points = starvars.star(self.__star_centres, delta_h=self.delta_h, parameters=param_names, rettype='DataFrame')
 
         # apply model to the generated star points
-        df = vars_funcs.apply_unique(self.model, self.points())
+        df = vars_funcs.apply_unique(self.model, self.__star_points)
         df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h'
