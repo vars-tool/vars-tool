@@ -2,7 +2,7 @@
 requires = [
     "setuptools>=42",
     "wheel",
-    "numpy>=1.19.2",
+    "numpy>=1.20",
     "pandas>=1.2.3",
     "matplotlib>=3.3.4",
     "scipy>=1.6.2",

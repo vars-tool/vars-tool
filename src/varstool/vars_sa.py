@@ -180,7 +180,7 @@ class VARS(object):
         ### `model`
         if model:
             if not isinstance(model, Model):
-                raise ValueError(
+                raise TypeError(
                     "`model` must be of type varstool.Model."
                 )
         self.model = model
@@ -249,7 +249,10 @@ class VARS(object):
     #-------------------------------------------
     # Core functions
     @staticmethod
-    def generate_star(star_centres, delta_h, param_names=[]):
+    def generate_star(
+        star_centres: ArrayLike, 
+        delta_h: float = 0.1, 
+        param_names: list[str] = []):
 
         # generate star points using star.py functions
         star_points = starvars(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
@@ -359,9 +362,9 @@ class VARS(object):
             for h in np.unique(result_bs_variogram.index.values).tolist():
                 # find all confidence interval limits for each h value
                 self.variogram_low = pd.concat(
-                    [self.variogram_low, result_bs_variogram.loc[h].quantile((1 - 0.9) / 2).rename(h).to_frame()], axis=1)
+                    [self.variogram_low, result_bs_variogram.loc[h].quantile((1 - self.bootstrap_ci) / 2).rename(h).to_frame()], axis=1)
                 self.variogram_upp = pd.concat(
-                    [self.variogram_upp, result_bs_variogram.loc[h].quantile(1 - ((1 - 0.9) / 2)).rename(h).to_frame()],
+                    [self.variogram_upp, result_bs_variogram.loc[h].quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename(h).to_frame()],
                     axis=1)
 
             # index value name is h?? not sure if this should be changed later
