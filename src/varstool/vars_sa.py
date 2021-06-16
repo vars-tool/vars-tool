@@ -252,10 +252,7 @@ class VARS(object):
     #-------------------------------------------
     # Core functions
     @staticmethod
-    def generate_star(
-        star_centres: pd.DataFrame, 
-        delta_h: float = 0.1, 
-        param_names: list[str] = []):
+    def generate_star(star_centres, delta_h, param_names):
 
         # generate star points using star.py functions
         star_points = starvars.star(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
