@@ -1,11 +1,12 @@
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
 
 from decimal import Decimal
 from typing import Dict
 
 
-def star(star_centres:np.ArrayLike, delta_h:float=0.1, parameters=[], rettype:str='dict', precision=10) -> np.ndarray:
+def star(star_centres:npt.ArrayLike, delta_h:float=0.1, parameters=[], rettype:str='dict', precision=10) -> np.ndarray:
     '''
     Description:
     ------------
@@ -23,7 +24,7 @@ def star(star_centres:np.ArrayLike, delta_h:float=0.1, parameters=[], rettype:st
                     ``n`` is the number of sample sets and
                     ``m`` is the number of parameters/factors/
                     variables
-    :type star_centres: np.ndarray
+    :type star_centres: np.typing.ArrayLike
     :param delta_h: sampling resolution, defaults to 0.1
     :type delta_h: float
     :param parameters: parameter names

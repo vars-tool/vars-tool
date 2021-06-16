@@ -3,6 +3,7 @@ import decimal
 
 import pandas as pd
 import numpy  as np
+import numpy.typing as npt
 import matplotlib.pyplot as plt
 
 from .sampling import starvars
@@ -63,8 +64,7 @@ class Model(Protocol):
     ) -> Union[Iterable, float, int]:
 
         # check if params is array-like object
-        assert isinstance(params, \
-            (pd.DataFrame, pd.Series, np.array, list, tuple))
+        assert isinstance(params, npt.ArrayLike)
 
         if options:
             self.unknown_options = options
@@ -80,7 +80,7 @@ class VARS(object):
 
     def __init__(
         self,
-        __star_centres: np.ArrayLike,  # sampled star centres (random numbers) used to create star points
+        __star_centres: npt.ArrayLike,  # sampled star centres (random numbers) used to create star points
         parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
@@ -225,7 +225,7 @@ class VARS(object):
 
     @centres.setter
     def centres(self, new_centres):
-        if not isinstance(new_centres, np.ArrayLike):
+        if not isinstance(new_centres, npt.ArrayLike):
             raise TypeError(
                 "new_centres must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, list, tuple"
@@ -238,7 +238,7 @@ class VARS(object):
 
     @points.setter
     def points(self, new_points):
-        if not isinstance(new_points, np.ArrayLike):
+        if not isinstance(new_points, npt.ArrayLike):
             raise TypeError(
                 "new_points must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, list, tuple"

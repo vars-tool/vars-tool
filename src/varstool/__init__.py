@@ -16,7 +16,6 @@ from .vars_sa import (
     VARS,
     GVARS,
     DVARS,
-    Sampler,
     Model,
 )
 
