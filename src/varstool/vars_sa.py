@@ -224,10 +224,10 @@ class VARS(object):
     @centres.setter
     def centres(self, new_centres):
         if not isinstance(new_centres, 
-              (pd.DataFrame, pd.Series, np.array, list, tuple)):
+              (pd.DataFrame, pd.Series, np.array, List, Tuple)):
             raise TypeError(
                 "new_centres must be an array-like object: "
-                "pandas.Dataframe, pandas.Series, numpy.array, list, tuple"
+                "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
             )
         self.__star_centres = new_centres
 
@@ -238,10 +238,10 @@ class VARS(object):
     @points.setter
     def points(self, new_points):
         if not isinstance(new_points, 
-              (pd.DataFrame, pd.Series, np.array, list, tuple)):
+              (pd.DataFrame, pd.Series, np.array, List, Tuple)):
             raise TypeError(
                 "new_points must be an array-like object: "
-                "pandas.Dataframe, pandas.Series, numpy.array, list, tuple"
+                "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
             )
         self.__star_points = new_points
 
