@@ -253,7 +253,7 @@ class VARS(object):
     # Core functions
     @staticmethod
     def generate_star(
-        star_centres: ArrayLike, 
+        star_centres: pd.DataFrame, 
         delta_h: float = 0.1, 
         param_names: list[str] = []):
 
