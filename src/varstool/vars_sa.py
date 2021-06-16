@@ -16,6 +16,7 @@ from typing import (
     Union,
     Callable,
     Any,
+    List,
 )
 
 from typing_extensions import (
@@ -59,9 +60,9 @@ class Model():
         options: Dict = None,
     ) -> Union[Iterable, float, int]:
 
-        # check if params is array-like object
+        # check if params is an array-like object
         assert isinstance(params, 
-            (pd.DataFrame, pd.Series, np.array, list, tuple))
+            (pd.DataFrame, pd.Series, np.array, List, Tuple))
 
         if options:
             self.unknown_options = options
