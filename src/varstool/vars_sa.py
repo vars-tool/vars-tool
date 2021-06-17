@@ -334,9 +334,15 @@ class VARS(object):
         # sobol calculation
         self.sobol_value = vars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, var_overall)
 
+        # do factor ranking on sobol results
+        self.sobol_factor_ranking = self._factor_ranking(self.sobol_value)
+
         # IVARS calculation
         self.ivars_df = pd.DataFrame.from_dict({scale: self.variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
              for scale in self.ivars_scales}, 'index')
+
+        # do factor ranking on IVARS results
+        self.ivars_factor_ranking = self._factor_ranking(self.ivars_df)
 
         if self.bootstrap_flag:
             # create result dataframes if bootstrapping is chosen to be done
@@ -431,6 +437,23 @@ class VARS(object):
 
 
     def _factor_ranking(self, factors):
+        """ Ranks factors based on their influence (how large or small results are)
+            The lowest rank corresponds to the most influential (larger) factor
+
+            parameters:
+            factors: an array like input that contains factors that are to be ranked
+
+            returns:
+            a numpy array containing the ranks of each factor in their corresponding index
+        """
+        # check the factors is array like
+        if not isinstance(factors,
+              (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
+            raise TypeError(
+                "factors must be an array-like object: "
+                "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
+            )
+
         # gather indices for sorting factor in descending order
         temp = np.argsort(factors)[::-1]
         # create an array the same shape and type as temp
