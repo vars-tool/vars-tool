@@ -26,7 +26,7 @@ def apply_unique(func, df, axis=1, *args, **kwargs):
     for efficiency.'''
 
     applied_df = df.merge(df.drop_duplicates()
-                         .assign(**{func.__name__: lambda x: x.apply(func, axis=axis)}),
+                         .assign(**{str(func): lambda x: x.apply(func, axis=axis)}),
                          how='left')
     applied_df.index = df.index
 

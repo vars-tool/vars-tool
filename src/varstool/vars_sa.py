@@ -290,10 +290,13 @@ class VARS(object):
 
 
     # param_names is the name of the model parameters might need a better name
-    def run_online(self, param_names=[]):
+    def run_online(self, ):
 
         # generate star points
-        self.__star_points = starvars.star(self.__star_centres, delta_h=self.delta_h, parameters=param_names, rettype='DataFrame')
+        self.__star_points = starvars.star(self.__star_centres, # star centres
+                                           delta_h=self.delta_h, # delta_h
+                                           parameters=[*self.parameters], # parameters dictionary keys
+                                           rettype='DataFrame') # return type is a dataframe
 
         # apply model to the generated star points
         df = vars_funcs.apply_unique(self.model, self.__star_points)
@@ -434,6 +437,7 @@ class VARS(object):
         ranks = np.empty_like(temp)
         # rank factors with highest value being the lowest rank
         ranks[temp] = np.arange(len(factors))
+        
         return ranks
 
 
