@@ -206,8 +206,8 @@ class VARS(object):
     def __repr__(self, ) -> str:
         """show the status of VARS analysis"""
 
-        status_star_centres = "Star Centres: " + ("Loaded\n" if self.__star_centres else "Not Loaded\n")
-        status_star_points = "Star Points: " + ("Generated\n" if self.__star_points else "Not Generated\n")
+        status_star_centres = "Star Centres: " + ("Loaded\n" if self.__star_centres.size == 0 else "Not Loaded\n")
+        status_star_points = "Star Points: " + ("Generated\n" if self.__star_points.size == 0 else "Not Generated\n")
         status_parameters = "Parameters: " (str(len(self.parameters))+" set\n" if self.parameters else "None\n")
         status_delta_h = "Delta h: " + (str(self.delta_h)+"\n" if self.delta_h else "None\n")
         status_model = "Model: " + (str(self.model)+"\n" if self.model else "None\n")
