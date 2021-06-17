@@ -106,7 +106,7 @@ class VARS(object):
         self.report_verbose = report_verbose
 
         # analysis stage is set to False before running anything
-        self.run = False
+        self.run_status = False
 
         # Check input arguments
         # ***add error checking, and possibily default value for star centres?
