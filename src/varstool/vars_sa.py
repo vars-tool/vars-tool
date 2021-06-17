@@ -105,6 +105,9 @@ class VARS(object):
         self.bootstrap_ci = bootstrap_ci
         self.report_verbose = report_verbose
 
+        # analysis stage is set to False before running anything
+        self.run = False
+
         # Check input arguments
         # ***add error checking, and possibily default value for star centres?
 
@@ -200,15 +203,31 @@ class VARS(object):
 
     #-------------------------------------------
     # Representators
-    def __repr__(self, ):
+    def __repr__(self, ) -> str:
+        """show the status of VARS analysis"""
 
-        return "test"
+        status_star_centres = "Star Centres: " + ("Loaded\n" if self.__star_centres else "Not Loaded\n")
+        status_star_points = "Star Points: " + ("Generated\n" if self.__star_points else "Not Generated\n")
+        status_parameters = "Parameters: " (str(len(self.parameters))+" set\n" if self.parameters else "None\n")
+        status_delta_h = "Delta h: " + (str(self.delta_h)+"\n" if self.delta_h else "None\n")
+        status_model = "Model: " + (str(self.model)+"\n" if self.model else "None\n")
+        status_seed = "Seed Number: " + (str(self.seed)+"\n" if self.seed else "None\n")
+        status_bstrap = "Bootstrap: " + ("On\n" if self.bootstrap_flag else "Off\n")
+        status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size)+"\n" if self.bootstrap_flag else "N/A\n")
+        status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"\n" if self.bootstrap_flag else "N/A\n")
+        status_analysis = "VARS Analysis: " + ("Done\n" if self.run else "Not Done\n")
+
+        status_report_list = [status_star_centres, status_star_points, status_parameters, \
+                              status_delta_h, status_model, status_seed, status_bstrap, \
+                              status_bstrap_size, status_bstrap_ci, status_analysis]
+
+        return sum(status_report_list)
 
     def _repr_html(self, ):
 
         pass
 
-    def __str__(self, ):
+    def __str__(self, ) -> str:
 
         return
 
@@ -393,6 +412,8 @@ class VARS(object):
             # transpose the results to get them in the right format
             self.ivars_low = self.ivars_low.transpose()
             self.ivars_upp = self.ivars_upp.transpose()
+
+            self.run = True
 
 
     def run_offline(star_points,):
