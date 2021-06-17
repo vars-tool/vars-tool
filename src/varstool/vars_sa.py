@@ -323,7 +323,7 @@ class VARS(object):
         self.variogram_value = vars_funcs.variogram(pair_df)
 
         # morris calculation
-        self.morris_values = vars_funcs.morris_eq(pair_df)
+        self.morris_value = vars_funcs.morris_eq(pair_df)
 
         # overall covariogram calculation
         self.covariogram_value = vars_funcs.covariogram(pair_df, mu_overall)
@@ -418,7 +418,7 @@ class VARS(object):
             self.ivars_low = self.ivars_low.transpose()
             self.ivars_upp = self.ivars_upp.transpose()
 
-            self.run = True
+        self.run_status = True
 
 
     def run_offline(star_points,):
