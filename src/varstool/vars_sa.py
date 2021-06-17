@@ -223,9 +223,11 @@ class VARS(object):
 
         return "\n".join(status_report_list)
 
+
     def _repr_html(self, ):
 
         pass
+
 
     def __str__(self, ) -> str:
 
