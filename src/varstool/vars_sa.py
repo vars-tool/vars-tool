@@ -115,7 +115,7 @@ class VARS(object):
         ## default value for the IVARS scales are 0.1, 0.3, and 0.5
         if not self.ivars_scales:
             warnings.warn(
-                "IVARS scales are not valid, default values of (0.1, 0.3, 0.5) \n"
+                "IVARS scales are not valid, default values of (0.1, 0.3, 0.5) "
                 "will be considered.",
                 UserWarning,
                 stacklevel=1
@@ -133,7 +133,7 @@ class VARS(object):
         ## if delta_h is not a factor of 1, NaNs or ZeroDivison might happen
         if (decimal.Decimal(str(1)) % decimal.Decimal(str(self.delta_h))) != 0:
             warnings.warn(
-                "If delta_h is not a factor of 1, NaNs and ZeroDivisionError are probable. \n"
+                "If delta_h is not a factor of 1, NaNs and ZeroDivisionError are probable. "
                 "It is recommended to change `delta_h` to a divisible number by 1.",
                 RuntimeWarning,
                 stacklevel=1
@@ -206,22 +206,22 @@ class VARS(object):
     def __repr__(self, ) -> str:
         """show the status of VARS analysis"""
 
-        status_star_centres = "Star Centres: " + ("Loaded\n" if len(self.__star_centres) == 0 else "Not Loaded\n")
-        status_star_points = "Star Points: " + ("Generated\n" if len(self.__star_points) == 0 else "Not Generated\n")
-        status_parameters = "Parameters: " + (str(len(self.parameters))+" set\n" if self.parameters else "None\n")
-        status_delta_h = "Delta h: " + (str(self.delta_h)+"\n" if self.delta_h else "None\n")
-        status_model = "Model: " + (str(self.model)+"\n" if self.model else "None\n")
-        status_seed = "Seed Number: " + (str(self.seed)+"\n" if self.seed else "None\n")
-        status_bstrap = "Bootstrap: " + ("On\n" if self.bootstrap_flag else "Off\n")
-        status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size)+"\n" if self.bootstrap_flag else "N/A\n")
-        status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"\n" if self.bootstrap_flag else "N/A\n")
-        status_analysis = "VARS Analysis: " + ("Done\n" if self.run else "Not Done\n")
+        status_star_centres = "Star Centres: " + ("Loaded" if len(self.__star_centres) == 0 else "Not Loaded")
+        status_star_points = "Star Points: " + ("Generated" if len(self.__star_points) == 0 else "Not Generated")
+        status_parameters = "Parameters: " + (str(len(self.parameters))+" set" if self.parameters else "None")
+        status_delta_h = "Delta h: " + (str(self.delta_h)+"" if self.delta_h else "None")
+        status_model = "Model: " + (str(self.model)+"" if self.model else "None")
+        status_seed = "Seed Number: " + (str(self.seed)+"" if self.seed else "None")
+        status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
+        status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size)+"" if self.bootstrap_flag else "N/A")
+        status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"" if self.bootstrap_flag else "N/A")
+        status_analysis = "VARS Analysis: " + ("Done" if self.run else "Not Done")
 
         status_report_list = [status_star_centres, status_star_points, status_parameters, \
                               status_delta_h, status_model, status_seed, status_bstrap, \
                               status_bstrap_size, status_bstrap_ci, status_analysis]
 
-        return sum(status_report_list)
+        return "\n".join(status_report_list)
 
     def _repr_html(self, ):
 
