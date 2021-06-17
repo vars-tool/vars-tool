@@ -359,7 +359,7 @@ class VARS(object):
 
                 bootstrapped_ecovariogram = vars_funcs.e_covariogram(bootstrapped_cov_section_all)
 
-                bootstrapped_var = bootstrapped_df[self.model.__name__].unique().var(ddof=1)
+                bootstrapped_var = bootstrapped_df[self.model.func.__name__].unique().var(ddof=1)
 
                 bootstrapped_sobol = vars_funcs.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram, bootstrapped_var)
 
