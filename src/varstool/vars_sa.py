@@ -80,7 +80,7 @@ class VARS(object):
 
     def __init__(
         self,
-        star_centres: pd.DataFrame,  # sampled star centres (random numbers) used to create star points
+        star_centres = [],  # sampled star centres (random numbers) used to create star points
         parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
@@ -98,7 +98,7 @@ class VARS(object):
         self.delta_h = delta_h
         self.ivars_scales = ivars_scales
         self.__star_centres = star_centres
-        self.__star_points  = None # no default value required
+        self.__star_points  = [] # an empty list works for now - but needs to be changed
         self.seed = seed
         self.bootstrap_flag = bootstrap_flag
         self.bootstrap_size = bootstrap_size
@@ -206,8 +206,8 @@ class VARS(object):
     def __repr__(self, ) -> str:
         """show the status of VARS analysis"""
 
-        status_star_centres = "Star Centres: " + ("Loaded\n" if self.__star_centres.size == 0 else "Not Loaded\n")
-        status_star_points = "Star Points: " + ("Generated\n" if self.__star_points.size == 0 else "Not Generated\n")
+        status_star_centres = "Star Centres: " + ("Loaded\n" if len(self.__star_centres) == 0 else "Not Loaded\n")
+        status_star_points = "Star Points: " + ("Generated\n" if len(self.__star_points.size) == 0 else "Not Generated\n")
         status_parameters = "Parameters: " (str(len(self.parameters))+" set\n" if self.parameters else "None\n")
         status_delta_h = "Delta h: " + (str(self.delta_h)+"\n" if self.delta_h else "None\n")
         status_model = "Model: " + (str(self.model)+"\n" if self.model else "None\n")
