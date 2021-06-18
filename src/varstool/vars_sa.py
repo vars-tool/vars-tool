@@ -104,12 +104,11 @@ class VARS(object):
         self.bootstrap_size = bootstrap_size
         self.bootstrap_ci = bootstrap_ci
         self.report_verbose = report_verbose
-
         # analysis stage is set to False before running anything
         self.run_status = False
 
         # Check input arguments
-        # ***add error checking, and possibily default value for star centres?
+        # ***add error checking, and possibly default value for star centres?
 
 
         ## default value for the IVARS scales are 0.1, 0.3, and 0.5
@@ -465,8 +464,175 @@ class VARS(object):
 
 
 class GVARS(VARS):
-    def __init__(self, ):
-        super().__init__()
+    __doc__ = """GVARS object"""
+
+    #-------------------------------------------
+    # Constructors
+
+    def __init__(self,
+                 # ***maybe overwrite vars parameter variable and make it include access to
+                 # each parameters dist type instead of this instance variable
+                 param_dist_types,  # distribution types of the model parameters
+                 num_direct_samples: int = 50, # number of directional samples
+                 num_stars: int = 2000, # number of star samples
+                 ):
+
+        # initialize values
+        super().__init__() # initialize all values from VARS super method
+        self.num_direct_samples = num_direct_samples
+        self.num_stars = num_stars
+        self.param_dist_types = param_dist_types
+
+        ## default value for the number of directional samples
+        if not self.num_direct_samples:
+            warnings.warn(
+                "Number of directional samples are not valid, default value of 50 "
+                "will be considered.",
+                UserWarning,
+                stacklevel=1
+            )
+        self.num_direct_samples = 50
+
+
+        ## default value for the number of star samples
+        if not self.num_stars:
+            warnings.warn(
+                "Number of star samples are not valid, default value of 2000 "
+                "will be considered.",
+                UserWarning,
+                stacklevel=1
+            )
+        self.num_stars = 2000
+
+        # number of parameters in users model
+        self.num_factors = len(self.parameters)
+
+
+#-------------------------------------------
+    # Representators
+    def __repr__(self, ) -> str:
+
+        pass
+
+
+    def _repr_html(self, ):
+
+        pass
+
+
+    def __str__(self, ) -> str:
+
+        pass
+
+    #-------------------------------------------
+    # Core properties
+
+    #-------------------------------------------
+    # Core functions
+
+
+    def run(self):
+
+        # Compute fictive correlation matrix
+        # use map_to_cor_norm not sure how yet in python
+        # could possible use numpy.corrcoef instead???
+        covMat = self.__map_to_cor_norm(self.parameters)
+
+        # Generate independent standard normal samples
+        # the amount of samples is the same as the amount of stars
+        norm_samples = pd.multivariate_normal(np.zeros(self.num_factors), np.ones((1, self.num_factors)), self.num_stars)
+
+        # Generate correlated standard normal samples
+        # the amount of samples is the same as the amount of stars
+        chol = np.linalg.cholesky(covMat) # calculate the Cholesky factorization of covMat
+        std_norm_samples = norm_samples*chol # transform samples to standard normal distribution
+
+        # generate actual multivariate samples
+        # the amount of samples is the same as the amount of stars
+        multivar_samples = N2XTransform()
+
+        # Define index matrix of complement subset
+        compsub =
+
+        # Computer conditional variance of xi on x~i and computer conditional
+        # expectation xi on x~i for each star centre
+
+        # generate directional sample: create samples in correlated standard normal space
+
+        # transform to original distribution and compute response surface
+
+        # make stars
+
+        # define the Xmax,Xmin along directional sample of all stars
+
+        # collect directional samples (for distance in variogram)
+        # sectionXi contains all section samples. each sell corresponds to
+        # each input factor: row= dirStar, column=nStar
+
+        # calculate variogram
+
+        # calculate ivars
+
+        # calculate sobol results
+
+        # bootstrapping
+
+        # calculate confidence intervals
+
+        # collect IVARS 50 ??
+
+        pass
+
+
+    # not sure if this function is needed yet
+    def __map_to_cor_norm(self, factors):
+        """
+        ***(doc string will probably need to be cleaned up)
+
+        This function is based on Kucherenko et al. 2012:
+        Kucherenko S., Tarantola S. and Annoni p. 2012 "Estimation of
+        global sensitivity indices for models with dependent variables" Computer
+        Physics Communications, doi:10.1016/j.cpc.2011.12.020
+
+        The code is modified from GSA_CORRELATED_MIXED_DISTRIBUTIONs code
+        (S. Kucherenko,  A. Klimenko, S. Tarantola), obtained from SAMO2018
+
+        1st update 20/10/2018
+        2nd update 20/12/2018
+
+        The code has been further modified to run in python on 18/06/2021:
+        Contributors:
+        Kasra Keshavarz
+        Cordell Blanchard
+
+        Parameters
+        factors: user model parameters (add more detail)
+
+        Returns
+        A fictive correlation matrix based on inputted parameters
+        """
+
+        pass
+
+    def __N_to_X_transform(self, norm_vectors, dist_types, parameters):
+        """Transform variables from standard normal to original distributions"""
+
+        # can have the parameters in a data frame with the indices
+        # being their distribution type and use pd.loc to gather
+        # the parameters with a specific distribution type
+        # then preform the transformation on them to avoid for loop
+
+        # will have to inform use that only unif, norm, triangle, lognorm, expo, and gev
+        # are the only ones that can be transformed
+
+        pass
+
+
+
+
+
+
+
 
 
 class DVARS(VARS):
