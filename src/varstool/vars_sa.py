@@ -28,7 +28,7 @@ class Model():
     __doc__ = """A wrapper class for a function of interest"""
 
     def __init__(
-        self, 
+        self,
         func: Callable = None,
         unknown_options: Dict[str, Any] = {},
     ) -> None:
@@ -40,7 +40,7 @@ class Model():
         # unkown_options must be a dict
         assert isinstance(unknown_options, dict)
         self.unknown_options = {}
-        
+
         if unknown_options:
             self.unknown_options = unknown_options
 
@@ -59,7 +59,7 @@ class Model():
     ) -> Union[Iterable, float, int]:
 
         # check if params is an array-like object
-        assert isinstance(params, 
+        assert isinstance(params,
             (pd.DataFrame, pd.Series, np.ndarray, List, Tuple))
 
         if options:
@@ -241,7 +241,7 @@ class VARS(object):
 
     @centres.setter
     def centres(self, new_centres):
-        if not isinstance(new_centres, 
+        if not isinstance(new_centres,
               (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
             raise TypeError(
                 "new_centres must be an array-like object: "
@@ -255,7 +255,7 @@ class VARS(object):
 
     @points.setter
     def points(self, new_points):
-        if not isinstance(new_points, 
+        if not isinstance(new_points,
               (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
             raise TypeError(
                 "new_points must be an array-like object: "
@@ -291,7 +291,7 @@ class VARS(object):
                                            delta_h=self.delta_h, # delta_h
                                            parameters=[*self.parameters], # parameters dictionary keys
                                            rettype='DataFrame') # return type is a dataframe
-        
+
         # apply model to the generated star points
         df = vars_funcs.apply_unique(self.model, self.__star_points)
         df.index.names = ['centre', 'param', 'points']
@@ -454,7 +454,7 @@ class VARS(object):
         ranks = np.empty_like(temp)
         # rank factors with highest value being the lowest rank
         ranks[temp] = np.arange(len(factors))
-        
+
         return ranks
 
 
@@ -465,9 +465,8 @@ class GVARS(VARS):
     # Constructors
 
     def __init__(self,
-                 # ***maybe overwrite vars parameter variable and make it include access to
-                 # each parameters dist type instead of this instance variable
                  param_dist_types,  # distribution types of the model parameters
+                 corr_mat,  # correlation matrix
                  num_direct_samples: int = 50, # number of directional samples
                  num_stars: int = 2000, # number of star samples
                  ):
@@ -477,6 +476,7 @@ class GVARS(VARS):
         self.num_direct_samples = num_direct_samples
         self.num_stars = num_stars
         self.param_dist_types = param_dist_types
+        self.corr_mat = corr_mat
 
         ## default value for the number of directional samples
         if not self.num_direct_samples:
@@ -530,8 +530,8 @@ class GVARS(VARS):
 
         # Compute fictive correlation matrix
         # use map_to_cor_norm not sure how yet in python
-        # could possible use numpy.corrcoef instead???
-        covMat = self.__map_to_cor_norm(self.parameters)
+        # could possible use numpy.corrcoef instead or numpy.cov???
+        covMat = self.__map_to_cor_norm(self.corr_mat, self.param_dist_types, self.parameters)
 
         # Generate independent standard normal samples
         # the amount of samples is the same as the amount of stars
@@ -544,13 +544,17 @@ class GVARS(VARS):
 
         # generate actual multivariate samples
         # the amount of samples is the same as the amount of stars
-        multivar_samples = N2XTransform()
+        multivar_samples = N2XTransform()  # not sure how to implement this function right now
 
         # Define index matrix of complement subset
-        compsub =
+        compsub = np.empty([self.num_factors, self.num_factors - 1])  # initialize comp sub
+        for i in range(0, self.num_factors):
+            temp = np.arange(self.num_factors)
+            compsub[i] = np.delete(temp, i)
 
         # Computer conditional variance of xi on x~i and computer conditional
         # expectation xi on x~i for each star centre
+
 
         # generate directional sample: create samples in correlated standard normal space
 
@@ -579,8 +583,7 @@ class GVARS(VARS):
         pass
 
 
-    # not sure if this function is needed yet
-    def __map_to_cor_norm(self, factors):
+    def __map_to_cor_norm(self, corr_mat, dist_types, factors):
         """
         ***(doc string will probably need to be cleaned up)
 
@@ -621,12 +624,6 @@ class GVARS(VARS):
         # are the only ones that can be transformed
 
         pass
-
-
-
-
-
-
 
 
 
