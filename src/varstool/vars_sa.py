@@ -19,10 +19,6 @@ from typing import (
     List,
 )
 
-from typing_extensions import (
-    runtime_checkable,
-)
-
 from collections.abc import (
     Iterable,
 )
@@ -289,7 +285,6 @@ class VARS(object):
         pass
 
 
-    # param_names is the name of the model parameters might need a better name
     def run_online(self, ):
 
         # generate star points
@@ -297,7 +292,7 @@ class VARS(object):
                                            delta_h=self.delta_h, # delta_h
                                            parameters=[*self.parameters], # parameters dictionary keys
                                            rettype='DataFrame') # return type is a dataframe
-
+        
         # apply model to the generated star points
         df = vars_funcs.apply_unique(self.model, self.__star_points)
         df.index.names = ['centre', 'param', 'points']
