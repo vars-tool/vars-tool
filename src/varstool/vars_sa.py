@@ -562,9 +562,9 @@ class GVARS(VARS):
 
         # make stars
 
-        # define the Xmax,Xmin along directional sample of all stars
 
-        # collect directional samples (for distance in variogram)
+         # define the Xmax,Xmin along directional sample of all stars
+       # collect directional samples (for distance in variogram)
         # sectionXi contains all section samples. each sell corresponds to
         # each input factor: row= dirStar, column=nStar
 
