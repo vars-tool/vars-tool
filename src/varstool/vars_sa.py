@@ -85,8 +85,8 @@ class VARS(object):
         bootstrap_flag: Optional[bool] = False, # bootstrapping flag
         bootstrap_size: Optional[int]  = 1000, # bootstrapping size
         bootstrap_ci: Optional[int] = 0.9, # bootstrap confidence interval
+        grouping_flag: Optional[bool] = False, # grouping flag
         report_verbose: Optional[bool] = False, # reporting - using tqdm??
-        report_freq: int = 10, # not sure whether we should include this?
     ) -> None:
 
         # initialize values
@@ -99,6 +99,7 @@ class VARS(object):
         self.bootstrap_flag = bootstrap_flag
         self.bootstrap_size = bootstrap_size
         self.bootstrap_ci = bootstrap_ci
+        self.grouping_flag = grouping_flag
         self.report_verbose = report_verbose
         # analysis stage is set to False before running anything
         self.run_status = False
@@ -106,6 +107,13 @@ class VARS(object):
         # Check input arguments
         # ***add error checking, and possibly default value for star centres?
 
+        # default value for bootstrap_flag
+        if not bootstrap_flag:
+            self.bootstrap_flag = False
+
+        # default value for grouping flag
+        if not grouping_flag:
+            self.grouping_flag = False
 
         ## default value for the IVARS scales are 0.1, 0.3, and 0.5
         if not self.ivars_scales:
@@ -329,20 +337,26 @@ class VARS(object):
         self.sobol_value = vars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, var_overall)
 
         # do factor ranking on sobol results
-        self.sobol_factor_ranking = self._factor_ranking(self.sobol_value)
+        sobol_factor_ranking_array = self._factor_ranking(self.sobol_value)
+        # turn results into data frame
+        self.sobol_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys())
 
         # IVARS calculation
         self.ivars_df = pd.DataFrame.from_dict({scale: self.variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
              for scale in self.ivars_scales}, 'index')
 
         # do factor ranking on IVARS results
-        self.ivars_factor_ranking = self._factor_ranking(self.ivars_df)
+        ivars_factor_ranking_array = self._factor_ranking(self.ivars_df)
+        # turn results into data frame
+        self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_array, columns=self.parameters.keys(), index=self.ivars_scales)
 
         if self.bootstrap_flag:
             # create result dataframes if bootstrapping is chosen to be done
             result_bs_variogram = pd.DataFrame()
             result_bs_sobol = pd.DataFrame()
             result_bs_ivars_df = pd.DataFrame()
+            result_bs_sobol_ranking = pd.DataFrame()
+            result_bs_ivars_ranking = pd.DataFrame()
 
             for i in range(0, self.bootstrap_size):
                 # bootstrapping to get CIs
@@ -367,6 +381,14 @@ class VARS(object):
                     {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                      for scale in self.ivars_scales}, 'index')
 
+                # calculating factor rankings for sobol and ivars
+                bootstrapped_sobol_ranking = self._factor_ranking(bootstrapped_sobol)
+                bootstrapped_sobol_ranking_df = pd.DataFrame(data=[bootstrapped_sobol_ranking], columns=self.parameters.keys())
+
+                bootstrapped_ivars_ranking = self._factor_ranking(bootstrapped_ivars_df)
+                bootstrapped_ivars_ranking_df = pd.DataFrame(data=bootstrapped_ivars_ranking, columns=self.parameters.keys(),
+                                                             index=self.ivars_scales)
+
                 # unstack variogram so that results concat nicely
                 bootstrapped_variogram_df = bootstrapped_variogram.unstack(level=0)
 
@@ -377,6 +399,8 @@ class VARS(object):
                 result_bs_variogram = pd.concat([bootstrapped_variogram_df, result_bs_variogram])
                 result_bs_sobol = pd.concat([bootstrapped_sobol_df, result_bs_sobol])
                 result_bs_ivars_df = pd.concat([bootstrapped_ivars_df, result_bs_ivars_df])
+                result_bs_sobol_ranking = pd.concat([bootstrapped_sobol_ranking_df, result_bs_sobol_ranking])
+                result_bs_ivars_ranking = pd.concat([bootstrapped_ivars_ranking_df, result_bs_ivars_ranking])
 
             # calculate upper and lower confidence interval limits for variogram results
             self.variogram_low = pd.DataFrame()
@@ -417,6 +441,30 @@ class VARS(object):
             # transpose the results to get them in the right format
             self.ivars_low = self.ivars_low.transpose()
             self.ivars_upp = self.ivars_upp.transpose()
+
+            # calculate reliability estimates based on factor ranking of sobol result
+            rel_sobol_results = []
+            for param in self.parameters.keys():
+                rel_sobol_results.append(result_bs_sobol_ranking.eq(self.sobol_factor_ranking)[param].sum()/self.bootstrap_size)
+
+            self.rel_sobol_factor_ranking = pd.DataFrame([rel_sobol_results], columns=self.parameters.keys())
+
+            # calculate reliability estimates based on factor ranking of ivars results
+            rel_ivars_results = []
+            # iterate through each paramter
+            for param in self.parameters.keys():
+                rel_ivars_results_scale = []
+                # iterate through each ivars scale
+                for scale in self.ivars_scales:
+                    # ... to find the reliability estimate of the ivars rankings at each ivars scale
+                    rel_ivars_results_scale.append(
+                        result_bs_ivars_ranking.eq(self.ivars_factor_ranking)[param].loc[scale].sum() / self.bootstrap_size)
+                rel_ivars_results.append(rel_ivars_results_scale)
+
+            self.rel_ivars_factor_ranking = pd.DataFrame(rel_ivars_results, columns=self.parameters.keys(), index=self.ivars_scales)
+
+        if self.grouping_flag:
+            x = 1 # filler for now
 
         self.run_status = True
 
