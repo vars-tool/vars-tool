@@ -463,7 +463,8 @@ class VARS(object):
 
             self.rel_ivars_factor_ranking = pd.DataFrame(rel_ivars_results, columns=self.parameters.keys(), index=self.ivars_scales)
 
-        if self.grouping_flag:
+        # grouping can only be done if bootstrapping has been done
+        if self.grouping_flag and self.bootstrap_flag:
             x = 1 # filler for now
 
         self.run_status = True
