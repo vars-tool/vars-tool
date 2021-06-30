@@ -493,7 +493,7 @@ class VARS(object):
                 cluster_rank_ivars50 = []
                 for g in range(0, num_grp_ivars50):
                     cluster_ivars50.append(np.argwhere(ivars50_grp_array == g + 1).flatten())
-                    cluster_rank_ivars50.append(self.ivars_factor_ranking.loc[0.5].to_numpy()[cluster_sobol[g]])
+                    cluster_rank_ivars50.append(self.ivars_factor_ranking.loc[0.5].to_numpy()[cluster_ivars50[g]])
                     cluster_rank_ivars50[g] = np.sort(cluster_rank_ivars50[g], axis=0)
 
                 # calculate the reliability estimates based on the factor groupings and their corresponding paramaters
