@@ -3,6 +3,9 @@ import decimal
 
 import pandas as pd
 import numpy  as np
+import scipy.stats as stat
+import scipy.cluster.hierarchy as hchy
+from itertools import compress
 #import numpy.typing as npt # let's further investigate this
 import matplotlib.pyplot as plt
 
@@ -86,6 +89,7 @@ class VARS(object):
         bootstrap_size: Optional[int]  = 1000, # bootstrapping size
         bootstrap_ci: Optional[int] = 0.9, # bootstrap confidence interval
         grouping_flag: Optional[bool] = False, # grouping flag
+        num_grps: Optional[int] = None, # number of groups
         report_verbose: Optional[bool] = False, # reporting - using tqdm??
     ) -> None:
 
@@ -106,6 +110,10 @@ class VARS(object):
 
         # Check input arguments
         # ***add error checking, and possibly default value for star centres?
+
+        # default value for number of groups is None
+        if not num_grps:
+            self.num_grps = None
 
         # default value for bootstrap_flag
         if not bootstrap_flag:
@@ -463,9 +471,60 @@ class VARS(object):
 
             self.rel_ivars_factor_ranking = pd.DataFrame(rel_ivars_results, columns=self.parameters.keys(), index=self.ivars_scales)
 
-        # grouping can only be done if bootstrapping has been done
-        if self.grouping_flag and self.bootstrap_flag:
-            x = 1 # filler for now
+            # grouping can only be done if bootstrapping has been done and 0.5 ivars was chosen as a scale
+            if self.grouping_flag and (0.5 in result_bs_ivars_df.index):
+                # group the parameters
+                num_grp_ivars50, ivars50_grp_array, ClustersIvars50 = self._factor_grouping(result_bs_ivars_df.loc[0.5], num_grp=self.num_grps)
+                num_grp_sobol, sobol_grp_array, ClustersSobol = self._factor_grouping(result_bs_sobol, num_grp=self.num_grps)
+
+                self.ivars50_grp = pd.DataFrame([ivars50_grp_array], columns=self.parameters.keys())
+                self.sobol_grp = pd.DataFrame([sobol_grp_array], columns=self.parameters.keys())
+
+                # calculate reliability estimates based on factor grouping
+                cluster_sobol = []
+                cluster_rank_sobol = []
+                # associate group numbers with the parameters
+                for g in range(0, num_grp_sobol):
+                    cluster_sobol.append(np.argwhere(sobol_grp_array == g + 1).flatten())
+                    cluster_rank_sobol.append(sobol_factor_ranking_array[cluster_sobol[g]])
+                    cluster_rank_sobol[g] = np.sort(cluster_rank_sobol[g], axis=0)
+
+                cluster_ivars50 = []
+                cluster_rank_ivars50 = []
+                for g in range(0, num_grp_ivars50):
+                    cluster_ivars50.append(np.argwhere(ivars50_grp_array == g + 1).flatten())
+                    cluster_rank_ivars50.append(self.ivars_factor_ranking.loc[0.5].to_numpy()[cluster_ivars50[g]])
+                    cluster_rank_ivars50[g] = np.sort(cluster_rank_ivars50[g], axis=0)
+
+                # calculate the reliability estimates based on the factor groupings and their corresponding paramaters
+                reli_sobol_grp_array = np.zeros(len(self.parameters.keys()))
+                reli_ivars50_grp_array = np.zeros(len(self.parameters.keys()))
+                for D in range(0, len(self.parameters.keys())):
+                    match = [np.argwhere(cluster_sobol[x] == D).flatten() for x in range(0, len(cluster_sobol))]
+                    rank_range_sobol = [(match[x].size != 0) for x in range(0, len(match))]
+                    rank_sobol_benchmark = list(compress(cluster_rank_sobol, rank_range_sobol))
+                    rank_sobol_benchmark = rank_sobol_benchmark[0]
+
+                    match = [np.argwhere(cluster_ivars50[x] == D).flatten() for x in range(0, len(cluster_ivars50))]
+                    rank_range_ivars50 = [(match[x].size != 0) for x in range(0, len(match))]
+                    rank_ivars50_benchmark = list(compress(cluster_rank_ivars50, rank_range_ivars50))
+                    rank_ivars50_benchmark = rank_ivars50_benchmark[0]
+
+                    # calculate the reliability of parameter number D
+                    reli_sobol = 0
+                    reli_ivars50 = 0
+                    for i in range(0, self.bootstrap_size):
+                        reli_sobol += len(
+                            np.argwhere(result_bs_sobol_ranking.iloc[i, D] == rank_sobol_benchmark)) / self.bootstrap_size
+                        reli_ivars50 += len(np.argwhere(
+                            result_bs_ivars_ranking.loc[0.5].iloc[i, D] == rank_ivars50_benchmark)) / self.bootstrap_size
+
+                    reli_sobol_grp_array[D] = reli_sobol
+                    reli_ivars50_grp_array[D] = reli_ivars50
+
+                self.reli_sobol_grp = pd.DataFrame([reli_sobol_grp_array], columns=self.parameters.keys())
+                self.reli_ivars50_grp = pd.DataFrame([reli_ivars50_grp_array], columns=self.parameters.keys())
+
 
         self.run_status = True
 
@@ -505,6 +564,77 @@ class VARS(object):
         ranks[temp] = np.arange(len(factors))
 
         return ranks
+
+    def _factor_grouping(self, sens_idx, num_grp=None):
+        [m, n] = sens_idx.shape
+
+        # make data 1d
+        R = sens_idx.stack()
+        # remove zero elements to improve numerical reasoning
+        R = R[R != 0]
+
+        # do a box-cox transformation
+        [TRANSDAT, LAMBDA] = stat.boxcox(R)
+        if LAMBDA <= 0.0099:
+            TRANSDAT = np.log(R)
+
+        indices = np.argwhere(np.isinf(TRANSDAT))
+        if indices.shape == (2, 1):
+            TRANSDAT[indices[0], indices[1]] = np.log(R[R > 0])
+
+        # reshape data for the linkage calculation
+        S = np.reshape(TRANSDAT, [n, m])
+
+        # Agglomerative hierarchical cluster
+        Z = hchy.linkage(S, method='ward', metric='euclidean')
+
+        # Optimal group number
+        Clusters = []
+        for i in range(2, n + 1):
+            Clusters.append(hchy.fcluster(Z, criterion='maxclust', t=i))
+        # if user gives the group number preform calculations
+        if num_grp:
+            rank_grp = hchy.fcluster(Z, criterion='maxclust', t=num_grp)
+            optm_num_grp = num_grp
+            nn = 1
+            id = len(Z)
+            while nn != optm_num_grp:
+                cutoff = Z[id - 1][2]
+                rank_grp = hchy.fcluster(Z, criterion='distance', t=cutoff)
+                nn = np.amax(rank_grp)
+                id = id - 1
+
+            clrThrshl = 0.5 * (Z[id][2] + Z[id + 1][2])
+        # if user does not give optimal group number use elbow method
+        else:
+            cutoff, clrThrshl = self._elbow_method(Z)
+            rank_grp = hchy.fcluster(Z, criterion='distance', t=cutoff)
+            optm_num_grp = max(rank_grp)
+
+        # *** this part can be edited once we start working on plots
+        # fig = plt.figure(figsize=(25,10))
+        # dn = hchy.dendrogram(Z)
+        # plt.show()
+
+        return optm_num_grp, rank_grp, Clusters
+
+
+    def _elbow_method(self, Z):
+        # creating Q1 and Q2 for elbow method calculations
+        Q1 = np.array([1, Z[0][2]])
+        Q2 = np.array([len(Z), Z[-1][2]])
+
+        # Use elbow method to find the cutoff and color threshold for clustering
+        d = []
+        for i in range(0, len(Z) - 2):
+            P = [i + 1, Z[i][2]]
+            d.append(np.abs(np.linalg.det(np.array([[Q2 - Q1], [P - Q1]]))) / np.linalg.norm(Q2 - Q1))
+
+        id = d.index(max(d))
+        cutoff = Z[id][2]
+        clrThrshl = 0.5 * (Z[id][2] + Z[id + 1][2])
+
+        return cutoff, clrThrshl
 
 
 class GVARS(VARS):
@@ -593,7 +723,7 @@ class GVARS(VARS):
 
         # generate actual multivariate samples
         # the amount of samples is the same as the amount of stars
-        multivar_samples = N2XTransform()  # not sure how to implement this function right now
+        multivar_samples = self.__NtoX_transform()  # not sure how to implement this function right now
 
         # Define index matrix of complement subset
         compsub = np.empty([self.num_factors, self.num_factors - 1])  # initialize comp sub
@@ -661,7 +791,7 @@ class GVARS(VARS):
 
         pass
 
-    def __N_to_X_transform(self, norm_vectors, dist_types, parameters):
+    def __NtoX_transform(self, norm_vectors, dist_types, parameters):
         """Transform variables from standard normal to original distributions"""
 
         # can have the parameters in a data frame with the indices
