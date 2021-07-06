@@ -704,46 +704,66 @@ class GVARS(VARS):
     #-------------------------------------------
     # Core functions
 
-
     def run(self):
 
-        # Compute fictive correlation matrix
-        # use map_to_cor_norm not sure how yet in python
-        # could possible use numpy.corrcoef instead or numpy.cov???
-        covMat = self.__map_to_cor_norm(self.corr_mat, self.param_dist_types, self.parameters)
+        n_var = self.corr_mat.shape[1]
+        cov_mat = np.array([[1, 0.6], [0.6, 1]])  # make funcion for this for now just using matlab results
 
         # Generate independent standard normal samples
         # the amount of samples is the same as the amount of stars
-        norm_samples = pd.multivariate_normal(np.zeros(self.num_factors), np.ones((1, self.num_factors)), self.num_stars)
+        U = np.random.multivariate_normal(np.zeros(n_var), np.eye(n_var), self.num_stars)
 
         # Generate correlated standard normal samples
         # the amount of samples is the same as the amount of stars
-        chol = np.linalg.cholesky(covMat) # calculate the Cholesky factorization of covMat
-        std_norm_samples = norm_samples*chol # transform samples to standard normal distribution
+        cholU = np.linalg.cholesky(cov_mat)
+        cholU = cholU.transpose()  # to get in correct format for matrix multiplication
+        Z = np.matmul(U, cholU)  # transform samples to standard normal distribution
 
-        # generate actual multivariate samples
-        # the amount of samples is the same as the amount of stars
-        multivar_samples = self.__NtoX_transform()  # not sure how to implement this function right now
+        # Generate Nstar actual multivariate samples X (not done yet)
+        X = 0
 
-        # Define index matrix of complement subset
-        compsub = np.empty([self.num_factors, self.num_factors - 1])  # initialize comp sub
-        for i in range(0, self.num_factors):
-            temp = np.arange(self.num_factors)
+        # define index matrix of complement subset
+        compsub = np.empty([n_var, n_var - 1])
+        for i in range(0, n_var):
+            temp = np.arange(n_var)
             compsub[i] = np.delete(temp, i)
+        compsub = compsub.astype(int)
 
-        # Computer conditional variance of xi on x~i and computer conditional
-        # expectation xi on x~i for each star centre
+        # computer coditional variance and conditional expectation for each star center
+        chol_cond_std = []
+        std_cond_norm = []
+        mui_on_noti = np.zeros((len(Z), n_var))
+        for i in range(0, n_var):
+            noti = compsub[i]
+            # 2 dimensional or greater matrix case
+            if (cov_mat[noti, noti].ndim >= 2):
+                cond_std = cov_mat[i][i] - cov_mat[i, noti] * np.linalg.inv(cov_mat[noti, noti]) * cov_mat[noti, i]
+                chol_cond_std.append(np.linalg.cholesky(cond_std))
+                std_cond_norm.append(con_std)
+                for j in range(0, len(Z)):
+                    mui_on_noti[j][i] = cov_mat[i, noti] * np.linalg.inv(cov_mat[noti, noti]) * Z[j, noti]
+            # less then 2 dimenional matrix case
+            else:
+                cond_std = cov_mat[i][i] - cov_mat[i, noti] * cov_mat[noti, noti] * cov_mat[noti, i]
+                chol_cond_std.append(np.linalg.cholesky([[cond_std]]).flatten())
+                std_cond_norm.append(cond_std)
+                for j in range(0, len(Z)):
+                    mui_on_noti[j][i] = cov_mat[i, noti] * cov_mat[noti, noti] * Z[j, noti]
 
+        # Generate directional sample:
+        # Create samples in correlated standard normal space
+        all_section_condZ = []
+        condZ = []
+        for j in range(0, self.num_direct_samples):
+            stnrm_base = np.random.multivariate_normal(np.zeros(n_var), np.eye(n_var), self.num_stars)
+            for i in range(0, n_var):
+                condZ.append(stnrm_base[:, i] * chol_cond_std[i] + mui_on_noti[:, i])
+            all_section_condZ.append(condZ.copy())
+            condZ.clear()
 
-        # generate directional sample: create samples in correlated standard normal space
+        # define the Xmax,Xmin along directional sample of all stars
 
-        # transform to original distribution and compute response surface
-
-        # make stars
-
-
-         # define the Xmax,Xmin along directional sample of all stars
-       # collect directional samples (for distance in variogram)
+        # collect directional samples (for distance in variogram)
         # sectionXi contains all section samples. each sell corresponds to
         # each input factor: row= dirStar, column=nStar
 
