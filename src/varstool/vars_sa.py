@@ -301,6 +301,8 @@ class VARS(object):
         status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
         status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size)+"" if self.bootstrap_flag else "N/A")
         status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"" if self.bootstrap_flag else "N/A")
+        status_grouping = "Grouping: " + ("On" if self.grouping_flag else "Off")
+        status_num_grps = "Number of Groups: " + (self.num_grps if self.num_grps else "Not yet determined")
         status_analysis = "VARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [status_star_centres, status_star_points, status_parameters, \
