@@ -395,7 +395,7 @@ class VARS(object):
                                         )
 
         # apply model to the generated star points
-        df = vars_funcs.apply_unique(self.model, self.__star_points)
+        df = vars_funcs.apply_unique(self.model.func, self.__star_points)
         df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h'
