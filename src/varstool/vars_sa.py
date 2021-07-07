@@ -108,6 +108,7 @@ class VARS(object):
         self.bootstrap_size = bootstrap_size
         self.bootstrap_ci = bootstrap_ci
         self.grouping_flag = grouping_flag
+        self.num_grps = num_grps
         self.report_verbose = report_verbose
         self.sampler = sampler # one of the default sampling algorithms or None
         # analysis stage is set to False before running anything
