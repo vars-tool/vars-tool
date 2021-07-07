@@ -9,8 +9,10 @@ from itertools import compress
 #import numpy.typing as npt # let's further investigate this
 import matplotlib.pyplot as plt
 
-from .sampling import starvars
-from .sa import vars_funcs
+from sampling import starvars
+from sa import vars_funcs
+from sa import tsvars_funcs
+from util import scale
 
 from typing import (
     Dict,
@@ -80,11 +82,13 @@ class VARS(object):
     def __init__(
         self,
         star_centres = [],  # sampled star centres (random numbers) used to create star points
+        num_stars: int = 100, # default number of stars
         parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
         model: Model = None, # model (function) to run for each star point
         seed: Optional[int] = 123456789, # randomization state
+        sampler: Optional[str] = None, # one of the default random samplers of varstool
         bootstrap_flag: Optional[bool] = False, # bootstrapping flag
         bootstrap_size: Optional[int]  = 1000, # bootstrapping size
         bootstrap_ci: Optional[int] = 0.9, # bootstrap confidence interval
@@ -95,33 +99,56 @@ class VARS(object):
 
         # initialize values
         self.parameters = parameters
+        self.num_stars = num_stars
         self.delta_h = delta_h
         self.ivars_scales = ivars_scales
         self.__star_centres = star_centres
-        self.__star_points  = [] # an empty list works for now - but needs to be changed
-        self.seed = seed
+        self.__star_points  = [] # an empty list works for now - but needs to be changed - really?
+        self.seed = seed # seed number
         self.bootstrap_flag = bootstrap_flag
         self.bootstrap_size = bootstrap_size
         self.bootstrap_ci = bootstrap_ci
         self.grouping_flag = grouping_flag
         self.report_verbose = report_verbose
+        self.sampler = sampler # one of the default sampling algorithms or None
         # analysis stage is set to False before running anything
         self.run_status = False
 
         # Check input arguments
-        # ***add error checking, and possibly default value for star centres?
+        # ***add error checking, and possibly default value for star centres
+        # KK: can you think of anything? @CB
 
         # default value for number of groups is None
         if not num_grps:
             self.num_grps = None
+        if not isinstance(num_grps, (int, np.int32, np.int64)):
+            warnings.warn(
+                "`num_grps` must be in integer, it has been set to `None`",
+                UserWarning,
+                stacklevel=1
+            )
 
         # default value for bootstrap_flag
         if not bootstrap_flag:
             self.bootstrap_flag = False
+        if not isinstance(bootstrap_flag, bool):
+            warnings.warn(
+                "`bootstrap_flag` must be either `True` or `False`."
+                "default value of `False` will be considered.",
+                UserWarning,
+                stacklevel=1
+            )
 
         # default value for grouping flag
         if not grouping_flag:
             self.grouping_flag = False
+        if not isinstance(groupbing_flag, bool):
+            warnings.warn(
+                "`grouping_flag` must be either `True` or `False`."
+                "default value of `False` will be considered.",
+                UserWarning,
+                stacklevel=1
+            )
 
         ## default value for the IVARS scales are 0.1, 0.3, and 0.5
         if not self.ivars_scales:
@@ -186,20 +213,69 @@ class VARS(object):
         ### `parameters`
         if not isinstance(parameters, dict):
             raise ValueError(
-                "`parameters` should be of type `dict`; the keys must be"
-                "their names, and values must be the lower and upper bounds"
-                "of their factor space."
+                "`parameters` must be of type `dict`; the keys must be"
+                "their names, either strings or integers, and values must"
+                "be the lower and upper bounds of their factor space."
+            )
+
+        if len(parameters) < 2:
+            raise ValueError(
+                "the number of parameters in a sensitivity analysis problem"
+                "must be greater than 1"
             )
 
         ### `model`
         if model:
             if not isinstance(model, Model):
                 raise TypeError(
-                    "`model` must be of type varstool.Model."
+                    "`model` must be of type varstool.Model"
                 )
         self.model = model
 
-        # adding anything else here?!
+        # check `sampler` and `parameters` values
+        if ((not self.sampler) and len(self.parameters) == 0):
+            raise ValueError(
+                "If a built-in sampler is selected, `parameters` cannot be empty."
+            )
+
+        # check the sampling algorithms
+        if self.sampler == 'rnd':
+            self.__star_centres = np.random.rand(self.num_stars, len(self.parameters))
+        elif self.sampler == 'lhs':
+            from sampling import lhs
+            self.__star_centres = lhs.lhs(sp=self.num_stars,
+                                          params=len(self.parameters),
+                                          seed=self.seed,
+                                        )
+        elif self.sampler == 'plhs':
+            from sampling import plhs
+            self.__star_centres = plhs.plhs(sp=self.num_stars,
+                                            params=len(self.parameters),
+                                            seed=self.seed,
+                                        )
+        elif self.sampler == 'sobol_seq':
+            from sampling import sobol_sequence
+            self.__star_centres = sobol_sequence.sobol_sequence(sp=self.num_stars,
+                                                                params=len(self.parameters),
+                                                                seed=self.seed,
+                                                            )
+        elif self.sampler == 'halton_seq':
+            from sampling import halton
+            self.__star_centres = halton.halton(sp=self.num_stars,
+                                                params=len(self.parameters),
+                                                seed=self.seed,
+                                            )
+        elif self.sampler == 'symlhs':
+            from sampling import symlhs
+            self.__star_centres = symlhs.symlhs(sp=self.num_stars,
+                                                params=len(self.parameters),
+                                                seed=self.seed,
+                                                )
+        else:
+            raise ValueError(
+                "`sampler` must be either None, or one of the following:"
+                "'rnd', 'lhs', 'plhs', 'halton_seq', 'sobol_seq', 'symlhs'"
+            )
 
     @classmethod
     def from_dict(cls, input_dict):
@@ -252,11 +328,11 @@ class VARS(object):
     ## D-/GVARS sublcasses.
 
     @property
-    def centres(self, ):
+    def star_centres(self, ):
         return self.__star_centres
 
-    @centres.setter
-    def centres(self, new_centres):
+    @star_centres.setter
+    def star_centres(self, new_centres):
         if not isinstance(new_centres,
               (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
             raise TypeError(
@@ -266,11 +342,11 @@ class VARS(object):
         self.__star_centres = new_centres
 
     @property
-    def points(self, ):
+    def star_points(self, ):
         return self.__star_points
 
-    @points.setter
-    def points(self, new_points):
+    @star_points.setter
+    def star_points(self, new_points):
         if not isinstance(new_points,
               (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
             raise TypeError(
@@ -307,6 +383,13 @@ class VARS(object):
                                            delta_h=self.delta_h, # delta_h
                                            parameters=[*self.parameters], # parameters dictionary keys
                                            rettype='DataFrame') # return type is a dataframe
+        
+        self.__star_points = scale(df=self.__star_points, # star points must be scaled
+                                   bounds={ # bounds are created while scaling
+                                   'lb':[val[0] for _, val in self.parameters.items()],
+                                   'ub':[val[1] for _, val in self.parameters.items()],
+                                   }
+                             )
 
         # apply model to the generated star points
         df = vars_funcs.apply_unique(self.model, self.__star_points)
@@ -824,6 +907,12 @@ class GVARS(VARS):
 
         pass
 
+
+class TSVARS(VARS):
+    __doc__ = "TSVARS Documentation"
+
+    def __init__(self, ) -> None:
+        super().__init__()
 
 
 class DVARS(VARS):

@@ -10,7 +10,8 @@ corresponding algorithm.
 
 import numpy as np
 
-def halton(sp:int, params:int, seed:int=None, scramble:bool=False, skip:int=1000, leap:int=101) -> np.ndarray:
+
+def halton(sp: int, params: int, seed: int=None, scramble: bool=True, skip: int=1000, leap: int=101) -> np.ndarray:
     '''
     Description:
     ------------
@@ -19,8 +20,8 @@ def halton(sp:int, params:int, seed:int=None, scramble:bool=False, skip:int=1000
     dimensions. The Halton sequence uses the base-two Van der Corput
     sequence for the first dimension, base-three for its second and
     base-:math:`n` for its n-dimension.
-    
-    
+
+
     Arguments:
     ----------
     :param sp: the number of sampling points
@@ -35,14 +36,14 @@ def halton(sp:int, params:int, seed:int=None, scramble:bool=False, skip:int=1000
     :type skip: {int, numpy.int32, numpy.int64}, optional
     :param leap: the interval of picking values
     :type leap: {int, numpy.int32, numpy.int64}, optional
-    
-    
+
+
     Returns:
     --------
     :return halton_seq: the halton sequence array
     :rtype halton_seq: numpy.ndarray
-    
-    
+
+
     References:
     -----------
     .. [1] https://github.com/scipy/scipy/scipy/stats/_qmc.py
@@ -51,48 +52,49 @@ def halton(sp:int, params:int, seed:int=None, scramble:bool=False, skip:int=1000
            points in evaluating multi-dimensional integrals. Numer. Math. 2, 
            84–90 (1960). https://doi.org/10.1007/BF01386213
     .. [4] Owen, A.B. A randomized Halton algorithm in R (2017). arXiv:1706.02808v2
-    
-    
+
+
     Contributors:
     -------------
     Razavi, Saman, (2018): supervision, function call in MATLAB (c)
     Keshavarz, Kasra, (2021): code in Python 3
     '''
-    
+
     # check the seed number
     if seed:
         np.random.seed(int(seed))
-    
+
     # check int signs
     sign_msg = ("the sign of '{}' must be positive (>0).")
     if sp < 0:
         raise ValueError(sign_msg.format('sp'))
     if params < 0:
         raise ValueError(sign_msg.format('params'))
-    
+
     # check dtypes
-    dtype_msg = ("dtype of '{}' array must be 'int', 'numpy.int32' or 'numpy.int64'.")
+    dtype_msg = (
+        "dtype of '{}' array must be 'int', 'numpy.int32' or 'numpy.int64'.")
     if type(sp) not in [int, np.int32, np.int64]:
         raise ValueError(dtype_msg.format('sp'))
     if type(params) not in [int, np.int32, np.int64]:
         raise ValueError(dtype_msg.format('params'))
 
-    
     # Generate a sample using a Van der Corput sequence per dimension.
     # important to have ``type(bdim) == int`` for performance reason
-    sample = [_van_der_corput(sp=sp*(leap+1)+skip, base=int(bdim), start_index=0,
-                             scramble=scramble,
-                             seed=seed)
+    sample = [_van_der_corput(sp=sp * (leap + 1) + skip, base=int(bdim), start_index=0,
+                              scramble=scramble,
+                              seed=seed)
               for bdim in _n_primes(params)]
-    
-    halton_sample = np.array(sample).T.reshape(sp*(leap+1)+skip, params)
-    
-    halton_sample = halton_sample[0+skip:halton_sample.shape[0]:(leap+1),:]
-    
+
+    halton_sample = np.array(sample).T.reshape(sp * (leap + 1) + skip, params)
+
+    halton_sample = halton_sample[0 +
+                                  skip:halton_sample.shape[0]:(leap + 1), :]
+
     return halton_sample
 
 
-def _van_der_corput(sp:int, base:int=2, start_index:int=0, scramble:bool=True, seed:int=None) -> np.ndarray:
+def _van_der_corput(sp: int, base: int=2, start_index: int=0, scramble: bool=True, seed: int=None) -> np.ndarray:
     '''
     Description:
     ------------
@@ -101,8 +103,8 @@ def _van_der_corput(sp:int, base:int=2, start_index:int=0, scramble:bool=True, s
     Scrambling uses permutations of the remainders (see [1]_ and [2]_).
     Multiple permutations are applied to construct a point. The sequence
     of permutations has to be the same for all points of the sequence.
-    
-    
+
+
     Arguments:
     ----------
     :param sp: number of elements in the sequence
@@ -115,25 +117,25 @@ def _van_der_corput(sp:int, base:int=2, start_index:int=0, scramble:bool=True, s
     :type scarmble: bool, optional
     :param seed: seed number for randomization
     :type seed: {None, int, numpy.int32, numpy.int64}, optional
-    
-    
+
+
     Returns:
     --------
     :return sequence: Sequence of van der Corput
     :rtype sequence: list
-    
-    
+
+
     References:
     -----------
     .. [1] A. B. Owen. "A randomized Halton algorithm in R",
        arXiv:1706.02808, 2017.
     .. [2] scipy.stats.qmc, version: dev-1.7
     '''
-    
+
     # check seed number
     if seed:
         np.random.seed(seed)
-    
+
     sequence = np.zeros(sp)
 
     quotient = np.arange(start_index, start_index + sp)
@@ -154,29 +156,29 @@ def _van_der_corput(sp:int, base:int=2, start_index:int=0, scramble:bool=True, s
     return sequence
 
 
-def _n_primes(n:int) -> list:
+def _n_primes(n: int) -> list:
     '''
     Description:
     ------------
     Generate ``n`` number of prime numbers, taken from [1]_
-    
+
     Arguments:
     ----------
     :param n: the number of primes to be produced
     :type n: {int, numpy.int32, numpy.int64}
-    
-    
+
+
     Returns:
     --------
     :return primes: a list of primes with while ``len(primes)`` is `n`.
     :rtype primes: list
-    
-    
+
+
     Source:
     -------
     .. [1] `Scipy <https://github.com/scipy/scipy/stats/_qmc.py>`_.
     '''
-    
+
     primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59,
               61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127,
               131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193,
@@ -202,7 +204,7 @@ def _n_primes(n:int) -> list:
     return primes
 
 
-def _gen_primes(threshold:int) -> list:
+def _gen_primes(threshold: int) -> list:
     """
     Description:
     ------------
@@ -215,36 +217,35 @@ def _gen_primes(threshold:int) -> list:
     :param threshold: the upper bound for the size of the prime values.
                      the ``threshold`` is included in the sequence.
     :type threshold: {int, numpy.int32, numpy.int64}
-    
-    
+
+
     Returns:
     --------
     :return primes: all primes from 2 and up to ``threshold``.
     :rtype primes: list
     """
-    
+
     if threshold == 2:
         return [2]
     elif threshold < 2:
         return []
 
-    numbers = list(range(3, threshold+1, 2))
+    numbers = list(range(3, threshold + 1, 2))
     root_of_threshold = threshold ** 0.5
-    half = int((threshold+1)/2-1)
+    half = int((threshold + 1) / 2 - 1)
     idx = 0
     counter = 3
-    
+
     while counter <= root_of_threshold:
         if numbers[idx]:
-            idy = int((counter*counter-3)/2)
+            idy = int((counter * counter - 3) / 2)
             numbers[idy] = 0
             while idy < half:
                 numbers[idy] = 0
                 idy += counter
         idx += 1
-        counter = 2*idx+3
-    
-    primes = np.array([2] + [number for number in numbers if number])
-    
-    return primes
+        counter = 2 * idx + 3
 
+    primes = np.array([2] + [number for number in numbers if number])
+
+    return primes
