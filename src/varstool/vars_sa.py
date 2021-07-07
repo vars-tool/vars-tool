@@ -9,10 +9,9 @@ from itertools import compress
 #import numpy.typing as npt # let's further investigate this
 import matplotlib.pyplot as plt
 
-from sampling import starvars
-from sa import vars_funcs
-from sa import tsvars_funcs
-from util import scale
+from .sampling import starvars
+from .sa import vars_funcs
+from .sa import tsvars_funcs
 
 from typing import (
     Dict,
@@ -382,14 +381,15 @@ class VARS(object):
         self.__star_points = starvars.star(self.__star_centres, # star centres
                                            delta_h=self.delta_h, # delta_h
                                            parameters=[*self.parameters], # parameters dictionary keys
-                                           rettype='DataFrame') # return type is a dataframe
+                                           rettype='DataFrame',
+                                       ) # return type is a dataframe
         
-        self.__star_points = scale(df=self.__star_points, # star points must be scaled
-                                   bounds={ # bounds are created while scaling
-                                   'lb':[val[0] for _, val in self.parameters.items()],
-                                   'ub':[val[1] for _, val in self.parameters.items()],
-                                   }
-                             )
+        self.__star_points = varsfuncs.scale(df=self.__star_points, # star points must be scaled
+                                             bounds={ # bounds are created while scaling
+                                             'lb':[val[0] for _, val in self.parameters.items()],
+                                             'ub':[val[1] for _, val in self.parameters.items()],
+                                             }
+                                        )
 
         # apply model to the generated star points
         df = vars_funcs.apply_unique(self.model, self.__star_points)
@@ -425,7 +425,7 @@ class VARS(object):
         self.e_covariogram_value = vars_funcs.e_covariogram(cov_section_all)
 
         # sobol calculation
-        self.sobol_value = vars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, var_overall)
+        self.sobol_value = vars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, var_overall, self.delta_h)
 
         # do factor ranking on sobol results
         sobol_factor_ranking_array = self._factor_ranking(self.sobol_value)

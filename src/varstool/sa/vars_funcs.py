@@ -4,9 +4,23 @@ import pandas as pd
 
 from itertools import combinations
 
+from collections.abc import (
+    Iterable,
+)
+
+from typing import (
+    Callable,
+    Optional,
+)
 
 # helper functions
-def apply_unique(func, df, axis=1, *args, **kwargs):
+def apply_unique(
+    func: Callable,
+    df: pd.DataFrame,
+    axis: int=1,
+    *args: Any=(),
+    **kwargs: Any={},
+    ) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -37,14 +51,14 @@ def apply_unique(func, df, axis=1, *args, **kwargs):
     """
 
     applied_df = df.merge(df.drop_duplicates()
-                          .assign(**{str(func): lambda x: x.apply(func, axis=axis)}),
+                          .assign(**{str(func): lambda x: x.apply(func, axis=axis, agrs=args, **kwargs)}),
                           how='left')
     applied_df.index = df.index
 
     return applied_df
 
 
-def pairs_h(iterable):
+def pairs_h(iterable: Iterable) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -76,7 +90,7 @@ def pairs_h(iterable):
     return pairs
 
 
-def scale(df, bounds, axis=1, *args, **kwargs):
+def scale(df:pd.DataFrame, bounds:pd.DataFrame, axis:int=1) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -118,7 +132,7 @@ def scale(df, bounds, axis=1, *args, **kwargs):
         return df.T * (bounds_np['ub'] - bounds_np['lb']) + bounds_np['lb']
 
 
-def section_df(df):
+def section_df(df:pd.DataFrame, delta_h:float) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -144,7 +158,7 @@ def section_df(df):
     """
     pairs = pairs_h(df.index.get_level_values(-1))
     df_values = df.to_numpy()
-    sample = pd.concat({h:
+    sample = pd.concat({h*delta_h: # realistic delta_h values are shown
                         pd.DataFrame.from_dict({str(idx_tup): [
                                                df_values[idx_tup[0]], df_values[idx_tup[1]]] for idx_tup in idx}, 'index')
                         for h, idx in pairs.items()})
@@ -386,7 +400,12 @@ def e_covariogram(cov_section_all: pd.DataFrame) -> pd.DataFrame:
     return e_covariogram_values
 
 
-def sobol_eq(gamma: pd.DataFrame, ecov: pd.DataFrame, variance: pd.Series) -> pd.DataFrame:
+def sobol_eq(
+    gamma: pd.DataFrame, 
+    ecov: pd.DataFrame,
+    variance: pd.Series,
+    delta_h: float
+    ) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -432,13 +451,13 @@ def sobol_eq(gamma: pd.DataFrame, ecov: pd.DataFrame, variance: pd.Series) -> pd
     Blanchard, Cordell, (2021): code in Python 3
     """
 
-    sobol_eq_values = ((gamma + ecov) / variance).loc[:, 1]
+    sobol_eq_values = ((gamma + ecov) / variance)[:, delta_h] # to 
 
     return sobol_eq_values
 
 
 # ivars function
-def ivars(variogram_array, scale, delta_h):
+def ivars(variogram_array: pd.DataFrame, scale: float, delta_h: float) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -503,7 +522,7 @@ def ivars(variogram_array, scale, delta_h):
     return ivars_values
 
 
-def ishigami(x, a=7, b=0.05):
+def ishigami(x: Iterable, a: int=7, b: float=0.05) -> float:
     '''Ishigami test function'''
     # check whether the input x is an array-like
 
