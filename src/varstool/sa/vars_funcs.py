@@ -11,6 +11,7 @@ from collections.abc import (
 from typing import (
     Callable,
     Optional,
+    Any
 )
 
 # helper functions
@@ -18,8 +19,8 @@ def apply_unique(
     func: Callable,
     df: pd.DataFrame,
     axis: int=1,
-    *args: Any=(),
-    **kwargs: Any={},
+    *args: tuple,
+    **kwargs: dict,
     ) -> pd.DataFrame:
     """
     Description:

@@ -141,7 +141,7 @@ class VARS(object):
         # default value for grouping flag
         if not grouping_flag:
             self.grouping_flag = False
-        if not isinstance(groupbing_flag, bool):
+        if not isinstance(grouping_flag, bool):
             warnings.warn(
                 "`grouping_flag` must be either `True` or `False`."
                 "default value of `False` will be considered.",
@@ -384,7 +384,7 @@ class VARS(object):
                                            rettype='DataFrame',
                                        ) # return type is a dataframe
         
-        self.__star_points = varsfuncs.scale(df=self.__star_points, # star points must be scaled
+        self.__star_points = vars_funcs.scale(df=self.__star_points, # star points must be scaled
                                              bounds={ # bounds are created while scaling
                                              'lb':[val[0] for _, val in self.parameters.items()],
                                              'ub':[val[1] for _, val in self.parameters.items()],
@@ -466,7 +466,7 @@ class VARS(object):
 
                 bootstrapped_var = bootstrapped_df[self.model.func.__name__].unique().var(ddof=1)
 
-                bootstrapped_sobol = vars_funcs.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram, bootstrapped_var)
+                bootstrapped_sobol = vars_funcs.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram, bootstrapped_var, self.delta_h)
 
                 bootstrapped_ivars_df = pd.DataFrame.from_dict(
                     {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
@@ -822,7 +822,7 @@ class GVARS(VARS):
             if (cov_mat[noti, noti].ndim >= 2):
                 cond_std = cov_mat[i][i] - cov_mat[i, noti] * np.linalg.inv(cov_mat[noti, noti]) * cov_mat[noti, i]
                 chol_cond_std.append(np.linalg.cholesky(cond_std))
-                std_cond_norm.append(con_std)
+                std_cond_norm.append(cond_std)
                 for j in range(0, len(Z)):
                     mui_on_noti[j][i] = cov_mat[i, noti] * np.linalg.inv(cov_mat[noti, noti]) * Z[j, noti]
             # less then 2 dimenional matrix case
