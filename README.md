@@ -18,13 +18,13 @@ The underlying approach of the VARS-TOOL toolkit is described in detail in the f
 
 ### Installation
 #### Installing with pip
-If you are using Linux or macOS the VARS-TOOL package can be installed using pip:
+If Linux or macOS are being used on your device the VARS-TOOL package can be installed using pip:
 ```
 pip install varstool
 ```
 
-#### Installing from source
-First, you will need to clone the repository onto your local device using the command:
+#### Installing from source code
+To install VARS-TOOL from the source code, you will need to clone the github repository onto your local device using the command:
 ```
 git clone https://github.com/vars-tool/vars-tool.git
 ```
@@ -56,10 +56,10 @@ Contributions to VARS-TOOl are welcome! To contribute new features submit a pull
 pip install -r requirements.txt
 ```
 Once the packages are installed to contribute do the following:
-1. Fork the repository([here](https://github.com/vars-tool/vars-tool/fork)). A fork is a copy where you can make your changes to the source code.
+1. Fork the repository([here](https://github.com/vars-tool/vars-tool/fork)). A fork makes it possible to make changes to the source code through creating a copy.
 2. Create a new branch on your fork
 3. Commit your changes and push them to your branch
-4. When the branch is ready to be merged, create a Pull Request ([how to create a pull request](https://gist.github.com/MarcDiethelm/7303312))
+4. When the branch is ready to be merged, you can create a Pull Request ([how to create a pull request](https://gist.github.com/MarcDiethelm/7303312))
 
 ### References
 
