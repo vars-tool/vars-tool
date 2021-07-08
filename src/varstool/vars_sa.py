@@ -386,7 +386,7 @@ class VARS(object):
                                            parameters=[*self.parameters], # parameters dictionary keys
                                            rettype='DataFrame',
                                        ) # return type is a dataframe
-        
+
         self.__star_points = vars_funcs.scale(df=self.__star_points, # star points must be scaled
                                              bounds={ # bounds are created while scaling
                                              'lb':[val[0] for _, val in self.parameters.items()],
@@ -440,9 +440,11 @@ class VARS(object):
              for scale in self.ivars_scales}, 'index')
 
         # do factor ranking on IVARS results
-        ivars_factor_ranking_array = self._factor_ranking(self.ivars)
+        ivars_factor_ranking_list = []
+        for scale in self.ivars_scales:
+            ivars_factor_ranking_list.append(self._factor_ranking(self.ivars.loc[scale]))
         # turn results into data frame
-        self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_array, columns=self.parameters.keys(), index=self.ivars_scales)
+        self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_list, columns=self.parameters.keys(), index=self.ivars_scales)
 
         if self.bootstrap_flag and self.grouping_flag:
             self.variogram_low, self.variogram_upp, self.sobol_low, self.sobol_upp, self.ivars_low, self.ivars_upp, \
