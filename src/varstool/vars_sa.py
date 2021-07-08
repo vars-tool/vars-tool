@@ -661,10 +661,13 @@ class VARS(object):
             bootstrapped_sobol_ranking_df = pd.DataFrame(data=[bootstrapped_sobol_ranking],
                                                          columns=self.parameters.keys())
 
-            bootstrapped_ivars_ranking = self._factor_ranking(bootstrapped_ivars_df)
-            bootstrapped_ivars_ranking_df = pd.DataFrame(data=bootstrapped_ivars_ranking,
-                                                         columns=self.parameters.keys(),
-                                                         index=self.ivars_scales)
+            # do factor ranking on IVARS results
+            bootstrapped_ivars_factor_ranking_list = []
+            for scale in self.ivars_scales:
+                bootstrapped_ivars_factor_ranking_list.append(self._factor_ranking(bootstrapped_ivars_df.loc[scale]))
+            # turn results into data frame
+            bootstrapped_ivars_ranking_df = pd.DataFrame(data=bootstrapped_ivars_factor_ranking_list, columns=self.parameters.keys(),
+                                                     index=self.ivars_scales)
 
             # unstack variogram so that results concat nicely
             bootstrapped_variogram_df = bootstrapped_variogram.unstack(level=0)
