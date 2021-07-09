@@ -1019,7 +1019,7 @@ class TSVARS(VARS):
                               status_star_centres, status_star_points, status_parameters, \
                               status_delta_h, status_model, status_seed, status_bstrap, \
                               status_bstrap_size, status_bstrap_ci, status_grouping, \
-                              status_num_grps, status_analysis, status_func_eval_method\
+                              status_num_grps, status_analysis, status_func_eval_method, \
                               status_vars_eval_method, status_vars_chunk_size
                               ]
 
