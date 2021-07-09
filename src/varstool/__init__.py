@@ -16,5 +16,6 @@ from varstool.vars_sa import (
     VARS,
     GVARS,
     DVARS,
+    TSVARS,
     Model,
 )
