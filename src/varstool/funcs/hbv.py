@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import saveload as sl
+#import saveload as sl
 import matplotlib.pyplot as pl
 from scipy.optimize import minimize
 from IPython.display import clear_output
@@ -32,13 +32,13 @@ def read_inputs(data_folder):
     return watershed_area, ini_values, forcing, long_term
 
 
-def HBV_SASK(folder, par_values=[]):
+def HBV_SASK(par_values=[], basin='banff'):
 
     # read parameters:
-    if par_values==[]: par_values=sl.json2dict(folder+'/pars.inp')
+#    if par_values==[]: par_values=sl.json2dict(folder+'/pars.inp')
 
     # read inputs
-    data_folder = par_values['basin']
+    data_folder = basin
     [ watershed_area, ini_values, forcing, long_term ] = read_inputs(data_folder);
 
     Q_cms,Q,AET,PET,Q1,Q2,Q1_routed,ponding,SWE,SMS,S1,S2=run_model(par_values,watershed_area,ini_values,forcing,long_term)
@@ -255,7 +255,7 @@ def obs_streamflow(folder):
     Qobs=pd.read_csv(fn,delim_whitespace=True,index_col=0,parse_dates=True,names=['Q'])
     return Qobs
  
-def run_optimization(folder,dates,metric,par_bounds,par_values,pn,pv, max_iter):
+def run_optimization(folder,dates,metric,par_bounds,par_values,pn,pv):
 
     # read inputs
     data_folder = par_values['basin']
@@ -273,7 +273,7 @@ def run_optimization(folder,dates,metric,par_bounds,par_values,pn,pv, max_iter):
     # Run optimization
     print(pv)
     print(pn)
-    output=minimize(error_fun,pv,args=(pn,par_values,metric,Qobs,watershed_area, ini_values, forcing, long_term,dates),bounds=pb, options={'maxiter':max_iter})
+    output=minimize(error_fun,pv,args=(pn,par_values,metric,Qobs,watershed_area, ini_values, forcing, long_term,dates),bounds=pb)
     pv=output['x']
     for n,v in zip(pn,pv): par_values[n]=v
     print(par_values)
