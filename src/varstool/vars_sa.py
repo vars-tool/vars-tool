@@ -1076,7 +1076,7 @@ class TSVARS(VARS):
             df.index.names = ['centre', 'param', 'point']
 
         # defining a lambda function to do the pairing for each time-step
-        ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(section_df)
+        ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(tsvars_funcs.section_df)
 
         # VARS evaluations can be done in two modes: serial and parallel
         ## if serial mode is chosen, two engines are available:
@@ -1164,11 +1164,11 @@ class TSVARS(VARS):
 
                 self.mu_overall = df.apply(lambda x: np.mean(list(np.unique(x))))
                 self.var_overall = df.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
-                self.variogram = variogram(pair_df)
-                self.sec_covariogram = cov_section(pair_df, mu_star_df)
-                self.morris = morris_eq(pair_df)
-                self.covariogram = covariogram(pair_df, mu_overall)
-                self.sobol_value = sobol_eq(variogram_value, e_covariogram_value, var_overall)
+                self.variogram = tsvars_funcs.variogram(pair_df)
+                self.sec_covariogram = tsvars_funcs.cov_section(pair_df, mu_star_df)
+                self.morris = tsvars_funcs.morris_eq(pair_df)
+                self.covariogram = tsvars_funcs.covariogram(pair_df, mu_overall)
+                self.sobol_value = tsvars_funcs.sobol_eq(variogram_value, e_covariogram_value, var_overall)
                 self.ivars = pd.DataFrame.from_dict({scale: self.variogram.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index')
 
