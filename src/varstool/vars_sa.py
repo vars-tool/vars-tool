@@ -998,19 +998,6 @@ class TSVARS(VARS):
                 "`vars_eval_method` must be either 'parallel' or 'serial'"
             )
 
-        if (not isinstance(self.vars_chunk_size, (int, np.int32, np.int64))) \
-                or \
-                (self.vars_chunk_size != None):     # no chunking 
-
-            warnings.warn(
-                "`vars_chunk_size` must be an integer "
-                "the value has been set to `None`",
-                UserWarning,
-                stacklevel=1
-            )
-            
-            self.vars_chunk_size = None # meaning no chunking 
-
         if self.func_eval_method not in ('serial', 'parallel'):
             raise ValueError(
                 "`func_eval_method` must be either 'parallel' or 'serial'"
