@@ -271,7 +271,7 @@ class VARS(object):
                                                 )
         elif self.sampler == None:
             pass
-            
+
         else:
             raise ValueError(
                 "`sampler` must be either None, or one of the following:"
@@ -998,11 +998,10 @@ class TSVARS(VARS):
                 "`vars_eval_method` must be either 'parallel' or 'serial'"
             )
 
-        if not (isinstance(self.vars_chunk_size, 
-            (int, np.int32, np.int64) \
+        if (not isinstance(self.vars_chunk_size, (int, np.int32, np.int64))) 
                 or
-                None) # no chunking 
-        ):
+                (self.vars_chunk_size != None):     # no chunking 
+
             warnings.warn(
                 "`vars_chunk_size` must be an integer "
                 "the value has been set to `None`",
