@@ -1039,6 +1039,7 @@ class TSVARS(VARS):
                                            parameters=[*self.parameters], # parameters dictionary keys
                                            rettype='DataFrame',
                                        ) # return type must be a dataframe
+        self.star_points.columns = [*self.parameters]
 
         self.star_points = tsvars_funcs.scale(df=self.star_points, # star points must be scaled
                                              bounds={ # bounds are created while scaling
