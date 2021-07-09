@@ -1,0 +1,2 @@
+include src/varstool/funcs/banff/*
+include src/varstool/funcs/oldman/*
