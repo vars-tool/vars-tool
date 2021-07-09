@@ -269,6 +269,9 @@ class VARS(object):
                                                 params=len(self.parameters),
                                                 seed=self.seed,
                                                 )
+        elif self.sampler == None:
+            pass
+            
         else:
             raise ValueError(
                 "`sampler` must be either None, or one of the following:"
