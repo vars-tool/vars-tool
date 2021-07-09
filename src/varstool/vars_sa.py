@@ -1172,7 +1172,7 @@ class TSVARS(VARS):
                 self.morris = tsvars_funcs.morris_eq(self.pair_df)
                 self.covariogram = tsvars_funcs.covariogram(self.pair_df, self.mu_overall)
                 self.e_covariogram = tsvars_funcs.e_covariogram(self.sec_covariogram)
-                self.sobol_value = tsvars_funcs.sobol_eq(self.variogram, self.e_covariogram, self.var_overall)
+                self.sobol_value = tsvars_funcs.sobol_eq(self.variogram, self.e_covariogram, self.var_overall, self.delta_h)
                 self.ivars = pd.DataFrame.from_dict({scale: self.variogram.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index')
 
