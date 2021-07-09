@@ -998,7 +998,7 @@ class TSVARS(VARS):
                 "`vars_eval_method` must be either 'parallel' or 'serial'"
             )
 
-        if (not isinstance(self.vars_chunk_size, (int, np.int32, np.int64))) 
+        if (not isinstance(self.vars_chunk_size, (int, np.int32, np.int64))) \
                 or
                 (self.vars_chunk_size != None):     # no chunking 
 
