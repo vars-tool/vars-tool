@@ -19,7 +19,7 @@ pyDOE project: https://github.com/tisimst/pyDOE
 '''
 
 
-def lhs(sp=None, params=1, criterion=None, iterations=None):
+def lhs(sp=None, params=1, seed=None, criterion=None, iterations=None):
     """
     Generate a latin-hypercube design
 
@@ -90,14 +90,18 @@ def lhs(sp=None, params=1, criterion=None, iterations=None):
         >>> lhs(4, samples=5, criterion='correlate', iterations=10)
     """
     H = None
+    
+    # check the seed number
+    if seed:
+        np.random.seed(int(seed))
 
     if sp is None:
         sp = params
 
     if criterion is not None:
         assert criterion.lower() in ('center', 'c', 'maximin', 'm',
-            'centermaximin', 'cm', 'correlation',
-            'corr'), 'Invalid value for "criterion": {}'.format(criterion)
+                                     'centermaximin', 'cm', 'correlation',
+                                     'corr'), 'Invalid value for "criterion": {}'.format(criterion)
     else:
         H = _lhsclassic(params, sp)
 
@@ -130,7 +134,7 @@ def _lhsclassic(n, samples):
     b = cut[1:samples + 1]
     rdpoints = np.zeros_like(u)
     for j in range(n):
-        rdpoints[:, j] = u[:, j]*(b-a) + a
+        rdpoints[:, j] = u[:, j] * (b - a) + a
 
     # Make the random pairings
     H = np.zeros_like(rdpoints)
@@ -149,7 +153,7 @@ def _lhscentered(n, samples):
     u = np.random.rand(samples, n)
     a = cut[:samples]
     b = cut[1:samples + 1]
-    _center = (a + b)/2
+    _center = (a + b) / 2
 
     # Make the random pairings
     H = np.zeros_like(u)
@@ -164,13 +168,13 @@ def _lhsmaximin(n, samples, iterations, lhstype):
 
     # Maximize the minimum distance between points
     for i in range(iterations):
-        if lhstype=='maximin':
+        if lhstype == 'maximin':
             Hcandidate = _lhsclassic(n, samples)
         else:
             Hcandidate = _lhscentered(n, samples)
 
         d = _pdist(Hcandidate)
-        if maxdist<np.min(d):
+        if maxdist < np.min(d):
             maxdist = np.min(d)
             H = Hcandidate.copy()
 
@@ -185,9 +189,10 @@ def _lhscorrelate(n, samples, iterations):
         # Generate a random LHS
         Hcandidate = _lhsclassic(n, samples)
         R = np.corrcoef(Hcandidate)
-        if np.max(np.abs(R[R!=1]))<mincorr:
-            mincorr = np.max(np.abs(R-np.eye(R.shape[0])))
-            print('new candidate solution found with max,abs corrcoef = {}'.format(mincorr))
+        if np.max(np.abs(R[R != 1])) < mincorr:
+            mincorr = np.max(np.abs(R - np.eye(R.shape[0])))
+            print(
+                'new candidate solution found with max,abs corrcoef = {}'.format(mincorr))
             H = Hcandidate.copy()
 
     return H
@@ -238,10 +243,10 @@ def _pdist(x):
     '''
 
     x = np.atleast_2d(x)
-    assert len(x.shape)==2, 'Input array must be 2d-dimensional'
+    assert len(x.shape) == 2, 'Input array must be 2d-dimensional'
 
     m, n = x.shape
-    if m<2:
+    if m < 2:
         return []
 
     d = []

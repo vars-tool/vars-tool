@@ -248,19 +248,18 @@ class VARS(object):
                                 )
         elif self.sampler == 'halton_seq':
             from .sampling import halton
-            self.star_centres = halton.halton(sp=self.num_stars,
-                                                params=len(self.parameters),
-                                                seed=self.seed,
-                                            )
+            self.star_centres = halton(sp=self.num_stars,
+                                         params=len(self.parameters),
+                                         seed=self.seed,
+                                )
         elif self.sampler == 'symlhs':
             from .sampling import symlhs
-            self.star_centres = symlhs.symlhs(sp=self.num_stars,
-                                                params=len(self.parameters),
-                                                seed=self.seed,
-                                                )
+            self.star_centres = symlhs(sp=self.num_stars,
+                                         params=len(self.parameters),
+                                         seed=self.seed,
+                                )
         elif self.sampler == None:
             pass
-
         else:
             raise ValueError(
                 "`sampler` must be either None, or one of the following:"
