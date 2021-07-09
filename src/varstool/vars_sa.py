@@ -120,17 +120,6 @@ class VARS(object):
 
         # Check input arguments
         # ***add error checking, and possibly default value for star centres
-        # KK: can you think of anything? @CB
-
-        # default value for number of groups is None
-        if not num_grps:
-            self.num_grps = None
-        if not isinstance(num_grps, (int, np.int32, np.int64)):
-            warnings.warn(
-                "`num_grps` must be in integer, it has been set to `None`",
-                UserWarning,
-                stacklevel=1
-            )
 
         # default value for bootstrap_flag
         if not bootstrap_flag:
