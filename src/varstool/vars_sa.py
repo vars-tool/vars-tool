@@ -974,7 +974,6 @@ class TSVARS(VARS):
     ) -> None:
 
         super().__init__(
-            self,
             star_centres,
             num_stars,
             parameters,
