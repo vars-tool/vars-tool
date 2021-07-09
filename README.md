@@ -22,8 +22,8 @@ The underlying approach of the VARS-TOOL toolkit is described in detail in the f
 ### Installing with pip
 
 If you have Python3 and pip installed on your machine, then the vars-tool package can be installed using pip:
-```
-$ pip install varstool
+```console
+foo@bar:~$  pip install varstool
 ```
 
 ### Installing from source code
