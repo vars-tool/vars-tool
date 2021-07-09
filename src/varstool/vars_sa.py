@@ -234,13 +234,7 @@ class VARS(object):
                 raise TypeError(
                     "`model` must be of type varstool.Model"
                 )
-        self.model = model
-
-        # check `sampler` and `parameters` values
-        if ((not self.sampler) and len(self.parameters) == 0):
-            raise ValueError(
-                "If a built-in sampler is selected, `parameters` cannot be empty."
-            )
+            self.model = model
 
         # check the sampling algorithms
         if self.sampler == 'rnd':
