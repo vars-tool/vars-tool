@@ -1160,7 +1160,7 @@ class TSVARS(VARS):
                 self.pair_df = df.groupby(level=0, axis=1).apply(ts_pair)
                 self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
                 self.pair_df.columns.names = ['ts', None]
-                self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
+                self.pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
 
                 self.mu_star_df = df.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                 self.mu_star_df.index.names = ['ts', 'centre', 'param']
