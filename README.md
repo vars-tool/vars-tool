@@ -21,18 +21,18 @@ The underlying approach of the VARS-TOOL toolkit is described in detail in the f
 
 ### 2.1. Installing with pip
 
-If you have Python3 and pip installed on your machine, then the vars-tool package can be installed using pip:
+If you have Python3 and pip installed on your machine, then the VARS-TOOL package can be installed using pip:
 ```console
 foo@bar:~$  pip install varstool
 ```
 
 ### 2.2. Installing from source code
 
-To install vars-tool from the source code, you will need to clone the github repository onto your local device using the command:
+To install VARS-TOOL from the source code, you will need to clone the github repository onto your local device using the command:
 ```console
 foo@bar:~$ git clone https://github.com/vars-tool/vars-tool.git
 ```
-To install the package, enter the vars-tool directory and run:
+To install the package, enter the VARS-TOOL directory and run:
 ```console
 foo@bar:~$ cd vars-tool
 foo@bar:~$ pip install .
@@ -51,7 +51,7 @@ Under progres...
 
 ## 4. Examples and Tutorials
 
-* [4.1. Quick Start:](https://github.com/vars-tool/vars-tool/blob/master/tutorial/QucikStart-Tutorial.ipynb) Here is an overview of the varstool main components and a simple example using ishigami and wavy6d models. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=tutorial%2FQucikStart-Tutorial.ipynb)
+* [4.1. Quick Start:](https://github.com/vars-tool/vars-tool/blob/master/tutorial/QucikStart-Tutorial.ipynb) Here is an overview of the VARS-TOOL main components and a simple example using ishigami and wavy6d models. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=tutorial%2FQucikStart-Tutorial.ipynb)
 
 * [4.2. Real-world Example Using HBV-SASK (using TSVARS):](https://github.com/vars-tool/vars-tool/blob/master/tutorial/TSVARS-Tutorial.ipynb) Sensitivity analysis of a real-world hydrological model. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=%2Ftutorial%2FTSVARS-Tutorial.ipynb)
 	
@@ -61,7 +61,7 @@ Under progres...
 
 ## 5. Your Contributions
 
-Contributions to vars-tool are welcome! To contribute new features submit a pull request. To get started it is recommended to install the packages in `requirements.txt` by using the following command:
+Contributions to VARS-TOOL are welcome! To contribute new features submit a pull request. To get started it is recommended to install the packages in `requirements.txt` by using the following command:
 ```console
 foo@bar:~$ pip install -r requirements.txt
 ```
@@ -79,7 +79,7 @@ Under progress...
 
 ### 7.1 Software
 
-varstool is licensed under the GNU General Public License, Version 3.0 or later.
+VARS-TOOL is licensed under the GNU General Public License, Version 3.0 or later.
 
 Copyright (C) 2015-21 Saman Razavi, University of Saskatchewan
 
