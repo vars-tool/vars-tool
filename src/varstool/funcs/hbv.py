@@ -10,20 +10,20 @@ def read_inputs(data_folder):
     inp={}
 
     # % ********  Initial Condition  *********
-    fn='.'+data_folder + '/initial_condition.inp'
+    fn='./'+data_folder + '/initial_condition.inp'
     data=np.loadtxt(fn,delimiter=' ',usecols=[1])
     watershed_area=data[0]
     ini_values=data[1:]
 
     # % ********  Precipitation and Temperature  *********
-    fn='.'+data_folder + '/Precipitation_Temperature.inp'
+    fn='./'+data_folder + '/Precipitation_Temperature.inp'
     forcing=pd.read_csv(fn,delim_whitespace=True,index_col=0,parse_dates=True,names=['P','T'])
     #forcing=pd.read_csv(fn,delim_whitespace=True,usecols=[1,2],names=['P','T'])
     #forcing.index=pd.date_range(start='1979-01-01',freq='D',periods=len(forcing))
     forcing['month_time_series']=forcing.index.month.values
 
     # % ********  Evapotranspiration  *********
-    fn='.'+data_folder + '/monthly_data.inp'
+    fn='./'+data_folder + '/monthly_data.inp'
     Tave,PEave=np.loadtxt(fn,delimiter='\t',unpack=True)
     long_term={}
     long_term['monthly_average_T']=Tave
