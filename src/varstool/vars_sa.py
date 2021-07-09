@@ -1167,10 +1167,10 @@ class TSVARS(VARS):
 
                 self.mu_overall = df.apply(lambda x: np.mean(list(np.unique(x))))
                 self.var_overall = df.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
-                self.variogram = tsvars_funcs.variogram(pair_df)
-                self.sec_covariogram = tsvars_funcs.cov_section(pair_df, mu_star_df)
-                self.morris = tsvars_funcs.morris_eq(pair_df)
-                self.covariogram = tsvars_funcs.covariogram(pair_df, mu_overall)
+                self.variogram = tsvars_funcs.variogram(self.pair_df)
+                self.sec_covariogram = tsvars_funcs.cov_section(self.pair_df, self.mu_star_df)
+                self.morris = tsvars_funcs.morris_eq(self.pair_df)
+                self.covariogram = tsvars_funcs.covariogram(self.pair_df, self.mu_overall)
                 self.e_covariogram = tsvars_funcs.e_covariogram(self.sec_covariogram)
                 self.sobol_value = tsvars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, self.var_overall)
                 self.ivars = pd.DataFrame.from_dict({scale: self.variogram.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
