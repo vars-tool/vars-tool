@@ -468,7 +468,7 @@ def ivars(
     Blanchard, Cordell, (2021): code in Python 3
     """
 
-    num_h = len(variogram_value.index.levels[-1].to_list())
+    num_h = len(variogram_array.index.levels[-1].to_list())
     x_bench = np.arange(start=0, stop=delta_h * (num_h + 1), step=delta_h)
     x_int = np.arange(start=0, stop=(scale * 10 + 1) / 10, step=delta_h)
 
