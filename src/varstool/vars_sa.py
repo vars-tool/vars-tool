@@ -483,20 +483,20 @@ class VARS(object):
 
         # make data 1d
         R = sens_idx.stack()
-        # remove zero elements to improve numerical reasoning
-        R = R[R != 0]
+        # replacing zeros with a constant number due to numerical reasoning
+        R[R == 0] = np.ones(len(R[R == 0]))
 
         # do a box-cox transformation
         [TRANSDAT, LAMBDA] = stat.boxcox(R)
         if LAMBDA <= 0.0099:
             TRANSDAT = np.log(R)
 
-        indices = np.argwhere(np.isinf(TRANSDAT))
+        indices = np.argwhere(np.isinf(TRANSDAT).tolist())
         if indices.shape == (2, 1):
             TRANSDAT[indices[0], indices[1]] = np.log(R[R > 0])
 
         # reshape data for the linkage calculation
-        S = np.reshape(TRANSDAT, [n, m])
+        S = np.reshape(TRANSDAT.tolist(), [n, m])
 
         # Agglomerative hierarchical cluster
         Z = hchy.linkage(S, method='ward', metric='euclidean')
@@ -1054,7 +1054,7 @@ class TSVARS(VARS):
         if self.func_eval_method == 'serial':
             df = self.star_points.apply(self.model, axis=1, result_type='expand')
             df.index.names = ['centre', 'param', 'point']
-        
+
         elif self.func_eval_method == 'parallel':
             warnings.warn(
                 "Evaluating function in parallel is not stable yet! "
@@ -1101,10 +1101,10 @@ class TSVARS(VARS):
                 self.ivars = pd.DataFrame()
 
                 for chunk in range(int(df.shape[1]//self.vars_chunk_size)+1): # total number of chunks
-                    
+
                     # make a chunk of the main df (result of func eval)
                     df_temp = df.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, df.shape[1]-1)]
-                
+
                     # make pairs for each chunk
                     temp_pair_df = df_temp.groupby(level=0, axis=1).apply(ts_pair)
                     temp_pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
@@ -1112,7 +1112,7 @@ class TSVARS(VARS):
                     temp_pair_df.stack(level='ts').reorder_levels(['ts','centre','param','h','pair_ind']).sort_index()
                     self.pair_df = pd.concat([self.pair_df, temp_pair_df])
 
-                    # mu star 
+                    # mu star
                     temp_mu_star = df_temp.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                     temp_mu_star.index.names = ['ts', 'centre', 'param']
                     self.mu_star = pd.concat([self.mu_star, temp_mu_star])
@@ -1125,7 +1125,7 @@ class TSVARS(VARS):
                     temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
                     self.var_overall = pd.concat([self.var_overall, temp_var_overall])
 
-                    #variogram 
+                    #variogram
                     temp_variogram = tsvars_funcs.variogram(temp_pair_df)
                     self.variogram = pd.concat([self.variogram, temp_variogram])
 
@@ -1199,16 +1199,16 @@ class TSVARS(VARS):
                 self.ivars = pd.DataFrame()
 
                 for chunk in range(int(df.shape[1]//self.vars_chunk_size)+1): # total number of chunks
-                    
+
                     # make a chunk of the main df (result of func eval)
                     df_temp = df.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, df.shape[1]-1)]
-                
+
                     # make pairs for each chunk
                     temp_pair_df = applyParallel(a.groupby(level=0, axis=1), ts_pair)
                     temp_pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
                     self.pair_df = pd.concat([self.pair_df, temp_pair_df])
 
-                    # mu star 
+                    # mu star
                     temp_mu_star = df_temp.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                     temp_mu_star.index.names = ['ts', 'centre', 'param']
                     self.mu_star = pd.concat([self.mu_star, temp_mu_star])
@@ -1221,7 +1221,7 @@ class TSVARS(VARS):
                     temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
                     self.var_overall = pd.concat([self.var_overall, temp_var_overall])
 
-                    #variogram 
+                    #variogram
                     temp_variogram = tsvars_funcs.variogram(temp_pair_df)
                     self.variogram = pd.concat([self.variogram, temp_variogram])
 
@@ -1273,7 +1273,7 @@ class TSVARS(VARS):
                 self.run_status = True
 
 
-    def temp_func(func, name, group):     
+    def temp_func(func, name, group):
         return func(group), name
 
     def applyParallel(dfGrouped, func):
