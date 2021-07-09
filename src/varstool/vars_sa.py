@@ -215,14 +215,14 @@ class VARS(object):
 
         ## check the dtypes and instances
         ### `parameters`
-        if not isinstance(parameters, dict):
+        if not isinstance(self.parameters, dict):
             raise ValueError(
                 "`parameters` must be of type `dict`; the keys must be"
                 "their names, either strings or integers, and values must"
                 "be the lower and upper bounds of their factor space."
             )
 
-        if len(parameters) < 2:
+        if 0 < len(self.parameters) < 2:
             raise ValueError(
                 "the number of parameters in a sensitivity analysis problem"
                 "must be greater than 1"
