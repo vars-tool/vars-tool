@@ -417,7 +417,7 @@ class VARS(object):
         # do factor ranking on sobol results
         sobol_factor_ranking_array = self._factor_ranking(self.sobol_value)
         # turn results into data frame
-        self.sobol_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys())
+        self.sobol_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
 
         # IVARS calculation
         self.ivars = pd.DataFrame.from_dict({scale: self.variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
@@ -556,8 +556,8 @@ class VARS(object):
         num_grp_sobol, sobol_grp_array, ClustersSobol = self._factor_grouping(result_bs_sobol,
                                                                               num_grp=self.num_grps)
 
-        ivars50_grp = pd.DataFrame([ivars50_grp_array], columns=self.parameters.keys())
-        sobol_grp = pd.DataFrame([sobol_grp_array], columns=self.parameters.keys())
+        ivars50_grp = pd.DataFrame([ivars50_grp_array], columns=self.parameters.keys(), index=[0.5])
+        sobol_grp = pd.DataFrame([sobol_grp_array], columns=self.parameters.keys(), index=[''])
 
         # calculate reliability estimates based on factor grouping
         cluster_sobol = []
@@ -601,8 +601,8 @@ class VARS(object):
             reli_sobol_grp_array[D] = reli_sobol
             reli_ivars50_grp_array[D] = reli_ivars50
 
-        reli_sobol_grp = pd.DataFrame([reli_sobol_grp_array], columns=self.parameters.keys())
-        reli_ivars50_grp = pd.DataFrame([reli_ivars50_grp_array], columns=self.parameters.keys())
+        reli_sobol_grp = pd.DataFrame([reli_sobol_grp_array], columns=self.parameters.keys(), index=[''])
+        reli_ivars50_grp = pd.DataFrame([reli_ivars50_grp_array], columns=self.parameters.keys(), index=[0.5])
 
         return ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp
 
@@ -716,7 +716,7 @@ class VARS(object):
             rel_sobol_results.append(
                 result_bs_sobol_ranking.eq(self.sobol_factor_ranking)[param].sum() / self.bootstrap_size)
 
-        rel_sobol_factor_ranking = pd.DataFrame([rel_sobol_results], columns=self.parameters.keys())
+        rel_sobol_factor_ranking = pd.DataFrame([rel_sobol_results], columns=self.parameters.keys(), index=[''])
 
         # calculate reliability estimates based on factor ranking of ivars results
         rel_ivars_results = []
