@@ -1,7 +1,7 @@
 # VARS-TOOL Python Library
 
 ## 1. Overview of VARS-TOOL
-----
+
 VARS-TOOL is a next-generation, multi-method sensitivity and uncertainty analysis software toolbox,
 applicable to the full range of computer simulation models, including Dynamical Earth Systems
 Models (DESMs). Developed primarily around the powerful “Variogram Analysis of Response
@@ -18,7 +18,7 @@ The underlying approach of the VARS-TOOL toolkit is described in detail in the f
 
 
 ## 2. Installation
----
+
 ### Installing with pip
 
 If you have Python3 and pip installed on your machine, then the vars-tool package can be installed using pip:
@@ -43,12 +43,11 @@ foo@bar:~$ python setup.py install
 ```
 > **_Note:_**: If this does not work due to limited permissions, add the `--user` option to the above commands.
 
-## 3. Documentation
----
+# 3. Documentation
+
 Under progres...
 
 ## 4. Examples and Tutorials
----
 
 ### [Quick Start:](https://github.com/vars-tool/vars-tool/blob/master/tutorial/QucikStart-Tutorial.ipynb)
 Here is an overview of the varstool main components and a simple example using ishigami and wavy6d models.
@@ -61,7 +60,7 @@ Here is an overview of the varstool main components and a simple example using i
 ### [Data-driven Sensitivity Analysis (DVARS)](url)
 
 ## Your Contributions
-----
+
 Contributions to VARS-TOOl are welcome! To contribute new features submit a pull request. To get started it is recommended to install the packages in `requirements.txt` by using the following command:
 ```console
 foo@bar:~$ pip install -r requirements.txt
@@ -73,8 +72,7 @@ Once the packages are installed to contribute do the following:
 4. When the branch is ready to be merged, you can create a Pull Request ([how to create a pull request](https://gist.github.com/MarcDiethelm/7303312))
 
 ## References
-----
 
 ## License
-----
+
 
