@@ -11,6 +11,7 @@ from collections.abc import (
 from typing import (
     Callable,
     Optional,
+    Any
 )
 
 # helper functions
@@ -18,8 +19,8 @@ def apply_unique(
     func: Callable,
     df: pd.DataFrame,
     axis: int=1,
-    *args: Any=(),
-    **kwargs: Any={},
+    *args: tuple,
+    **kwargs: dict,
     ) -> pd.DataFrame:
     """
     Description:
@@ -51,7 +52,7 @@ def apply_unique(
     """
 
     applied_df = df.merge(df.drop_duplicates()
-                          .assign(**{str(func): lambda x: x.apply(func, axis=axis, agrs=args, **kwargs)}),
+                          .assign(**{func.__name__: lambda x: x.apply(func, axis=axis)}),
                           how='left')
     applied_df.index = df.index
 
@@ -83,10 +84,9 @@ def pairs_h(iterable: Iterable) -> pd.DataFrame:
     Blanchard, Cordell, (2021): code in Python 3
     """
 
-    interval = range(min(iterable), max(iterable) - min(iterable))
-    pairs = {key + 1: [j for j in combinations(iterable, 2) if np.abs(
-        j[0] - j[1]) == key + 1] for key in interval}
-
+    # gives the pairs of numbers considering their differences
+    interval = range(min(iterable), max(iterable)-min(iterable))
+    pairs  = {key+1:[j for j in combinations(iterable, 2) if np.abs(j[0]-j[1])==key+1] for key in interval}
     return pairs
 
 

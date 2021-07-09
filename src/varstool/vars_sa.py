@@ -108,6 +108,7 @@ class VARS(object):
         self.bootstrap_size = bootstrap_size
         self.bootstrap_ci = bootstrap_ci
         self.grouping_flag = grouping_flag
+        self.num_grps = num_grps
         self.report_verbose = report_verbose
         self.sampler = sampler # one of the default sampling algorithms or None
         # analysis stage is set to False before running anything
@@ -141,7 +142,7 @@ class VARS(object):
         # default value for grouping flag
         if not grouping_flag:
             self.grouping_flag = False
-        if not isinstance(groupbing_flag, bool):
+        if not isinstance(grouping_flag, bool):
             warnings.warn(
                 "`grouping_flag` must be either `True` or `False`."
                 "default value of `False` will be considered.",
@@ -301,11 +302,13 @@ class VARS(object):
         status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
         status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size)+"" if self.bootstrap_flag else "N/A")
         status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"" if self.bootstrap_flag else "N/A")
+        status_grouping = "Grouping: " + ("On" if self.grouping_flag else "Off")
+        status_num_grps = "Number of Groups: " + (str(self.num_grps)+"" if self.num_grps else "None")
         status_analysis = "VARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [status_star_centres, status_star_points, status_parameters, \
                               status_delta_h, status_model, status_seed, status_bstrap, \
-                              status_bstrap_size, status_bstrap_ci, status_analysis]
+                              status_bstrap_size, status_bstrap_ci, status_grouping, status_num_grps, status_analysis]
 
         return "\n".join(status_report_list)
 
@@ -383,8 +386,8 @@ class VARS(object):
                                            parameters=[*self.parameters], # parameters dictionary keys
                                            rettype='DataFrame',
                                        ) # return type is a dataframe
-        
-        self.__star_points = varsfuncs.scale(df=self.__star_points, # star points must be scaled
+
+        self.__star_points = vars_funcs.scale(df=self.__star_points, # star points must be scaled
                                              bounds={ # bounds are created while scaling
                                              'lb':[val[0] for _, val in self.parameters.items()],
                                              'ub':[val[1] for _, val in self.parameters.items()],
@@ -392,11 +395,11 @@ class VARS(object):
                                         )
 
         # apply model to the generated star points
-        df = vars_funcs.apply_unique(self.model, self.__star_points)
+        df = vars_funcs.apply_unique(self.model.func, self.__star_points)
         df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h'
-        pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df)
+        pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df, self.delta_h)
         pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # get mu_star value
@@ -433,180 +436,23 @@ class VARS(object):
         self.sobol_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys())
 
         # IVARS calculation
-        self.ivars_df = pd.DataFrame.from_dict({scale: self.variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+        self.ivars = pd.DataFrame.from_dict({scale: self.variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
              for scale in self.ivars_scales}, 'index')
 
         # do factor ranking on IVARS results
-        ivars_factor_ranking_array = self._factor_ranking(self.ivars_df)
+        ivars_factor_ranking_list = []
+        for scale in self.ivars_scales:
+            ivars_factor_ranking_list.append(self._factor_ranking(self.ivars.loc[scale]))
         # turn results into data frame
-        self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_array, columns=self.parameters.keys(), index=self.ivars_scales)
+        self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_list, columns=self.parameters.keys(), index=self.ivars_scales)
 
-        if self.bootstrap_flag:
-            # create result dataframes if bootstrapping is chosen to be done
-            result_bs_variogram = pd.DataFrame()
-            result_bs_sobol = pd.DataFrame()
-            result_bs_ivars_df = pd.DataFrame()
-            result_bs_sobol_ranking = pd.DataFrame()
-            result_bs_ivars_ranking = pd.DataFrame()
-
-            for i in range(0, self.bootstrap_size):
-                # bootstrapping to get CIs
-                # specify random sequence by sampling with replacement
-                bootstrap_rand = np.random.choice(list(range(0, 10)), size=len(range(0, 10)), replace=True).tolist()
-                bootstrapped_pairdf = pd.concat([pair_df.loc[pd.IndexSlice[i, :, :, :], :] for i in bootstrap_rand])
-                bootstrapped_df = pd.concat([df.loc[pd.IndexSlice[i, :, :], :] for i in bootstrap_rand])
-
-                # calculating sectional covariograms
-                bootstrapped_cov_section_all = pd.concat([cov_section_all.loc[pd.IndexSlice[i, :]] for i in bootstrap_rand])
-
-                # calculating variogram, ecovariogram, variance, mean, Sobol, and IVARS values
-                bootstrapped_variogram = vars_funcs.variogram(bootstrapped_pairdf)
-
-                bootstrapped_ecovariogram = vars_funcs.e_covariogram(bootstrapped_cov_section_all)
-
-                bootstrapped_var = bootstrapped_df[self.model.func.__name__].unique().var(ddof=1)
-
-                bootstrapped_sobol = vars_funcs.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram, bootstrapped_var)
-
-                bootstrapped_ivars_df = pd.DataFrame.from_dict(
-                    {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
-                     for scale in self.ivars_scales}, 'index')
-
-                # calculating factor rankings for sobol and ivars
-                bootstrapped_sobol_ranking = self._factor_ranking(bootstrapped_sobol)
-                bootstrapped_sobol_ranking_df = pd.DataFrame(data=[bootstrapped_sobol_ranking], columns=self.parameters.keys())
-
-                bootstrapped_ivars_ranking = self._factor_ranking(bootstrapped_ivars_df)
-                bootstrapped_ivars_ranking_df = pd.DataFrame(data=bootstrapped_ivars_ranking, columns=self.parameters.keys(),
-                                                             index=self.ivars_scales)
-
-                # unstack variogram so that results concat nicely
-                bootstrapped_variogram_df = bootstrapped_variogram.unstack(level=0)
-
-                # swap sobol results rows and columns so that results concat nicely
-                bootstrapped_sobol_df = bootstrapped_sobol.to_frame().transpose()
-
-                # attatch new results to previous results (order does not matter here)
-                result_bs_variogram = pd.concat([bootstrapped_variogram_df, result_bs_variogram])
-                result_bs_sobol = pd.concat([bootstrapped_sobol_df, result_bs_sobol])
-                result_bs_ivars_df = pd.concat([bootstrapped_ivars_df, result_bs_ivars_df])
-                result_bs_sobol_ranking = pd.concat([bootstrapped_sobol_ranking_df, result_bs_sobol_ranking])
-                result_bs_ivars_ranking = pd.concat([bootstrapped_ivars_ranking_df, result_bs_ivars_ranking])
-
-            # calculate upper and lower confidence interval limits for variogram results
-            self.variogram_low = pd.DataFrame()
-            self.variogram_upp = pd.DataFrame()
-            # iterate through each h value
-            for h in np.unique(result_bs_variogram.index.values).tolist():
-                # find all confidence interval limits for each h value
-                self.variogram_low = pd.concat(
-                    [self.variogram_low, result_bs_variogram.loc[h].quantile((1 - self.bootstrap_ci) / 2).rename(h).to_frame()], axis=1)
-                self.variogram_upp = pd.concat(
-                    [self.variogram_upp, result_bs_variogram.loc[h].quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename(h).to_frame()],
-                    axis=1)
-
-            # index value name is h?? not sure if this should be changed later
-            self.variogram_low.index.names = ['h']
-            self.variogram_upp.index.names = ['h']
-
-            # transpose to get into correct format
-            self.variogram_low = self.variogram_low.transpose()
-            self.variogram_upp = self.variogram_upp.transpose()
-
-            # calculate upper and lower confidence interval limits for sobol results in a nice looking format
-            self.sobol_low = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2).rename('').to_frame().transpose()
-            self.sobol_upp = result_bs_sobol.quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename('').to_frame().transpose()
-
-            # calculate upper and lower confidence interval limits of the ivars values
-            self.ivars_low = pd.DataFrame()
-            self.ivars_upp = pd.DataFrame()
-            # iterate through each IVARS scale
-            for scale in self.ivars_scales:
-                # find confidence interval limits for each scale
-                self.ivars_low = pd.concat(
-                    [self.ivars_low, result_bs_ivars_df.loc[scale].quantile((1 - self.bootstrap_ci) / 2).rename(scale).to_frame()], axis=1)
-                self.ivars_upp = pd.concat(
-                    [self.ivars_upp, result_bs_ivars_df.loc[scale].quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename(scale).to_frame()],
-                    axis=1)
-
-            # transpose the results to get them in the right format
-            self.ivars_low = self.ivars_low.transpose()
-            self.ivars_upp = self.ivars_upp.transpose()
-
-            # calculate reliability estimates based on factor ranking of sobol result
-            rel_sobol_results = []
-            for param in self.parameters.keys():
-                rel_sobol_results.append(result_bs_sobol_ranking.eq(self.sobol_factor_ranking)[param].sum()/self.bootstrap_size)
-
-            self.rel_sobol_factor_ranking = pd.DataFrame([rel_sobol_results], columns=self.parameters.keys())
-
-            # calculate reliability estimates based on factor ranking of ivars results
-            rel_ivars_results = []
-            # iterate through each paramter
-            for param in self.parameters.keys():
-                rel_ivars_results_scale = []
-                # iterate through each ivars scale
-                for scale in self.ivars_scales:
-                    # ... to find the reliability estimate of the ivars rankings at each ivars scale
-                    rel_ivars_results_scale.append(
-                        result_bs_ivars_ranking.eq(self.ivars_factor_ranking)[param].loc[scale].sum() / self.bootstrap_size)
-                rel_ivars_results.append(rel_ivars_results_scale)
-
-            self.rel_ivars_factor_ranking = pd.DataFrame(rel_ivars_results, columns=self.parameters.keys(), index=self.ivars_scales)
-
-            # grouping can only be done if bootstrapping has been done and 0.5 ivars was chosen as a scale
-            if self.grouping_flag and (0.5 in result_bs_ivars_df.index):
-                # group the parameters
-                num_grp_ivars50, ivars50_grp_array, ClustersIvars50 = self._factor_grouping(result_bs_ivars_df.loc[0.5], num_grp=self.num_grps)
-                num_grp_sobol, sobol_grp_array, ClustersSobol = self._factor_grouping(result_bs_sobol, num_grp=self.num_grps)
-
-                self.ivars50_grp = pd.DataFrame([ivars50_grp_array], columns=self.parameters.keys())
-                self.sobol_grp = pd.DataFrame([sobol_grp_array], columns=self.parameters.keys())
-
-                # calculate reliability estimates based on factor grouping
-                cluster_sobol = []
-                cluster_rank_sobol = []
-                # associate group numbers with the parameters
-                for g in range(0, num_grp_sobol):
-                    cluster_sobol.append(np.argwhere(sobol_grp_array == g + 1).flatten())
-                    cluster_rank_sobol.append(sobol_factor_ranking_array[cluster_sobol[g]])
-                    cluster_rank_sobol[g] = np.sort(cluster_rank_sobol[g], axis=0)
-
-                cluster_ivars50 = []
-                cluster_rank_ivars50 = []
-                for g in range(0, num_grp_ivars50):
-                    cluster_ivars50.append(np.argwhere(ivars50_grp_array == g + 1).flatten())
-                    cluster_rank_ivars50.append(self.ivars_factor_ranking.loc[0.5].to_numpy()[cluster_ivars50[g]])
-                    cluster_rank_ivars50[g] = np.sort(cluster_rank_ivars50[g], axis=0)
-
-                # calculate the reliability estimates based on the factor groupings and their corresponding paramaters
-                reli_sobol_grp_array = np.zeros(len(self.parameters.keys()))
-                reli_ivars50_grp_array = np.zeros(len(self.parameters.keys()))
-                for D in range(0, len(self.parameters.keys())):
-                    match = [np.argwhere(cluster_sobol[x] == D).flatten() for x in range(0, len(cluster_sobol))]
-                    rank_range_sobol = [(match[x].size != 0) for x in range(0, len(match))]
-                    rank_sobol_benchmark = list(compress(cluster_rank_sobol, rank_range_sobol))
-                    rank_sobol_benchmark = rank_sobol_benchmark[0]
-
-                    match = [np.argwhere(cluster_ivars50[x] == D).flatten() for x in range(0, len(cluster_ivars50))]
-                    rank_range_ivars50 = [(match[x].size != 0) for x in range(0, len(match))]
-                    rank_ivars50_benchmark = list(compress(cluster_rank_ivars50, rank_range_ivars50))
-                    rank_ivars50_benchmark = rank_ivars50_benchmark[0]
-
-                    # calculate the reliability of parameter number D
-                    reli_sobol = 0
-                    reli_ivars50 = 0
-                    for i in range(0, self.bootstrap_size):
-                        reli_sobol += len(
-                            np.argwhere(result_bs_sobol_ranking.iloc[i, D] == rank_sobol_benchmark)) / self.bootstrap_size
-                        reli_ivars50 += len(np.argwhere(
-                            result_bs_ivars_ranking.loc[0.5].iloc[i, D] == rank_ivars50_benchmark)) / self.bootstrap_size
-
-                    reli_sobol_grp_array[D] = reli_sobol
-                    reli_ivars50_grp_array[D] = reli_ivars50
-
-                self.reli_sobol_grp = pd.DataFrame([reli_sobol_grp_array], columns=self.parameters.keys())
-                self.reli_ivars50_grp = pd.DataFrame([reli_ivars50_grp_array], columns=self.parameters.keys())
+        if self.bootstrap_flag and self.grouping_flag:
+            self.variogram_low, self.variogram_upp, self.sobol_low, self.sobol_upp, self.ivars_low, self.ivars_upp, \
+            self.rel_sobol_factor_ranking,self.rel_ivars_factor_ranking, self.ivars50_grp, self.sobol_grp, \
+            self.reli_sobol_grp, self.reli_ivars50_grp = self._bootstrapping(pair_df, df, cov_section_all)
+        else:
+            self.variogram_low, self.variogram_upp, self.sobol_low, self.sobol_upp, self.ivars_low, self.ivars_upp, \
+            self.rel_sobol_factor_ranking,self.rel_ivars_factor_ranking = self._bootstrapping(pair_df, df, cov_section_all)
 
 
         self.run_status = True
@@ -719,6 +565,202 @@ class VARS(object):
 
         return cutoff, clrThrshl
 
+    def _grouping(self, result_bs_ivars_df, result_bs_sobol, result_bs_ivars_ranking, result_bs_sobol_ranking):
+        # group the parameters
+        num_grp_ivars50, ivars50_grp_array, ClustersIvars50 = self._factor_grouping(result_bs_ivars_df.loc[0.5],
+                                                                                    num_grp=self.num_grps)
+        num_grp_sobol, sobol_grp_array, ClustersSobol = self._factor_grouping(result_bs_sobol,
+                                                                              num_grp=self.num_grps)
+
+        ivars50_grp = pd.DataFrame([ivars50_grp_array], columns=self.parameters.keys())
+        sobol_grp = pd.DataFrame([sobol_grp_array], columns=self.parameters.keys())
+
+        # calculate reliability estimates based on factor grouping
+        cluster_sobol = []
+        cluster_rank_sobol = []
+        # associate group numbers with the parameters
+        for g in range(0, num_grp_sobol):
+            cluster_sobol.append(np.argwhere(sobol_grp_array == g + 1).flatten())
+            cluster_rank_sobol.append(self.sobol_factor_ranking.to_numpy().flatten()[cluster_sobol[g]])
+            cluster_rank_sobol[g] = np.sort(cluster_rank_sobol[g], axis=0)
+
+        cluster_ivars50 = []
+        cluster_rank_ivars50 = []
+        for g in range(0, num_grp_ivars50):
+            cluster_ivars50.append(np.argwhere(ivars50_grp_array == g + 1).flatten())
+            cluster_rank_ivars50.append(self.ivars_factor_ranking.loc[0.5].to_numpy()[cluster_ivars50[g]])
+            cluster_rank_ivars50[g] = np.sort(cluster_rank_ivars50[g], axis=0)
+
+        # calculate the reliability estimates based on the factor groupings and their corresponding paramaters
+        reli_sobol_grp_array = np.zeros(len(self.parameters.keys()))
+        reli_ivars50_grp_array = np.zeros(len(self.parameters.keys()))
+        for D in range(0, len(self.parameters.keys())):
+            match = [np.argwhere(cluster_sobol[x] == D).flatten() for x in range(0, len(cluster_sobol))]
+            rank_range_sobol = [(match[x].size != 0) for x in range(0, len(match))]
+            rank_sobol_benchmark = list(compress(cluster_rank_sobol, rank_range_sobol))
+            rank_sobol_benchmark = rank_sobol_benchmark[0]
+
+            match = [np.argwhere(cluster_ivars50[x] == D).flatten() for x in range(0, len(cluster_ivars50))]
+            rank_range_ivars50 = [(match[x].size != 0) for x in range(0, len(match))]
+            rank_ivars50_benchmark = list(compress(cluster_rank_ivars50, rank_range_ivars50))
+            rank_ivars50_benchmark = rank_ivars50_benchmark[0]
+
+            # calculate the reliability of parameter number D
+            reli_sobol = 0
+            reli_ivars50 = 0
+            for i in range(0, self.bootstrap_size):
+                reli_sobol += len(
+                    np.argwhere(result_bs_sobol_ranking.iloc[i, D] == rank_sobol_benchmark)) / self.bootstrap_size
+                reli_ivars50 += len(np.argwhere(
+                    result_bs_ivars_ranking.loc[0.5].iloc[i, D] == rank_ivars50_benchmark)) / self.bootstrap_size
+
+            reli_sobol_grp_array[D] = reli_sobol
+            reli_ivars50_grp_array[D] = reli_ivars50
+
+        reli_sobol_grp = pd.DataFrame([reli_sobol_grp_array], columns=self.parameters.keys())
+        reli_ivars50_grp = pd.DataFrame([reli_ivars50_grp_array], columns=self.parameters.keys())
+
+        return ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp
+
+
+    def _bootstrapping(self, pair_df, df, cov_section_all):
+        # create result dataframes if bootstrapping is chosen to be done
+        result_bs_variogram = pd.DataFrame()
+        result_bs_sobol = pd.DataFrame()
+        result_bs_ivars_df = pd.DataFrame()
+        result_bs_sobol_ranking = pd.DataFrame()
+        result_bs_ivars_ranking = pd.DataFrame()
+
+        for i in range(0, self.bootstrap_size):
+            # bootstrapping to get CIs
+            # specify random sequence by sampling with replacement
+            bootstrap_rand = np.random.choice(list(range(0, 10)), size=len(range(0, 10)), replace=True).tolist()
+            bootstrapped_pairdf = pd.concat([pair_df.loc[pd.IndexSlice[i, :, :, :], :] for i in bootstrap_rand])
+            bootstrapped_df = pd.concat([df.loc[pd.IndexSlice[i, :, :], :] for i in bootstrap_rand])
+
+            # calculating sectional covariograms
+            bootstrapped_cov_section_all = pd.concat([cov_section_all.loc[pd.IndexSlice[i, :]] for i in bootstrap_rand])
+
+            # calculating variogram, ecovariogram, variance, mean, Sobol, and IVARS values
+            bootstrapped_variogram = vars_funcs.variogram(bootstrapped_pairdf)
+
+            bootstrapped_ecovariogram = vars_funcs.e_covariogram(bootstrapped_cov_section_all)
+
+            bootstrapped_var = bootstrapped_df[self.model.func.__name__].unique().var(ddof=1)
+
+            bootstrapped_sobol = vars_funcs.sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram,
+                                                     bootstrapped_var, self.delta_h)
+
+            bootstrapped_ivars_df = pd.DataFrame.from_dict(
+                {scale: bootstrapped_variogram.groupby(level=0).apply(vars_funcs.ivars, scale=scale,
+                                                                      delta_h=self.delta_h) \
+                 for scale in self.ivars_scales}, 'index')
+
+            # calculating factor rankings for sobol and ivars
+            bootstrapped_sobol_ranking = self._factor_ranking(bootstrapped_sobol)
+            bootstrapped_sobol_ranking_df = pd.DataFrame(data=[bootstrapped_sobol_ranking],
+                                                         columns=self.parameters.keys())
+
+            # do factor ranking on IVARS results
+            bootstrapped_ivars_factor_ranking_list = []
+            for scale in self.ivars_scales:
+                bootstrapped_ivars_factor_ranking_list.append(self._factor_ranking(bootstrapped_ivars_df.loc[scale]))
+            # turn results into data frame
+            bootstrapped_ivars_ranking_df = pd.DataFrame(data=bootstrapped_ivars_factor_ranking_list, columns=self.parameters.keys(),
+                                                     index=self.ivars_scales)
+
+            # unstack variogram so that results concat nicely
+            bootstrapped_variogram_df = bootstrapped_variogram.unstack(level=0)
+
+            # swap sobol results rows and columns so that results concat nicely
+            bootstrapped_sobol_df = bootstrapped_sobol.to_frame().transpose()
+
+            # attatch new results to previous results (order does not matter here)
+            result_bs_variogram = pd.concat([bootstrapped_variogram_df, result_bs_variogram])
+            result_bs_sobol = pd.concat([bootstrapped_sobol_df, result_bs_sobol])
+            result_bs_ivars_df = pd.concat([bootstrapped_ivars_df, result_bs_ivars_df])
+            result_bs_sobol_ranking = pd.concat([bootstrapped_sobol_ranking_df, result_bs_sobol_ranking])
+            result_bs_ivars_ranking = pd.concat([bootstrapped_ivars_ranking_df, result_bs_ivars_ranking])
+
+        # calculate upper and lower confidence interval limits for variogram results
+        variogram_low = pd.DataFrame()
+        variogram_upp = pd.DataFrame()
+        # iterate through each h value
+        for h in np.unique(result_bs_variogram.index.values).tolist():
+            # find all confidence interval limits for each h value
+            variogram_low = pd.concat(
+                [variogram_low,
+                 result_bs_variogram.loc[h].quantile((1 - self.bootstrap_ci) / 2).rename(h).to_frame()], axis=1)
+            variogram_upp = pd.concat(
+                [variogram_upp,
+                 result_bs_variogram.loc[h].quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename(h).to_frame()],
+                axis=1)
+
+        # index value name is h?? not sure if this should be changed later
+        variogram_low.index.names = ['h']
+        variogram_upp.index.names = ['h']
+
+        # transpose to get into correct format
+        variogram_low = variogram_low.transpose()
+        variogram_upp = variogram_upp.transpose()
+
+        # calculate upper and lower confidence interval limits for sobol results in a nice looking format
+        sobol_low = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2).rename('').to_frame().transpose()
+        sobol_upp = result_bs_sobol.quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename('').to_frame().transpose()
+
+        # calculate upper and lower confidence interval limits of the ivars values
+        ivars_low = pd.DataFrame()
+        ivars_upp = pd.DataFrame()
+        # iterate through each IVARS scale
+        for scale in self.ivars_scales:
+            # find confidence interval limits for each scale
+            ivars_low = pd.concat(
+                [ivars_low,
+                 result_bs_ivars_df.loc[scale].quantile((1 - self.bootstrap_ci) / 2).rename(scale).to_frame()], axis=1)
+            ivars_upp = pd.concat(
+                [ivars_upp,
+                 result_bs_ivars_df.loc[scale].quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename(scale).to_frame()],
+                axis=1)
+
+        # transpose the results to get them in the right format
+        ivars_low = ivars_low.transpose()
+        ivars_upp = ivars_upp.transpose()
+
+        # calculate reliability estimates based on factor ranking of sobol result
+        rel_sobol_results = []
+        for param in self.parameters.keys():
+            rel_sobol_results.append(
+                result_bs_sobol_ranking.eq(self.sobol_factor_ranking)[param].sum() / self.bootstrap_size)
+
+        rel_sobol_factor_ranking = pd.DataFrame([rel_sobol_results], columns=self.parameters.keys())
+
+        # calculate reliability estimates based on factor ranking of ivars results
+        rel_ivars_results = []
+        # iterate through each paramter
+        for param in self.parameters.keys():
+            rel_ivars_results_scale = []
+            # iterate through each ivars scale
+            for scale in self.ivars_scales:
+                # ... to find the reliability estimate of the ivars rankings at each ivars scale
+                rel_ivars_results_scale.append(
+                    result_bs_ivars_ranking.eq(self.ivars_factor_ranking)[param].loc[scale].sum() / self.bootstrap_size)
+            rel_ivars_results.append(rel_ivars_results_scale)
+
+        rel_ivars_factor_ranking = pd.DataFrame(rel_ivars_results, columns=self.parameters.keys(),
+                                                     index=self.ivars_scales)
+
+        # grouping can only be done if bootstrapping has been done and 0.5 ivars was chosen as a scale
+        if self.grouping_flag and (0.5 in result_bs_ivars_df.index):
+            ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp = \
+                self._grouping(result_bs_ivars_df, result_bs_sobol, result_bs_ivars_ranking, result_bs_sobol_ranking)
+
+            return variogram_low, variogram_upp, sobol_low, sobol_upp, ivars_low, ivars_upp, rel_sobol_factor_ranking,\
+                rel_ivars_factor_ranking, ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp
+        # if grouping is not chosen to be done return only bootstrapping results
+        else:
+            return variogram_low, variogram_upp, sobol_low, sobol_upp, ivars_low, ivars_upp, rel_sobol_factor_ranking, \
+               rel_ivars_factor_ranking
+
 
 class GVARS(VARS):
     __doc__ = """GVARS object"""
@@ -822,7 +864,7 @@ class GVARS(VARS):
             if (cov_mat[noti, noti].ndim >= 2):
                 cond_std = cov_mat[i][i] - cov_mat[i, noti] * np.linalg.inv(cov_mat[noti, noti]) * cov_mat[noti, i]
                 chol_cond_std.append(np.linalg.cholesky(cond_std))
-                std_cond_norm.append(con_std)
+                std_cond_norm.append(cond_std)
                 for j in range(0, len(Z)):
                     mui_on_noti[j][i] = cov_mat[i, noti] * np.linalg.inv(cov_mat[noti, noti]) * Z[j, noti]
             # less then 2 dimenional matrix case
