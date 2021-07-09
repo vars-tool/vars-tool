@@ -1,6 +1,7 @@
 # VARS-TOOL Python Library
 
-### Overview of VARS-TOOL
+## 1. Overview of VARS-TOOL
+----
 VARS-TOOL is a next-generation, multi-method sensitivity and uncertainty analysis software toolbox,
 applicable to the full range of computer simulation models, including Dynamical Earth Systems
 Models (DESMs). Developed primarily around the powerful “Variogram Analysis of Response
@@ -16,44 +17,54 @@ The underlying approach of the VARS-TOOL toolkit is described in detail in the f
 3. VARS-TOOL: A toolbox for comprehensive, efficient, and robust sensitivity and uncertainty analysis: https://doi.org/10.1016/j.envsoft.2018.10.005
 
 
-### Installation
-#### Installing with pip
-If Linux or macOS are being used on your device the VARS-TOOL package can be installed using pip:
+## 2. Installation
+---
+### Installing with pip
+
+If you have Python3 and pip installed on your machine, then the vars-tool package can be installed using pip:
 ```
-pip install varstool
+$ pip install varstool
 ```
 
-#### Installing from source code
-To install VARS-TOOL from the source code, you will need to clone the github repository onto your local device using the command:
+### Installing from source code
+
+To install vars-tool from the source code, you will need to clone the github repository onto your local device using the command:
+```console
+foo@bar:~$ git clone https://github.com/vars-tool/vars-tool.git
 ```
-git clone https://github.com/vars-tool/vars-tool.git
-```
-To install the package, run:
-```
-pip install .
+To install the package, enter the vars-tool directory and run:
+```console
+foo@bar:~$ cd vars-tool
+foo@bar:~$ pip install .
 ```
 If pip is not available on your device use:
+```console
+foo@bar:~$ python setup.py install
 ```
-python setup.py install
-```
-note: if this does not work add the `--user` option to the above commands.
+> **_Note:_**: If this does not work due to limited permissions, add the `--user` option to the above commands.
 
-### Documentation
+## 3. Documentation
+---
+Under progres...
 
-### Examples
-#### [Quick Start](url)
+## 4. Examples and Tutorials
+---
+
+### [Quick Start:](https://github.com/vars-tool/vars-tool/blob/master/tutorial/QucikStart-Tutorial.ipynb)
 Here is an overview of the varstool main components and a simple example using ishigami and wavy6d models.
 
-#### [Real-world Example Using HBV-SASK (using TSVARS)](url)
+### [Real-world Example Using HBV-SASK (using TSVARS):](url)
 	
-#### [Handling Correlated Factors Using Generalized VARS (GVARS)](url)
-	
-#### [Data-driven Sensitivity Analysis (DVARS)](url)
+### [Handling Correlated Factors Using Generalized VARS (GVARS)](url)
 
-### Contribution
+	
+### [Data-driven Sensitivity Analysis (DVARS)](url)
+
+## Your Contributions
+----
 Contributions to VARS-TOOl are welcome! To contribute new features submit a pull request. To get started it is recommended to install the packages in `requirements.txt` by using the following command:
-```
-pip install -r requirements.txt
+```console
+foo@bar:~$ pip install -r requirements.txt
 ```
 Once the packages are installed to contribute do the following:
 1. Fork the repository ([here](https://github.com/vars-tool/vars-tool/fork)). A fork makes it possible to make changes to the source code through creating a copy.
@@ -61,8 +72,9 @@ Once the packages are installed to contribute do the following:
 3. Commit your changes and push them to your branch
 4. When the branch is ready to be merged, you can create a Pull Request ([how to create a pull request](https://gist.github.com/MarcDiethelm/7303312))
 
-### References
+## References
+----
 
-### License
-
+## License
+----
 
