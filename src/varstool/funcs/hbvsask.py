@@ -31,7 +31,8 @@ def read_inputs(data_folder):
 
     return watershed_area, ini_values, forcing, long_term
 
-def HBV_SASK(folder,par_values=[]):
+
+def HBV_SASK(folder, par_values=[]):
 
     # read parameters:
     if par_values==[]: par_values=sl.json2dict(folder+'/pars.inp')
