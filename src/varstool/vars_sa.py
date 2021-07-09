@@ -1156,18 +1156,14 @@ class TSVARS(VARS):
 
             else:
                 # pair_df is built serially - other functions are the same as parallel
-                print('here 1')
+
                 self.pair_df = df.groupby(level=0, axis=1).apply(ts_pair)
                 self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
                 self.pair_df.columns.names = ['ts', None]
                 self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
 
-                print('here 2')
-
                 self.mu_star_df = df.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                 self.mu_star_df.index.names = ['ts', 'centre', 'param']
-
-                print('here3')
 
                 self.mu_overall = df.apply(lambda x: np.mean(list(np.unique(x))))
                 self.var_overall = df.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
@@ -1175,11 +1171,11 @@ class TSVARS(VARS):
                 self.sec_covariogram = tsvars_funcs.cov_section(pair_df, mu_star_df)
                 self.morris = tsvars_funcs.morris_eq(pair_df)
                 self.covariogram = tsvars_funcs.covariogram(pair_df, mu_overall)
-                self.sobol_value = tsvars_funcs.sobol_eq(variogram_value, e_covariogram_value, var_overall)
+                self.e_covariogram = tsvars_funcs.e_covariogram(self.sec_covariogram)
+                self.sobol_value = tsvars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, self.var_overall)
                 self.ivars = pd.DataFrame.from_dict({scale: self.variogram.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index')
 
-                print('here4')
                 self.run_status = True
 
 
