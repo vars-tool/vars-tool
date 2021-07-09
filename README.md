@@ -49,25 +49,25 @@ Under progres...
 
 ## 4. Examples and Tutorials
 
-* 4.1 [Quick Start:](https://github.com/vars-tool/vars-tool/blob/master/tutorial/QucikStart-Tutorial.ipynb) Here is an overview of the varstool main components and a simple example using ishigami and wavy6d models.
+* [4.1. Quick Start:](https://github.com/vars-tool/vars-tool/blob/master/tutorial/QucikStart-Tutorial.ipynb) Here is an overview of the varstool main components and a simple example using ishigami and wavy6d models.
 
-* 4.2 [Real-world Example Using HBV-SASK (using TSVARS):](url)
+* [4.2. Real-world Example Using HBV-SASK (using TSVARS):](url) Sensitivity analysis of a real-world hydrological model 
 	
-* 4.3 [Handling Correlated Factors Using Generalized VARS (GVARS)](url)
+* [4.3. Handling Correlated Factors Using Generalized VARS (GVARS):](url) under progress...
 	
-* 4.4 [Data-driven Sensitivity Analysis (DVARS)](url)
+* [4.4. Data-driven Sensitivity Analysis (DVARS):](url) under progress...
 
 ## Your Contributions
 
-Contributions to VARS-TOOl are welcome! To contribute new features submit a pull request. To get started it is recommended to install the packages in `requirements.txt` by using the following command:
+Contributions to vars-tool are welcome! To contribute new features submit a pull request. To get started it is recommended to install the packages in `requirements.txt` by using the following command:
 ```console
 foo@bar:~$ pip install -r requirements.txt
 ```
 Once the packages are installed to contribute do the following:
-1. Fork the repository ([here](https://github.com/vars-tool/vars-tool/fork)). A fork makes it possible to make changes to the source code through creating a copy.
-2. Create a new branch on your fork
-3. Commit your changes and push them to your branch
-4. When the branch is ready to be merged, you can create a Pull Request ([how to create a pull request](https://gist.github.com/MarcDiethelm/7303312))
+1. Fork the repository ([here](https://github.com/vars-tool/vars-tool/fork)). A fork makes it possible to make changes to the source code through creating a copy,
+2. Create a new branch on your fork,
+3. Commit your changes and push them to your branch, and
+4. When the branch is ready to be merged, you can create a Pull Request ([how to create a pull request](https://gist.github.com/MarcDiethelm/7303312)).
 
 ## References
 
