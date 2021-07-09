@@ -12,7 +12,7 @@ from IPython.display import clear_output
 def read_inputs(data_folder):
 
     inp={}
-path =  "../data/test.csv"
+
     # % ********  Initial Condition  *********
     fn=Path(__file__).parent / './'+data_folder + '/initial_condition.inp'
     data=np.loadtxt(fn,delimiter=' ',usecols=[1])
