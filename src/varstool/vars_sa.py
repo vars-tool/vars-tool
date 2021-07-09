@@ -728,7 +728,7 @@ class VARS(object):
                 # ... to find the reliability estimate of the ivars rankings at each ivars scale
                 rel_ivars_results_scale.append(
                     result_bs_ivars_ranking.eq(self.ivars_factor_ranking)[param].loc[scale].sum() / self.bootstrap_size)
-            rel_ivars_results.append(rel_ivars_results_scale)
+            rel_ivars_results.append([rel_ivars_results_scale])
 
         rel_ivars_factor_ranking = pd.DataFrame(rel_ivars_results, columns=self.parameters.keys(),
                                                      index=self.ivars_scales)
