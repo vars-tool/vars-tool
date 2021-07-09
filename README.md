@@ -41,7 +41,10 @@ If pip is not available on your device use:
 ```console
 foo@bar:~$ python setup.py install
 ```
-> **_Note:_**: If this does not work due to limited permissions, add the `--user` option to the above commands.
+| :memo:        | If this does not work due to limited permissions, add the `--user` option to the above commands.|
+|---------------|:------------------------------------------------------------------------------------------------|
+
+[//]: <> > **_Note:_**: If this does not work due to limited permissions, add the `--user` option to the above commands.
 
 ## 3. Documentation
 
@@ -72,5 +75,4 @@ Once the packages are installed to contribute do the following:
 ## 6. References
 
 ## 7. License
-
 
