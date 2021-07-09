@@ -954,13 +954,42 @@ class TSVARS(VARS):
 
     def __init__(
         self, #itself
+        star_centres = [],  # sampled star centres (random numbers) used to create star points
+        num_stars: int = 100, # default number of stars
+        parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
+        delta_h: Optional[float] = 0.1, # delta_h for star sampling
+        ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
+        model: Model = None, # model (function) to run for each star point
+        seed: Optional[int] = 123456789, # randomization state
+        sampler: Optional[str] = None, # one of the default random samplers of varstool
+        bootstrap_flag: Optional[bool] = False, # bootstrapping flag
+        bootstrap_size: Optional[int]  = 1000, # bootstrapping size
+        bootstrap_ci: Optional[int] = 0.9, # bootstrap confidence interval
+        grouping_flag: Optional[bool] = False, # grouping flag
+        num_grps: Optional[int] = None, # number of groups
+        report_verbose: Optional[bool] = False, # reporting - using tqdm??
         func_eval_method: Optional[str] = 'serial', # the method to evaluate the model or function
         vars_eval_method: Optional[str] = 'serial', # the method to make pair_df dataframe
         vars_chunk_size: Optional[int] = None, # the chunk size to make pair_dfs to save memory
-        vars_eval_engine: Optional[str] = 'apply' # either apply or forloop
     ) -> None:
-        
-        super().__init__(self) # main instance variables are just the same as VARS
+
+        super().__init__(
+            self,
+            star_centres,
+            num_stars,
+            parameters,
+            delta_h,
+            ivars_scales,
+            model,
+            seed,
+            sampler,
+            bootstrap_flag,
+            bootstrap_size,
+            bootstrap_ci,
+            grouping_flag,
+            num_grps,
+            report_verbose,
+        ) # main instance variables are just the same as VARS
 
         # defining the TSVARS specific instance variables
         self.func_eval_method = func_eval_method
