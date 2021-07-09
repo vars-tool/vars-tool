@@ -57,7 +57,7 @@ Under progres...
 	
 * [4.4. Data-driven Sensitivity Analysis (DVARS):](url) under progress...
 
-## Your Contributions
+## 5. Your Contributions
 
 Contributions to vars-tool are welcome! To contribute new features submit a pull request. To get started it is recommended to install the packages in `requirements.txt` by using the following command:
 ```console
@@ -69,8 +69,8 @@ Once the packages are installed to contribute do the following:
 3. Commit your changes and push them to your branch, and
 4. When the branch is ready to be merged, you can create a Pull Request ([how to create a pull request](https://gist.github.com/MarcDiethelm/7303312)).
 
-## References
+## 6. References
 
-## License
+## 7. License
 
 
