@@ -330,7 +330,7 @@ class VARS(object):
 
     @property
     def star_centres(self, ):
-        return self.star_centres
+        return self._star_centres
 
     @star_centres.setter
     def star_centres(self, new_centres):
@@ -340,11 +340,11 @@ class VARS(object):
                 "new_centres must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
             )
-        self.star_centres = new_centres
+        self._star_centres = new_centres
 
     @property
     def star_points(self, ):
-        return self.star_points
+        return self._star_points
 
     @star_points.setter
     def star_points(self, new_points):
@@ -354,7 +354,7 @@ class VARS(object):
                 "new_points must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
             )
-        self.star_points = new_points
+        self._star_points = new_points
 
 
     #-------------------------------------------
