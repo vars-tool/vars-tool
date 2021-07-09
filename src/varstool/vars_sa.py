@@ -229,31 +229,31 @@ class VARS(object):
         if self.sampler == 'rnd':
             self.star_centres = np.random.rand(self.num_stars, len(self.parameters))
         elif self.sampler == 'lhs':
-            from sampling import lhs
-            self.star_centres = lhs.lhs(sp=self.num_stars,
-                                          params=len(self.parameters),
-                                          seed=self.seed,
-                                        )
+            from .sampling import lhs
+            self.star_centres = lhs(sp=self.num_stars,
+                                      params=len(self.parameters),
+                                      seed=self.seed,
+                                )
         elif self.sampler == 'plhs':
-            from sampling import plhs
-            self.star_centres = plhs.plhs(sp=self.num_stars,
-                                            params=len(self.parameters),
-                                            seed=self.seed,
-                                        )
+            from .sampling import plhs
+            self.star_centres = plhs(sp=self.num_stars,
+                                       params=len(self.parameters),
+                                       seed=self.seed,
+                                )
         elif self.sampler == 'sobol_seq':
-            from sampling import sobol_sequence
-            self.star_centres = sobol_sequence.sobol_sequence(sp=self.num_stars,
-                                                                params=len(self.parameters),
-                                                                seed=self.seed,
-                                                            )
+            from .sampling import sobol_sequence
+            self.star_centres = sobol_sequence(sp=self.num_stars,
+                                                 params=len(self.parameters),
+                                                 seed=self.seed,
+                                )
         elif self.sampler == 'halton_seq':
-            from sampling import halton
+            from .sampling import halton
             self.star_centres = halton.halton(sp=self.num_stars,
                                                 params=len(self.parameters),
                                                 seed=self.seed,
                                             )
         elif self.sampler == 'symlhs':
-            from sampling import symlhs
+            from .sampling import symlhs
             self.star_centres = symlhs.symlhs(sp=self.num_stars,
                                                 params=len(self.parameters),
                                                 seed=self.seed,
