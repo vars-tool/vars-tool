@@ -41,7 +41,7 @@ If pip is not available on your device use:
 ```console
 foo@bar:~$ python setup.py install
 ```
-| :information: | If this does not work due to limited permissions, add the `--user` option to the above commands.|
+| :point_up:    | If this does not work due to limited permissions, add the `--user` option to the above commands.|
 |---------------|:------------------------------------------------------------------------------------------------|
 
 
