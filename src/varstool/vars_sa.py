@@ -999,7 +999,7 @@ class TSVARS(VARS):
             )
 
         if (not isinstance(self.vars_chunk_size, (int, np.int32, np.int64))) \
-                or
+                or \
                 (self.vars_chunk_size != None):     # no chunking 
 
             warnings.warn(
