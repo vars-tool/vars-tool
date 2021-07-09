@@ -1049,7 +1049,7 @@ class TSVARS(VARS):
 
         # doing function evaluations either on serial or parallel mode
         if self.func_eval_method == 'serial':
-            df = self.star_points.apply(self.model.func, axis=1, result_type='expand')
+            df = self.star_points.apply(self.model, axis=1, result_type='expand')
             df.index.names = ['centre', 'param', 'point']
         
         elif self.func_eval_method == 'parallel':
