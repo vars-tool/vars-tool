@@ -7,3 +7,4 @@ scipy>=1.6.2
 mapply>=0.1.7
 psutil>=5.8.0
 joblib>=1.0.1
+tqdm>=4.61.1
