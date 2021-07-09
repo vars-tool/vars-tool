@@ -1012,7 +1012,6 @@ class TSVARS(VARS):
         status_func_eval_method = "Function Evaluation Method: " + self.func_eval_method
         status_vars_eval_method = "TSVARS Evaluation Method: " + self.vars_eval_method
         status_vars_chunk_size  = "TSVARS Chunk Size: " + (str(self.vars_chunk_size) if self.vars_chunk_size else "N/A")
-        status_vars_eval_engine = "TSVARS Evaluation Serial Engine: " + (str(self.vars_eval_engine) if self.vars_eval_method == 'serial' else 'N/A')
 
         status_report_list = [
                               status_star_centres, status_star_points, status_parameters, \
