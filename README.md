@@ -49,15 +49,13 @@ Under progres...
 
 ## 4. Examples and Tutorials
 
-### [Quick Start:](https://github.com/vars-tool/vars-tool/blob/master/tutorial/QucikStart-Tutorial.ipynb)
-Here is an overview of the varstool main components and a simple example using ishigami and wavy6d models.
+* 4.1 [Quick Start:](https://github.com/vars-tool/vars-tool/blob/master/tutorial/QucikStart-Tutorial.ipynb) Here is an overview of the varstool main components and a simple example using ishigami and wavy6d models.
 
-### [Real-world Example Using HBV-SASK (using TSVARS):](url)
+* 4.2 [Real-world Example Using HBV-SASK (using TSVARS):](url)
 	
-### [Handling Correlated Factors Using Generalized VARS (GVARS)](url)
-
+* 4.3 [Handling Correlated Factors Using Generalized VARS (GVARS)](url)
 	
-### [Data-driven Sensitivity Analysis (DVARS)](url)
+* 4.4 [Data-driven Sensitivity Analysis (DVARS)](url)
 
 ## Your Contributions
 
