@@ -66,7 +66,7 @@ def HBV_SASK(par_values=[], basin='banff'):
     state['S1'] = S1
     state['S2'] = S2
 
-    return flux['Q_cms'][1000:]
+    return flux['Q_cms'][365:]
 
 
 def run_model(par_values,watershed_area,ini_values,forcing,long_term):
