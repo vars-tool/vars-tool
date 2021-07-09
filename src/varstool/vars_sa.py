@@ -1,13 +1,17 @@
 import warnings
 import decimal
+import multiprocessing
 
 import pandas as pd
 import numpy  as np
 import scipy.stats as stat
 import scipy.cluster.hierarchy as hchy
-from itertools import compress
 #import numpy.typing as npt # let's further investigate this
 import matplotlib.pyplot as plt
+
+from joblib import Parallel, delayed
+from itertools import compress
+
 
 from .sampling import starvars
 from .sa import vars_funcs
@@ -101,8 +105,8 @@ class VARS(object):
         self.num_stars = num_stars
         self.delta_h = delta_h
         self.ivars_scales = ivars_scales
-        self.__star_centres = star_centres
-        self.__star_points  = [] # an empty list works for now - but needs to be changed - really?
+        self.star_centres = star_centres
+        self.star_points  = [] # an empty list works for now - but needs to be changed - really?
         self.seed = seed # seed number
         self.bootstrap_flag = bootstrap_flag
         self.bootstrap_size = bootstrap_size
@@ -240,34 +244,34 @@ class VARS(object):
 
         # check the sampling algorithms
         if self.sampler == 'rnd':
-            self.__star_centres = np.random.rand(self.num_stars, len(self.parameters))
+            self.star_centres = np.random.rand(self.num_stars, len(self.parameters))
         elif self.sampler == 'lhs':
             from sampling import lhs
-            self.__star_centres = lhs.lhs(sp=self.num_stars,
+            self.star_centres = lhs.lhs(sp=self.num_stars,
                                           params=len(self.parameters),
                                           seed=self.seed,
                                         )
         elif self.sampler == 'plhs':
             from sampling import plhs
-            self.__star_centres = plhs.plhs(sp=self.num_stars,
+            self.star_centres = plhs.plhs(sp=self.num_stars,
                                             params=len(self.parameters),
                                             seed=self.seed,
                                         )
         elif self.sampler == 'sobol_seq':
             from sampling import sobol_sequence
-            self.__star_centres = sobol_sequence.sobol_sequence(sp=self.num_stars,
+            self.star_centres = sobol_sequence.sobol_sequence(sp=self.num_stars,
                                                                 params=len(self.parameters),
                                                                 seed=self.seed,
                                                             )
         elif self.sampler == 'halton_seq':
             from sampling import halton
-            self.__star_centres = halton.halton(sp=self.num_stars,
+            self.star_centres = halton.halton(sp=self.num_stars,
                                                 params=len(self.parameters),
                                                 seed=self.seed,
                                             )
         elif self.sampler == 'symlhs':
             from sampling import symlhs
-            self.__star_centres = symlhs.symlhs(sp=self.num_stars,
+            self.star_centres = symlhs.symlhs(sp=self.num_stars,
                                                 params=len(self.parameters),
                                                 seed=self.seed,
                                                 )
@@ -293,8 +297,8 @@ class VARS(object):
     def __repr__(self, ) -> str:
         """show the status of VARS analysis"""
 
-        status_star_centres = "Star Centres: " + ("Loaded" if len(self.__star_centres) != 0 else "Not Loaded")
-        status_star_points = "Star Points: " + ("Loaded" if len(self.__star_points) != 0 else "Not Loaded")
+        status_star_centres = "Star Centres: " + ("Loaded" if len(self.star_centres) != 0 else "Not Loaded")
+        status_star_points = "Star Points: " + ("Loaded" if len(self.star_points) != 0 else "Not Loaded")
         status_parameters = "Parameters: " + (str(len(self.parameters))+" paremeters set" if self.parameters else "None")
         status_delta_h = "Delta h: " + (str(self.delta_h)+"" if self.delta_h else "None")
         status_model = "Model: " + (str(self.model)+"" if self.model else "None")
@@ -313,14 +317,9 @@ class VARS(object):
         return "\n".join(status_report_list)
 
 
-    def _repr_html(self, ):
-
-        pass
-
-
     def __str__(self, ) -> str:
 
-        return
+        return self.__class__.__name__
 
 
     #-------------------------------------------
@@ -331,7 +330,7 @@ class VARS(object):
 
     @property
     def star_centres(self, ):
-        return self.__star_centres
+        return self.star_centres
 
     @star_centres.setter
     def star_centres(self, new_centres):
@@ -341,11 +340,11 @@ class VARS(object):
                 "new_centres must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
             )
-        self.__star_centres = new_centres
+        self.star_centres = new_centres
 
     @property
     def star_points(self, ):
-        return self.__star_points
+        return self.star_points
 
     @star_points.setter
     def star_points(self, new_points):
@@ -355,7 +354,7 @@ class VARS(object):
                 "new_points must be an array-like object: "
                 "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
             )
-        self.__star_points = new_points
+        self.star_points = new_points
 
 
     #-------------------------------------------
@@ -381,13 +380,13 @@ class VARS(object):
     def run_online(self, ):
 
         # generate star points
-        self.__star_points = starvars.star(self.__star_centres, # star centres
+        self.star_points = starvars.star(self.star_centres, # star centres
                                            delta_h=self.delta_h, # delta_h
                                            parameters=[*self.parameters], # parameters dictionary keys
                                            rettype='DataFrame',
                                        ) # return type is a dataframe
 
-        self.__star_points = vars_funcs.scale(df=self.__star_points, # star points must be scaled
+        self.star_points = vars_funcs.scale(df=self.star_points, # star points must be scaled
                                              bounds={ # bounds are created while scaling
                                              'lb':[val[0] for _, val in self.parameters.items()],
                                              'ub':[val[1] for _, val in self.parameters.items()],
@@ -395,7 +394,7 @@ class VARS(object):
                                         )
 
         # apply model to the generated star points
-        df = vars_funcs.apply_unique(self.model.func, self.__star_points)
+        df = vars_funcs.apply_unique(self.model.func, self.star_points)
         df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h'
@@ -953,8 +952,324 @@ class GVARS(VARS):
 class TSVARS(VARS):
     __doc__ = "TSVARS Documentation"
 
-    def __init__(self, ) -> None:
-        super().__init__()
+    def __init__(
+        self, #itself
+        func_eval_method: Optional[str] = 'serial', # the method to evaluate the model or function
+        vars_eval_method: Optional[str] = 'serial', # the method to make pair_df dataframe
+        vars_chunk_size: Optional[int] = None, # the chunk size to make pair_dfs to save memory
+        vars_eval_engine: Optional[str] = 'apply' # either apply or forloop
+    ) -> None:
+        
+        super().__init__(self) # main instance variables are just the same as VARS
+
+        # defining the TSVARS specific instance variables
+        self.func_eval_method = func_eval_method
+        self.vars_eval_method = vars_eval_method
+        self.vars_chunk_size = vars_chunk_size
+
+        # writing some errors that might happen here
+        if self.vars_eval_method not in ('serial', 'parallel'):
+            raise ValueError(
+                "`vars_eval_method` must be either 'parallel' or 'serial'"
+            )
+
+        if not (isinstance(self.vars_chunk_size, 
+            (int, np.int32, np.int64) \
+                or
+                None) # no chunking 
+        ):
+            warnings.warn(
+                "`vars_chunk_size` must be an integer "
+                "the value has been set to `None`",
+                UserWarning,
+                stacklevel=1
+            )
+            
+            self.vars_chunk_size = None # meaning no chunking 
+
+        if self.func_eval_method not in ('serial', 'parallel'):
+            raise ValueError(
+                "`func_eval_method` must be either 'parallel' or 'serial'"
+            )
+
+
+    #-------------------------------------------
+    # Representators
+    def __repr__(self) -> str:
+        """method shows the status of VARS analysis"""
+
+        status_star_centres = "Star Centres: " + ("Loaded" if len(self.star_centres) != 0 else "Not Loaded")
+        status_star_points = "Star Points: " + ("Loaded" if len(self.star_points) != 0 else "Not Loaded")
+        status_parameters = "Parameters: " + (str(len(self.parameters))+" paremeters set" if self.parameters else "None")
+        status_delta_h = "Delta h: " + (str(self.delta_h)+"" if self.delta_h else "None")
+        status_model = "Model: " + (str(self.model)+"" if self.model else "None")
+        status_seed = "Seed Number: " + (str(self.seed)+"" if self.seed else "None")
+        status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
+        status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size)+"" if self.bootstrap_flag else "N/A")
+        status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"" if self.bootstrap_flag else "N/A")
+        status_grouping = "Grouping: " + ("On" if self.grouping_flag else "Off")
+        status_num_grps = "Number of Groups: " + (str(self.num_grps)+"" if self.num_grps else "None")
+        status_analysis = "TSVARS Analysis: " + ("Done" if self.run_status else "Not Done")
+        status_func_eval_method = "Function Evaluation Method: " + self.func_eval_method
+        status_vars_eval_method = "TSVARS Evaluation Method: " + self.vars_eval_method
+        status_vars_chunk_size  = "TSVARS Chunk Size: " + (str(self.vars_chunk_size) if self.vars_chunk_size else "N/A")
+        status_vars_eval_engine = "TSVARS Evaluation Serial Engine: " + (str(self.vars_eval_engine) if self.vars_eval_method == 'serial' else 'N/A')
+
+        status_report_list = [
+                              status_star_centres, status_star_points, status_parameters, \
+                              status_delta_h, status_model, status_seed, status_bstrap, \
+                              status_bstrap_size, status_bstrap_ci, status_grouping, \
+                              status_num_grps, status_analysis, status_func_eval_method\
+                              status_vars_eval_method, status_vars_chunk_size
+                              ]
+
+        return "\n".join(status_report_list) # join lines together and show them all
+
+
+    sef __str__(self) -> str:
+
+        return self.__class__.__name__
+
+
+    #-------------------------------------------
+    # Core functions
+
+    def run_online(self, ):
+
+        self.star_points = starvars.star(self.star_centres, # star centres
+                                           delta_h=self.delta_h, # delta_h
+                                           parameters=[*self.parameters], # parameters dictionary keys
+                                           rettype='DataFrame',
+                                       ) # return type must be a dataframe
+
+        self.star_points = tsvars_funcs.scale(df=self.star_points, # star points must be scaled
+                                             bounds={ # bounds are created while scaling
+                                             'lb':[val[0] for _, val in self.parameters.items()],
+                                             'ub':[val[1] for _, val in self.parameters.items()],
+                                             }
+                                        )
+
+        # doing function evaluations either on serial or parallel mode
+        if self.func_eval_method == 'serial':
+            df = self.star_points.apply(self.model.func, axis=1, result_type='expand')
+            df.index.names = ['centre', 'param', 'point']
+        
+        elif self.func_eval_method == 'parallel':
+            warnings.warn(
+                "Evaluating function in parallel is not stable yet! "
+                "varstool currently uses `mapply` to parallelize function "
+                "evaluations, see https://github.com/ddelange/mapply",
+                UserWarning,
+                stacklevel=1
+            )
+
+            #import mapply inside this if clause to avoid unnecessary overhead
+            import mapply
+            import psutil
+
+            mapply.init(
+                n_workers=-1,
+                chunk_size=1,
+                max_chunks_per_worker=int(df.shape[0]//psutil.psutil.cpu_count(logical=False)),
+                progressbar=True,
+            )
+            df = self.star_points.mapply(self.model.func, axis=1, result_type='expand')
+            df.index.names = ['centre', 'param', 'point']
+
+        # defining a lambda function to do the pairing for each time-step
+        ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(section_df)
+
+        # VARS evaluations can be done in two modes: serial and parallel
+        ## if serial mode is chosen, two engines are available:
+        ## 1. pandas dataframe `apply` method & 2. simple for loop over time-steps
+        if self.vars_eval_method == 'serial':
+
+            if self.vars_chunk_size: # if chunk size is provided by the user
+
+                self.pair_df = pd.DataFrame()
+                self.sec_covariogram = pd.DataFrame()
+                self.variogram = pd.DataFrame()
+                self.mu_star = pd.DataFrame()
+                self.mu_overall = pd.DataFrame()
+                self.var_overall = pd.DataFrame()
+                self.sec_covariogram = pd.DataFrame()
+                self.morris = pd.DataFrame()
+                self.covariogram = pd.DataFrame()
+                self.e_covariogram = pd.DataFrame()
+                self.sobol = pd.DataFrame()
+                self.ivars = pd.DataFrame()
+
+                for chunk in range(int(df.shape[1]//self.vars_chunk_size)+1): # total number of chunks
+                    
+                    # make a chunk of the main df (result of func eval)
+                    df_temp = df.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, df.shape[1]-1)]
+                
+                    # make pairs for each chunk
+                    temp_pair_df = df_temp.groupby(level=0, axis=1).apply(ts_pair)
+                    temp_pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
+                    temp_pair_df.columns.names = ['ts', None]
+                    temp_pair_df.stack(level='ts').reorder_levels(['ts','centre','param','h','pair_ind']).sort_index()
+                    self.pair_df = pd.concat([self.pair_df, temp_pair_df])
+
+                    # mu star 
+                    temp_mu_star = df_temp.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+                    temp_mu_star.index.names = ['ts', 'centre', 'param']
+                    self.mu_star = pd.concat([self.mu_star, temp_mu_star])
+
+                    # mu overall
+                    temp_mu_overall = df_temp.apply(lambda x: np.mean(list(np.unique(x))))
+                    self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall])
+
+                    #var overall
+                    temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                    self.var_overall = pd.concat([self.var_overall, temp_var_overall])
+
+                    #variogram 
+                    temp_variogram = tsvars_funcs.variogram(temp_pair_df)
+                    self.variogram = pd.concat([self.variogram, temp_variogram])
+
+                    #sectional variogram
+                    temp_sec_covariogram = tsvars_funcs.cov_section(temp_pair_df, temp_mu_star)
+                    self.sec_covariogram = pd.concat([self.sec_covariogram, temp_sec_covariogram])
+
+                    #morris
+                    temp_morris_values = tsvars_funcs.morris_eq(temp_pair_df)
+                    self.morris = pd.concat([self.morris, temp_morris_values])
+
+                    #covariogram
+                    temp_covariogram = tsvars_funcs.covariogram(temp_pair_df, temp_mu_overall)
+                    self.covariogram = pd.concat([self.covariogram, temp_covariogram])
+
+                    #e_covariogram
+                    temp_e_covariogram = tsvars_funcs.e_covariogram(temp_sec_covariogram)
+                    self.e_covariogram = pd.concat([self.e_covariogram, temp_e_covariogram])
+
+                    #sobol
+                    temp_sobol_values = tsvars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, self.var_overall, self.delta_h)
+                    self.sobol = pd.concat([self.sobol, temp_sobol_values])
+
+                    #ivars
+                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_variogram_values.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                      for scale in self.ivars_scales}, 'index')
+                    self.ivars = pd.concat([self.ivars_values, temp_ivars_values])
+
+            else:
+                # pair_df is built serially - other functions are the same as parallel
+                self.pair_df = df.groupby(level=0, axis=1).apply(ts_pair)
+                self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
+                self.pair_df.columns.names = ['ts', None]
+                self.pair_df.stack(level=0).reorder_levels([-1,0,1,2,3]).sort_index()
+
+                self.mu_star_df = df.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+                self.mu_star_df.index.names = ['ts', 'centre', 'param']
+
+                self.mu_overall = df.apply(lambda x: np.mean(list(np.unique(x))))
+                self.var_overall = df.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                self.variogram = variogram(pair_df)
+                self.sec_covariogram = cov_section(pair_df, mu_star_df)
+                self.morris = morris_eq(pair_df)
+                self.covariogram = covariogram(pair_df, mu_overall)
+                self.sobol_value = sobol_eq(variogram_value, e_covariogram_value, var_overall)
+                self.ivars = pd.DataFrame.from_dict({scale: self.variogram.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                      for scale in self.ivars_scales}, 'index')
+
+
+        elif self.vars_eval_method == 'parallel':
+
+            if self.vars_chunk_size: # if chunk size is provided by the user
+
+                self.pair_df = pd.DataFrame()
+                self.sec_covariogram = pd.DataFrame()
+                self.variogram = pd.DataFrame()
+                self.mu_star = pd.DataFrame()
+                self.mu_overall = pd.DataFrame()
+                self.var_overall = pd.DataFrame()
+                self.sec_covariogram = pd.DataFrame()
+                self.morris = pd.DataFrame()
+                self.covariogram = pd.DataFrame()
+                self.e_covariogram = pd.DataFrame()
+                self.sobol = pd.DataFrame()
+                self.ivars = pd.DataFrame()
+
+                for chunk in range(int(df.shape[1]//self.vars_chunk_size)+1): # total number of chunks
+                    
+                    # make a chunk of the main df (result of func eval)
+                    df_temp = df.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, df.shape[1]-1)]
+                
+                    # make pairs for each chunk
+                    temp_pair_df = applyParallel(a.groupby(level=0, axis=1), ts_pair)
+                    temp_pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
+                    self.pair_df = pd.concat([self.pair_df, temp_pair_df])
+
+                    # mu star 
+                    temp_mu_star = df_temp.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+                    temp_mu_star.index.names = ['ts', 'centre', 'param']
+                    self.mu_star = pd.concat([self.mu_star, temp_mu_star])
+
+                    # mu overall
+                    temp_mu_overall = df_temp.apply(lambda x: np.mean(list(np.unique(x))))
+                    self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall])
+
+                    #var overall
+                    temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                    self.var_overall = pd.concat([self.var_overall, temp_var_overall])
+
+                    #variogram 
+                    temp_variogram = tsvars_funcs.variogram(temp_pair_df)
+                    self.variogram = pd.concat([self.variogram, temp_variogram])
+
+                    #sectional variogram
+                    temp_sec_covariogram = tsvars_funcs.cov_section(temp_pair_df, temp_mu_star)
+                    self.sec_covariogram = pd.concat([self.sec_covariogram, temp_sec_covariogram])
+
+                    #morris
+                    temp_morris_values = tsvars_funcs.morris_eq(temp_pair_df)
+                    self.morris = pd.concat([self.morris, temp_morris_values])
+
+                    #covariogram
+                    temp_covariogram = tsvars_funcs.covariogram(temp_pair_df, temp_mu_overall)
+                    self.covariogram = pd.concat([self.covariogram, temp_covariogram])
+
+                    #e_covariogram
+                    temp_e_covariogram = tsvars_funcs.e_covariogram(temp_sec_covariogram)
+                    self.e_covariogram = pd.concat([self.e_covariogram, temp_e_covariogram])
+
+                    #sobol
+                    temp_sobol_values = tsvars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, self.var_overall, self.delta_h)
+                    self.sobol = pd.concat([self.sobol, temp_sobol_values])
+
+                    #ivars
+                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_variogram_values.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                      for scale in self.ivars_scales}, 'index')
+                    self.ivars = pd.concat([self.ivars_values, temp_ivars_values])
+
+            else:
+                # pair_df is built serially - other functions are the same as parallel
+                self.pair_df = applyParallel(a.groupby(level=0, axis=1), ts_pair)
+                self.pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
+
+                self.mu_star_df = df.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+                self.mu_star_df.index.names = ['ts', 'centre', 'param']
+
+                self.mu_overall = df.apply(lambda x: np.mean(list(np.unique(x))))
+                self.var_overall = df.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                self.variogram = variogram(pair_df)
+                self.sec_covariogram = cov_section(pair_df, mu_star_df)
+                self.morris = morris_eq(pair_df)
+                self.covariogram = covariogram(pair_df, mu_overall)
+                self.sobol_value = sobol_eq(variogram_value, e_covariogram_value, var_overall)
+                self.ivars = pd.DataFrame.from_dict({scale: self.variogram.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                      for scale in self.ivars_scales}, 'index')
+
+
+    def temp_func(func, name, group):     
+        return func(group), name
+
+    def applyParallel(dfGrouped, func):
+        retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
+                                    (delayed(temp_func)(func, name, group)\
+                                for name, group in dfGrouped))
+        return pd.concat(retLst, keys=top_index)
 
 
 class DVARS(VARS):

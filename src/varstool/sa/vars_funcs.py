@@ -15,13 +15,15 @@ from typing import (
 )
 
 # helper functions
+
+
 def apply_unique(
     func: Callable,
     df: pd.DataFrame,
     axis: int=1,
     *args: tuple,
     **kwargs: dict,
-    ) -> pd.DataFrame:
+) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -85,12 +87,13 @@ def pairs_h(iterable: Iterable) -> pd.DataFrame:
     """
 
     # gives the pairs of numbers considering their differences
-    interval = range(min(iterable), max(iterable)-min(iterable))
-    pairs  = {key+1:[j for j in combinations(iterable, 2) if np.abs(j[0]-j[1])==key+1] for key in interval}
+    interval = range(min(iterable), max(iterable) - min(iterable))
+    pairs = {key + 1: [j for j in combinations(iterable, 2) if np.abs(
+        j[0] - j[1]) == key + 1] for key in interval}
     return pairs
 
 
-def scale(df:pd.DataFrame, bounds:pd.DataFrame, axis:int=1) -> pd.DataFrame:
+def scale(df: pd.DataFrame, bounds: pd.DataFrame, axis: int=1) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -132,7 +135,7 @@ def scale(df:pd.DataFrame, bounds:pd.DataFrame, axis:int=1) -> pd.DataFrame:
         return df.T * (bounds_np['ub'] - bounds_np['lb']) + bounds_np['lb']
 
 
-def section_df(df:pd.DataFrame, delta_h:float) -> pd.DataFrame:
+def section_df(df: pd.DataFrame, delta_h: float) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -143,6 +146,8 @@ def section_df(df:pd.DataFrame, delta_h:float) -> pd.DataFrame:
     -----------
     :param df: a dataframe of star points
     :type df: pd.DataFrame
+    :param delta_h: resolution of star samples
+    :type delta_h: float
 
 
     Returns:
@@ -158,7 +163,7 @@ def section_df(df:pd.DataFrame, delta_h:float) -> pd.DataFrame:
     """
     pairs = pairs_h(df.index.get_level_values(-1))
     df_values = df.to_numpy()
-    sample = pd.concat({h*delta_h: # realistic delta_h values are shown
+    sample = pd.concat({h * delta_h:  # realistic delta_h values are shown
                         pd.DataFrame.from_dict({str(idx_tup): [
                                                df_values[idx_tup[0]], df_values[idx_tup[1]]] for idx_tup in idx}, 'index')
                         for h, idx in pairs.items()})
@@ -401,11 +406,11 @@ def e_covariogram(cov_section_all: pd.DataFrame) -> pd.DataFrame:
 
 
 def sobol_eq(
-    gamma: pd.DataFrame, 
-    ecov: pd.DataFrame,
-    variance: pd.Series,
-    delta_h: float
-    ) -> pd.DataFrame:
+        gamma: pd.DataFrame,
+        ecov: pd.DataFrame,
+        variance: pd.Series,
+        delta_h: float
+) -> pd.DataFrame:
     """
     Description:
     ------------
@@ -424,6 +429,8 @@ def sobol_eq(
     :type ecov: pd.DataFrame
     :param variance: variance of function evaluations over all time-steps
     :type variance: pd.Series
+    :param delta_h: resolution of star samples
+    :type delta_h: float
 
 
     Returns:
@@ -451,7 +458,7 @@ def sobol_eq(
     Blanchard, Cordell, (2021): code in Python 3
     """
 
-    sobol_eq_values = ((gamma + ecov) / variance)[:, delta_h] # to 
+    sobol_eq_values = ((gamma + ecov) / variance)[:, delta_h]  # to
 
     return sobol_eq_values
 
