@@ -1026,7 +1026,7 @@ class TSVARS(VARS):
         return "\n".join(status_report_list) # join lines together and show them all
 
 
-    sef __str__(self) -> str:
+    def __str__(self) -> str:
 
         return self.__class__.__name__
 
