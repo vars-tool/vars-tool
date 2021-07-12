@@ -420,7 +420,7 @@ class VARS(object):
         # do factor ranking on sobol results
         sobol_factor_ranking_array = self._factor_ranking(self.st)
         # turn results into data frame
-        self.sobol_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
+        self.st_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
 
         # IVARS calculation
         self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
@@ -434,12 +434,12 @@ class VARS(object):
         self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_list, columns=self.parameters.keys(), index=self.ivars_scales)
 
         if self.bootstrap_flag and self.grouping_flag:
-            self.variogram_low, self.variogram_upp, self.sobol_low, self.sobol_upp, self.ivars_low, self.ivars_upp, \
-            self.rel_sobol_factor_ranking,self.rel_ivars_factor_ranking, self.ivars50_grp, self.sobol_grp, \
-            self.reli_sobol_grp, self.reli_ivars50_grp = self._bootstrapping(pair_df, df, cov_section_all)
+            self.gamma_low, self.gamma_upp, self.st_low, self.st_upp, self.ivars_low, self.ivars_upp, \
+            self.rel_st_factor_ranking,self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
+            self.reli_st_grp, self.reli_ivars50_grp = self._bootstrapping(pair_df, df, cov_section_all)
         else:
-            self.variogram_low, self.variogram_upp, self.sobol_low, self.sobol_upp, self.ivars_low, self.ivars_upp, \
-            self.rel_sobol_factor_ranking,self.rel_ivars_factor_ranking = self._bootstrapping(pair_df, df, cov_section_all)
+            self.gamma_low, self.gamma_upp, self.st_low, self.st_upp, self.ivars_low, self.ivars_upp, \
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = self._bootstrapping(pair_df, df, cov_section_all)
 
 
         self.run_status = True
