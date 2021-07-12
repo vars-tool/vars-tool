@@ -566,7 +566,7 @@ class VARS(object):
         # associate group numbers with the parameters
         for g in range(0, num_grp_sobol):
             cluster_sobol.append(np.argwhere(sobol_grp_array == g + 1).flatten())
-            cluster_rank_sobol.append(self.sobol_factor_ranking.to_numpy().flatten()[cluster_sobol[g]])
+            cluster_rank_sobol.append(self.st_factor_ranking.to_numpy().flatten()[cluster_sobol[g]])
             cluster_rank_sobol[g] = np.sort(cluster_rank_sobol[g], axis=0)
 
         cluster_ivars50 = []
@@ -725,7 +725,7 @@ class VARS(object):
         rel_sobol_results = []
         for param in self.parameters.keys():
             rel_sobol_results.append(
-                result_bs_sobol_ranking[param].eq(self.sobol_factor_ranking[param][0]).sum() / self.bootstrap_size)
+                result_bs_sobol_ranking[param].eq(self.st_factor_ranking[param][0]).sum() / self.bootstrap_size)
 
         rel_sobol_factor_ranking = pd.DataFrame([rel_sobol_results], columns=self.parameters.keys(), index=[''])
 
