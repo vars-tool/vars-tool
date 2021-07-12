@@ -26,7 +26,6 @@ If you have Python3 and pip installed on your machine, then the VARS-TOOL packag
 foo@bar:~$  pip install varstool
 ```
 
-
 ### 2.2. Installing from source code
 
 To install the lastest VARS-TOOL code from the source code, you will need to clone the github repository onto your local device using the command:
