@@ -85,12 +85,12 @@ class VARS(object):
     def __init__(
         self,
         star_centres = [],  # sampled star centres (random numbers) used to create star points
-        num_stars: int = 100, # default number of stars
+        num_stars: int = 100, #  number of stars
         parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
         model: Model = None, # model (function) to run for each star point
-        seed: Optional[int] = 123456789, # randomization state
+        seed: Optional[int] = np.random.randint(1, 123456790), # randomization state
         sampler: Optional[str] = None, # one of the default random samplers of varstool
         bootstrap_flag: Optional[bool] = False, # bootstrapping flag
         bootstrap_size: Optional[int]  = 1000, # bootstrapping size
@@ -180,9 +180,9 @@ class VARS(object):
         if ((not isinstance(seed, int)) or (seed < 0)):
             warnings.warn(
                 "`seed` must be an integer greater than zero."
-                " value is set to default, i.e., 123456789"
+                " value is set to default, i.e., randomized integer between 1 and 123456789"
             )
-            self.seed = 123456789
+            self.seed = np.random.randint(1, 123456790)
 
         ## check bootstrap dtype and sign
         if ((not isinstance(bootstrap_size, int)) or (bootstrap_size < 1)):
@@ -443,7 +443,7 @@ class VARS(object):
 
 
         self.run_status = True
-        
+
 
         return
 
@@ -560,9 +560,6 @@ class VARS(object):
         num_grp_sobol, sobol_grp_array, ClustersSobol = self._factor_grouping(result_bs_sobol,
                                                                               num_grp=self.num_grps)
 
-        ivars50_grp = pd.DataFrame([ivars50_grp_array], columns=self.parameters.keys(), index=[0.5])
-        sobol_grp = pd.DataFrame([sobol_grp_array], columns=self.parameters.keys(), index=[''])
-
         # calculate reliability estimates based on factor grouping
         cluster_sobol = []
         cluster_rank_sobol = []
@@ -607,6 +604,16 @@ class VARS(object):
 
         reli_sobol_grp = pd.DataFrame([reli_sobol_grp_array], columns=self.parameters.keys(), index=[''])
         reli_ivars50_grp = pd.DataFrame([reli_ivars50_grp_array], columns=self.parameters.keys(), index=[0.5])
+
+        # change numbering of groups to be consistent with matlab results
+        for i in range(0, len(ivars50_grp_array)):
+            ivars50_grp_array[i] = np.abs(ivars50_grp_array[i] - self.num_grps) + 1
+
+        for i in range(0, len(sobol_grp_array)):
+            sobol_grp_array[i] = np.abs(sobol_grp_array[i] - self.num_grps) + 1
+
+        ivars50_grp = pd.DataFrame([ivars50_grp_array], columns=self.parameters.keys(), index=[0.5])
+        sobol_grp = pd.DataFrame([sobol_grp_array], columns=self.parameters.keys(), index=[''])
 
         return ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp
 
@@ -714,10 +721,11 @@ class VARS(object):
         ivars_upp = ivars_upp.transpose()
 
         # calculate reliability estimates based on factor ranking of sobol result
+        # calculate reliability estimates based on factor ranking of sobol result
         rel_sobol_results = []
         for param in self.parameters.keys():
             rel_sobol_results.append(
-                result_bs_sobol_ranking.eq(self.sobol_factor_ranking)[param].sum() / self.bootstrap_size)
+                result_bs_sobol_ranking[param].eq(self.sobol_factor_ranking[param][0]).sum() / self.bootstrap_size)
 
         rel_sobol_factor_ranking = pd.DataFrame([rel_sobol_results], columns=self.parameters.keys(), index=[''])
 
