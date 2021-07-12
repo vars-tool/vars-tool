@@ -434,18 +434,38 @@ class VARS(object):
         self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_list, columns=self.parameters.keys(), index=self.ivars_scales)
 
         if self.bootstrap_flag and self.grouping_flag:
-            self.variogram_low, self.variogram_upp, self.sobol_low, self.sobol_upp, self.ivars_low, self.ivars_upp, \
+            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_sobol_factor_ranking,self.rel_ivars_factor_ranking, self.ivars50_grp, self.sobol_grp, \
             self.reli_sobol_grp, self.reli_ivars50_grp = self._bootstrapping(pair_df, df, cov_section_all)
         else:
-            self.variogram_low, self.variogram_upp, self.sobol_low, self.sobol_upp, self.ivars_low, self.ivars_upp, \
+            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_sobol_factor_ranking,self.rel_ivars_factor_ranking = self._bootstrapping(pair_df, df, cov_section_all)
 
-
+        # for status update
         self.run_status = True
         
-
-        return
+        # output dictionary
+        self.output = {
+            'Gamma':self.gamma,
+            'MAEE':self.maee,
+            'MEE':self.mee,
+            'COV':self.cov,
+            'ECOV':self.ecov,
+            'IVARS':self.ivars,
+            'IVARSid':self.ivars_scales,
+            'rnkST':self.sobol_factor_ranking,
+            'rnkIVARS':self.ivars_factor_ranking,
+            'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
+            'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
+            'STlb':self.stlb if self.bootstrap_flag is True else None,
+            'STub':self.stub if self.bootstrap_flag is True else None,
+            'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
+            'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
+            'relST':self.rel_sobol_factor_ranking,
+            'relIVARS':self.rel_ivars_factor_ranking,
+            'Groups': [self.ivars50_grp, self.sobol_grp] if self.grouping_flag is True else None,
+            'relGrp': [self.reli_sobol_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
+        }
 
     def run_offline(star_points,):
 
@@ -670,48 +690,48 @@ class VARS(object):
             result_bs_ivars_ranking = pd.concat([bootstrapped_ivars_ranking_df, result_bs_ivars_ranking])
 
         # calculate upper and lower confidence interval limits for variogram results
-        variogram_low = pd.DataFrame()
-        variogram_upp = pd.DataFrame()
+        gammalb = pd.DataFrame()
+        gammaub = pd.DataFrame()
         # iterate through each h value
         for h in np.unique(result_bs_variogram.index.values).tolist():
             # find all confidence interval limits for each h value
-            variogram_low = pd.concat(
-                [variogram_low,
+            gammalb = pd.concat(
+                [gammalb,
                  result_bs_variogram.loc[h].quantile((1 - self.bootstrap_ci) / 2).rename(h).to_frame()], axis=1)
-            variogram_upp = pd.concat(
-                [variogram_upp,
+            gammaub = pd.concat(
+                [gammaub,
                  result_bs_variogram.loc[h].quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename(h).to_frame()],
                 axis=1)
 
         # index value name is h?? not sure if this should be changed later
-        variogram_low.index.names = ['h']
-        variogram_upp.index.names = ['h']
+        gammalb.index.names = ['h']
+        gammaub.index.names = ['h']
 
         # transpose to get into correct format
-        variogram_low = variogram_low.transpose()
-        variogram_upp = variogram_upp.transpose()
+        gammalb = gammalb.transpose()
+        gammaub = gammaub.transpose()
 
         # calculate upper and lower confidence interval limits for sobol results in a nice looking format
-        sobol_low = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2).rename('').to_frame().transpose()
-        sobol_upp = result_bs_sobol.quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename('').to_frame().transpose()
+        stlb = result_bs_sobol.quantile((1 - self.bootstrap_ci) / 2).rename('').to_frame().transpose()
+        stub = result_bs_sobol.quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename('').to_frame().transpose()
 
         # calculate upper and lower confidence interval limits of the ivars values
-        ivars_low = pd.DataFrame()
-        ivars_upp = pd.DataFrame()
+        ivarslb = pd.DataFrame()
+        ivarsub = pd.DataFrame()
         # iterate through each IVARS scale
         for scale in self.ivars_scales:
             # find confidence interval limits for each scale
-            ivars_low = pd.concat(
-                [ivars_low,
+            ivarslb = pd.concat(
+                [ivarslb,
                  result_bs_ivars_df.loc[scale].quantile((1 - self.bootstrap_ci) / 2).rename(scale).to_frame()], axis=1)
-            ivars_upp = pd.concat(
-                [ivars_upp,
+            ivarsub = pd.concat(
+                [ivarsub,
                  result_bs_ivars_df.loc[scale].quantile(1 - ((1 - self.bootstrap_ci) / 2)).rename(scale).to_frame()],
                 axis=1)
 
         # transpose the results to get them in the right format
-        ivars_low = ivars_low.transpose()
-        ivars_upp = ivars_upp.transpose()
+        ivarslb = ivarslb.transpose()
+        ivarsub = ivarsub.transpose()
 
         # calculate reliability estimates based on factor ranking of sobol result
         rel_sobol_results = []
@@ -743,11 +763,11 @@ class VARS(object):
             ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp = \
                 self._grouping(result_bs_ivars_df, result_bs_sobol, result_bs_ivars_ranking, result_bs_sobol_ranking)
 
-            return variogram_low, variogram_upp, sobol_low, sobol_upp, ivars_low, ivars_upp, rel_sobol_factor_ranking,\
+            return gammalb, gammaub, stlb, stub, ivarslb, ivarsub, rel_sobol_factor_ranking,\
                 rel_ivars_factor_ranking, ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp
         # if grouping is not chosen to be done return only bootstrapping results
         else:
-            return variogram_low, variogram_upp, sobol_low, sobol_upp, ivars_low, ivars_upp, rel_sobol_factor_ranking, \
+            return gammalb, gammaub, stlb, stub, ivarslb, ivarsub, rel_sobol_factor_ranking, \
                rel_ivars_factor_ranking
 
 
