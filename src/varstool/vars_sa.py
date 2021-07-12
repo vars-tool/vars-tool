@@ -301,7 +301,6 @@ class VARS(object):
 
         return "\n".join(status_report_list)
 
-
     def __str__(self, ) -> str:
 
         return self.__class__.__name__
@@ -353,14 +352,12 @@ class VARS(object):
         # figure out way to return this?
         return star_points  # for now will just do this
 
-
     def _plot(self, ):
 
         # make similar plots as the matlab plots showing the important
         # SA results from analysis
 
         pass
-
 
     def run_online(self, ):
 
@@ -400,27 +397,33 @@ class VARS(object):
         cov_section_all = vars_funcs.cov_section(pair_df, mu_star_df)
 
         # variogram calculation
-        self.variogram_value = vars_funcs.variogram(pair_df)
+        # MATLAB: Gamma
+        self.gamma = vars_funcs.variogram(pair_df)
 
         # morris calculation
-        self.morris_value = vars_funcs.morris_eq(pair_df)
+        morris_value = vars_funcs.morris_eq(pair_df)
+        self.maee = morris_value[0] # MATLAB: MAEE
+        self.mee  = morris_value[1] # MATLAB: MEE
 
         # overall covariogram calculation
-        self.covariogram_value = vars_funcs.covariogram(pair_df, mu_overall)
+        # MATLAB: COV
+        self.cov = vars_funcs.covariogram(pair_df, mu_overall)
 
         # expected value of the overall covariogram calculation
-        self.e_covariogram_value = vars_funcs.e_covariogram(cov_section_all)
+        # MATLAB: ECOV
+        self.ecov = vars_funcs.e_covariogram(cov_section_all)
 
         # sobol calculation
-        self.sobol_value = vars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, var_overall, self.delta_h)
+        # MATLAB: ST
+        self.st = vars_funcs.sobol_eq(self.gamma, self.ecov, var_overall, self.delta_h)
 
         # do factor ranking on sobol results
-        sobol_factor_ranking_array = self._factor_ranking(self.sobol_value)
+        sobol_factor_ranking_array = self._factor_ranking(self.st)
         # turn results into data frame
         self.sobol_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
 
         # IVARS calculation
-        self.ivars = pd.DataFrame.from_dict({scale: self.variogram_value.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+        self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
              for scale in self.ivars_scales}, 'index')
 
         # do factor ranking on IVARS results
@@ -440,7 +443,9 @@ class VARS(object):
 
 
         self.run_status = True
+        
 
+        return
 
     def run_offline(star_points,):
 
@@ -449,7 +454,6 @@ class VARS(object):
         # figure out a way to return results
 
         return
-
 
     def _factor_ranking(self, factors):
         """ Ranks factors based on their influence (how large or small results are)
@@ -605,7 +609,6 @@ class VARS(object):
         reli_ivars50_grp = pd.DataFrame([reli_ivars50_grp_array], columns=self.parameters.keys(), index=[0.5])
 
         return ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp
-
 
     def _bootstrapping(self, pair_df, df, cov_section_all):
         # create result dataframes if bootstrapping is chosen to be done
@@ -793,7 +796,7 @@ class GVARS(VARS):
         self.num_factors = len(self.parameters)
 
 
-#-------------------------------------------
+    #-------------------------------------------
     # Representators
     def __repr__(self, ) -> str:
 
@@ -1146,7 +1149,7 @@ class TSVARS(VARS):
                     self.e_covariogram = pd.concat([self.e_covariogram, temp_e_covariogram])
 
                     #sobol
-                    temp_sobol_values = tsvars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, self.var_overall, self.delta_h)
+                    temp_sobol_values = tsvars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
                     self.sobol = pd.concat([self.sobol, temp_sobol_values])
 
                     #ivars
@@ -1242,7 +1245,7 @@ class TSVARS(VARS):
                     self.e_covariogram = pd.concat([self.e_covariogram, temp_e_covariogram])
 
                     #sobol
-                    temp_sobol_values = tsvars_funcs.sobol_eq(self.variogram_value, self.e_covariogram_value, self.var_overall, self.delta_h)
+                    temp_sobol_values = tsvars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
                     self.sobol = pd.concat([self.sobol, temp_sobol_values])
 
                     #ivars
@@ -1266,12 +1269,11 @@ class TSVARS(VARS):
                 self.sec_covariogram = tsvars_funcs.cov_section(pair_df, mu_star_df)
                 self.morris = tsvars_funcs.morris_eq(pair_df)
                 self.covariogram = tsvars_funcs.covariogram(pair_df, mu_overall)
-                self.sobol_value = tsvars_funcs.sobol_eq(variogram_value, e_covariogram_value, var_overall)
+                self.sobol_value = tsvars_funcs.sobol_eq(gamma, ecov, var_overall)
                 self.ivars = pd.DataFrame.from_dict({scale: self.variogram.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index')
 
                 self.run_status = True
-
 
     def temp_func(func, name, group):
         return func(group), name

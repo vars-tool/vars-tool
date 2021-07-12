@@ -26,6 +26,7 @@ If you have Python3 and pip installed on your machine, then the VARS-TOOL packag
 foo@bar:~$  pip install varstool
 ```
 
+
 ### 2.2. Installing from source code
 
 To install the lastest VARS-TOOL code from the source code, you will need to clone the github repository onto your local device using the command:
@@ -49,6 +50,7 @@ foo@bar:~$ python setup.py install
 
 Under progress...
 
+
 ## 4. Examples and Tutorials
 
 * 4.1. **Quick Start**: Here is an overview of the VARS-TOOL main components and a simple example using ishigami and wavy6d models. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=tutorial%2FQucikStart-Tutorial.ipynb)
@@ -58,6 +60,7 @@ Under progress...
 * 4.3. **Handling Correlated Factors Using Generalized VARS (GVARS)**: under progress...
 	
 * 4.4. **Data-driven Sensitivity Analysis (DVARS)**: under progress...
+
 
 ## 5. Your Contributions
 
@@ -71,9 +74,11 @@ Once the packages are installed to contribute do the following:
 3. Commit your changes and push them to your branch, and
 4. When the branch is ready to be merged, you can create a Pull Request ([how to create a pull request](https://gist.github.com/MarcDiethelm/7303312)).
 
+
 ## 6. References
 
 Under progress...
+
 
 ## 7. License
 
