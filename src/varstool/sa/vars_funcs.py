@@ -18,9 +18,10 @@ from typing import (
 
 
 def apply_unique(
-    func: Callable,
+    func: varstool.Model,
     df: pd.DataFrame,
     axis: int=1,
+    progress: bool=False,
     *args: tuple,
     **kwargs: dict,
 ) -> pd.DataFrame:
@@ -52,10 +53,19 @@ def apply_unique(
     Keshavarz, Kasra, (2021): code in Python 3
     Blanchard, Cordell, (2021): code in Python 3
     """
+    if not progress:
+        applied_df = df.merge(df.drop_duplicates()
+                              .assign(**{func.__name__: lambda x: x.apply(func, axis=axis)}),
+                              how='left')
+    else:
+        # adding progress bar compatible with Jupyter notebooks
+        from tqdm.autonotebook import tqdm
+        tqdm.pandas(desc=str(func) + ' evaluation') # func is of type varstool.Model
 
-    applied_df = df.merge(df.drop_duplicates()
-                          .assign(**{func.__name__: lambda x: x.apply(func, axis=axis)}),
-                          how='left')
+        applied_df = df.merge(df.drop_duplicates()
+                              .assign(**{func.__name__: lambda x: x.progress_apply(func, axis=axis)}),
+                              how='left')
+
     applied_df.index = df.index
 
     return applied_df

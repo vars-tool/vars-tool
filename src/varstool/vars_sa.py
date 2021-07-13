@@ -1,3 +1,14 @@
+"""
+VARS Sensitivity Anlaysis Framework
+-----------------------------------
+
+The Variogram Analysis of Response Surfaces (VARS) is a 
+powerful sensitivity analysis (SA) method first applied
+to  Earth and Environmental System models. 
+
+"""
+
+
 import warnings
 import decimal
 import multiprocessing
@@ -6,8 +17,10 @@ import pandas as pd
 import numpy  as np
 import scipy.stats as stat
 import scipy.cluster.hierarchy as hchy
-#import numpy.typing as npt # let's further investigate this
 import matplotlib.pyplot as plt
+
+from tqdm.autonotebook import tqdm
+
 
 from joblib import Parallel, delayed
 from itertools import compress
@@ -32,9 +45,24 @@ from collections.abc import (
 )
 
 
-class Model():
-    __doc__ = """A wrapper class for a function of interest"""
+class Model(object):
+    """
+    Description:
+    ------------
+    A wrapper class to contain various models and functions
+    to be fed into VARS and its variations. The models can be
+    called by simply calling the wrapper class itself.
 
+
+    Parameters:
+    -----------
+    :param func: function of interest 
+    :type func: Callable
+    :param unknown_options: a dictionary of options with keys as
+                            parameters and values of parameter
+                            values.
+    :type unknown_options: dict
+    """
     def __init__(
         self,
         func: Callable = None,
@@ -77,20 +105,76 @@ class Model():
 
 
 class VARS(object):
-    __doc__ = """VARS object"""
+    """
+    Description:
+    ------------
+    The Python implementation of the Variogram Analysis of Response
+    Surfaces (VARS) first introduced in Razavi and Gupta (2015) (see
+    [1]_ and [2]_).
+
+
+    Parameters:
+    -----------
+    :param star_centres: contains star centres of the analysis
+    :type star_centres: numpy.array
+    :param num_stars: number of stars to generate
+    :type num_stars: int, numpy.int32, numpy.int64, defaults to 100
+    :param parameters: the parameters of the model including lower and
+                       upper bounds
+    :type parameters: dict
+    :param delta_h: the resolution of star samples
+    :type delta_h: float, defaults to 0.1
+    :param ivars_scales: the IVARS scales
+    :type ivars_scales: tuple, defaults to (0.1, 0.3, 0.5)
+    :param model: the model used in the sensitivity analysis
+    :type model: varstool.Model
+    :param seed: the seed number used in generating star centres
+    :type seed: int, numpy.int32, numpy.int64
+    :param bootstrap_flag: flag to bootstrap the sensitivity analysis results
+    :type bootstrap_flag: bool, defaults to False
+    :param bootstrap_size: the size of bootstrapping experiment
+    :type bootstrap_size: int, defaults to 1000
+    :param bootstrap_ci: the condifence interval of boostrapping
+    :type bootstrap_ci: float, defaults to 0.9
+    :param grouping_flag: flag to conduct grouping of sensitive parameters
+    :type grouping_flag: bool, defaults to False
+    :param num_grps: the number of groups to categorize parameters
+    :type num_grps: int, defaults to None
+    :param report_verbose: flag to show the sensitvity analysis progress
+    :type report_verbose: bool, False
+
+
+    References:
+    -----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water 
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water 
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
+
+
+    Contributors:
+    -------------
+    Razavi, Saman, (2015): algorithm, code in MATALB (c)
+    Gupta, Hoshin, (2015): algorithm, code in MATLAB (c)
+    Mattot, Shawn, (2019): code in C/++
+    Keshavarz, Kasra, (2021): code in Python 3
+    Blanchard, Cordell, (2021): code in Python 3
+    """
 
     #-------------------------------------------
     # Constructors
 
     def __init__(
         self,
-        star_centres = [],  # sampled star centres (random numbers) used to create star points
-        num_stars: int = 100, # default number of stars
+        star_centres = np.array([]),  # sampled star centres (random numbers) used to create star points
+        num_stars: int = 100, #  number of stars
         parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
         model: Model = None, # model (function) to run for each star point
-        seed: Optional[int] = 123456789, # randomization state
+        seed: Optional[int] = np.random.randint(1, 123456789), # randomization state
         sampler: Optional[str] = None, # one of the default random samplers of varstool
         bootstrap_flag: Optional[bool] = False, # bootstrapping flag
         bootstrap_size: Optional[int]  = 1000, # bootstrapping size
@@ -106,7 +190,7 @@ class VARS(object):
         self.delta_h = delta_h
         self.ivars_scales = ivars_scales
         self.star_centres = star_centres
-        self.star_points  = [] # an empty list works for now - but needs to be changed - really?
+        self.star_points  = pd.DataFrame([]) # an empty list works for now - but needs to be changed - really?
         self.seed = seed # seed number
         self.bootstrap_flag = bootstrap_flag
         self.bootstrap_size = bootstrap_size
@@ -119,8 +203,6 @@ class VARS(object):
         self.run_status = False
 
         # Check input arguments
-        # ***add error checking, and possibly default value for star centres
-
         # default value for bootstrap_flag
         if not bootstrap_flag:
             self.bootstrap_flag = False
@@ -180,9 +262,9 @@ class VARS(object):
         if ((not isinstance(seed, int)) or (seed < 0)):
             warnings.warn(
                 "`seed` must be an integer greater than zero."
-                " value is set to default, i.e., 123456789"
+                " value is set to default, i.e., randomized integer between 1 and 123456789"
             )
-            self.seed = 123456789
+            self.seed = np.random.randint(1, 123456790)
 
         ## check bootstrap dtype and sign
         if ((not isinstance(bootstrap_size, int)) or (bootstrap_size < 1)):
@@ -227,6 +309,7 @@ class VARS(object):
 
         # check the sampling algorithms
         if self.sampler == 'rnd':
+            np.random.seed(self.seed)
             self.star_centres = np.random.rand(self.num_stars, len(self.parameters))
         elif self.sampler == 'lhs':
             from .sampling import lhs
@@ -266,23 +349,13 @@ class VARS(object):
                 "'rnd', 'lhs', 'plhs', 'halton_seq', 'sobol_seq', 'symlhs'"
             )
 
-    @classmethod
-    def from_dict(cls, input_dict):
-
-        return cls()
-
-    @classmethod
-    def from_text(cls, input_text_file):
-
-        return cls()
-
 
     #-------------------------------------------
     # Representators
-    def __repr__(self, ) -> str:
-        """show the status of VARS analysis"""
+    def __repr__(self) -> str:
+        """shows the status of VARS analysis"""
 
-        status_star_centres = "Star Centres: " + ("Loaded" if len(self.star_centres) != 0 else "Not Loaded")
+        status_star_centres = "Star Centres: " + (str(self.star_centres.size[0])+ " Centers Loaded" if len(self.star_centres) != 0 else "Not Loaded")
         status_star_points = "Star Points: " + ("Loaded" if len(self.star_points) != 0 else "Not Loaded")
         status_parameters = "Parameters: " + (str(len(self.parameters))+" paremeters set" if self.parameters else "None")
         status_delta_h = "Delta h: " + (str(self.delta_h)+"" if self.delta_h else "None")
@@ -301,7 +374,8 @@ class VARS(object):
 
         return "\n".join(status_report_list)
 
-    def __str__(self, ) -> str:
+    def __str__(self) -> str:
+        """shows the instance name of the VARS analysis experiment"""
 
         return self.__class__.__name__
 
@@ -313,7 +387,7 @@ class VARS(object):
     ## D-/GVARS sublcasses.
 
     @property
-    def star_centres(self, ):
+    def star_centres(self):
         return self._star_centres
 
     @star_centres.setter
@@ -327,7 +401,7 @@ class VARS(object):
         self._star_centres = new_centres
 
     @property
-    def star_points(self, ):
+    def star_points(self):
         return self._star_points
 
     @star_points.setter
@@ -344,7 +418,11 @@ class VARS(object):
     #-------------------------------------------
     # Core functions
     @staticmethod
-    def generate_star(star_centres, delta_h, param_names):
+    def generate_star(
+        star_centres: np.array, 
+        delta_h: float, 
+        param_names:list,
+    ) -> pd.DataFrame:
 
         # generate star points using star.py functions
         star_points = starvars.star(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
@@ -352,14 +430,14 @@ class VARS(object):
         # figure out way to return this?
         return star_points  # for now will just do this
 
-    def _plot(self, ):
+    def _plot(self):
 
         # make similar plots as the matlab plots showing the important
         # SA results from analysis
 
         pass
 
-    def run_online(self, ):
+    def run_online(self):
 
         # generate star points
         self.star_points = starvars.star(self.star_centres, # star centres
@@ -376,51 +454,90 @@ class VARS(object):
                                         )
 
         # apply model to the generated star points
-        df = vars_funcs.apply_unique(self.model.func, self.star_points)
+        df = vars_funcs.apply_unique(func=self.model.func, 
+                                     df=self.star_points,
+                                     axis=1,
+                                     progrss=self.report_verbose,
+                            )
         df.index.names = ['centre', 'param', 'points']
 
-        # get paired values for each section based on 'h'
-        pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df, self.delta_h)
-        pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
+        # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
+        if self.report_verbose:
+            tqdm.pandas(desc='building pairs')
+            self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df, self.delta_h)
+        else:
+            self.pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df, self.delta_h)
+        self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
+
+        # progress bar for vars analysis
+        if self.report_verbose:
+            vars_pbar = tqdm(desc='VARS Analysis', total=10) # 10 steps for different components
 
         # get mu_star value
-        mu_star_df = df[str(self.model)].groupby(level=[0,1]).mean()
-        mu_star_df.index.names = ['centre', 'param']
+        self.mu_star_df = df[str(self.model)].groupby(level=[0,1]).mean()
+        self.mu_star_df.index.names = ['centre', 'param']
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
 
         # overall mean of the unique evaluated function value over all star points
-        mu_overall = df[str(self.model)].unique().mean()
+        self.mu_overall = df[str(self.model)].unique().mean()
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        var_overall = df[str(self.model)].unique().var(ddof=1)
+        self.var_overall = df[str(self.model)].unique().var(ddof=1)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
 
         # sectional covariogram calculation
-        cov_section_all = vars_funcs.cov_section(pair_df, mu_star_df)
+        self.cov_section_all = vars_funcs.cov_section(self.pair_df, self.mu_star_df)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.write('Sectional covariogram `cov_section_all` calculated - access via .cov_section_all')
 
         # variogram calculation
         # MATLAB: Gamma
-        self.gamma = vars_funcs.variogram(pair_df)
+        self.gamma = vars_funcs.variogram(self.pair_df)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.write('Variogram (`gamma`) calculated - access via .gamma')
 
         # morris calculation
-        morris_value = vars_funcs.morris_eq(pair_df)
+        morris_value = vars_funcs.morris_eq(self.pair_df)
         self.maee = morris_value[0] # MATLAB: MAEE
         self.mee  = morris_value[1] # MATLAB: MEE
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.write('Morris MAEE and MEE (`maee` and `mee`) calculated - access via .maee and .mee')
 
         # overall covariogram calculation
         # MATLAB: COV
-        self.cov = vars_funcs.covariogram(pair_df, mu_overall)
+        self.cov = vars_funcs.covariogram(self.pair_df, self.mu_overall)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.write('Covariogram (`cov`) calculated - access via .cov')
 
         # expected value of the overall covariogram calculation
         # MATLAB: ECOV
-        self.ecov = vars_funcs.e_covariogram(cov_section_all)
+        self.ecov = vars_funcs.e_covariogram(self.cov_section_all)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.write('Expected value of covariogram (`ecov`) calculated - access via .ecov')
 
         # sobol calculation
         # MATLAB: ST
-        self.st = vars_funcs.sobol_eq(self.gamma, self.ecov, var_overall, self.delta_h)
+        self.st = vars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.write('Sobol ST (`st`) calculated - access via .st')
 
         # do factor ranking on sobol results
         sobol_factor_ranking_array = self._factor_ranking(self.st)
         # turn results into data frame
-        self.sobol_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
+        self.st_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
 
         # IVARS calculation
         self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
@@ -435,15 +552,15 @@ class VARS(object):
 
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_sobol_factor_ranking,self.rel_ivars_factor_ranking, self.ivars50_grp, self.sobol_grp, \
-            self.reli_sobol_grp, self.reli_ivars50_grp = self._bootstrapping(pair_df, df, cov_section_all)
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
+            self.reli_st_grp, self.reli_ivars50_grp = self._bootstrapping(self.pair_df, df, cov_section_all)
         else:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_sobol_factor_ranking,self.rel_ivars_factor_ranking = self._bootstrapping(pair_df, df, cov_section_all)
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = self._bootstrapping(self.pair_df, df, cov_section_all)
 
         # for status update
         self.run_status = True
-        
+
         # output dictionary
         self.output = {
             'Gamma':self.gamma,
@@ -461,11 +578,14 @@ class VARS(object):
             'STub':self.stub if self.bootstrap_flag is True else None,
             'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
             'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
-            'relST':self.rel_sobol_factor_ranking,
-            'relIVARS':self.rel_ivars_factor_ranking,
-            'Groups': [self.ivars50_grp, self.sobol_grp] if self.grouping_flag is True else None,
-            'relGrp': [self.reli_sobol_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
+            'relST':self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
+            'relIVARS':self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
+            'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
+            'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
         }
+
+        return
+
 
     def run_offline(star_points,):
 
@@ -580,16 +700,13 @@ class VARS(object):
         num_grp_sobol, sobol_grp_array, ClustersSobol = self._factor_grouping(result_bs_sobol,
                                                                               num_grp=self.num_grps)
 
-        ivars50_grp = pd.DataFrame([ivars50_grp_array], columns=self.parameters.keys(), index=[0.5])
-        sobol_grp = pd.DataFrame([sobol_grp_array], columns=self.parameters.keys(), index=[''])
-
         # calculate reliability estimates based on factor grouping
         cluster_sobol = []
         cluster_rank_sobol = []
         # associate group numbers with the parameters
         for g in range(0, num_grp_sobol):
             cluster_sobol.append(np.argwhere(sobol_grp_array == g + 1).flatten())
-            cluster_rank_sobol.append(self.sobol_factor_ranking.to_numpy().flatten()[cluster_sobol[g]])
+            cluster_rank_sobol.append(self.st_factor_ranking.to_numpy().flatten()[cluster_sobol[g]])
             cluster_rank_sobol[g] = np.sort(cluster_rank_sobol[g], axis=0)
 
         cluster_ivars50 = []
@@ -627,6 +744,16 @@ class VARS(object):
 
         reli_sobol_grp = pd.DataFrame([reli_sobol_grp_array], columns=self.parameters.keys(), index=[''])
         reli_ivars50_grp = pd.DataFrame([reli_ivars50_grp_array], columns=self.parameters.keys(), index=[0.5])
+
+        # change numbering of groups to be consistent with matlab results
+        for i in range(0, len(ivars50_grp_array)):
+            ivars50_grp_array[i] = np.abs(ivars50_grp_array[i] - self.num_grps) + 1
+
+        for i in range(0, len(sobol_grp_array)):
+            sobol_grp_array[i] = np.abs(sobol_grp_array[i] - self.num_grps) + 1
+
+        ivars50_grp = pd.DataFrame([ivars50_grp_array], columns=self.parameters.keys(), index=[0.5])
+        sobol_grp = pd.DataFrame([sobol_grp_array], columns=self.parameters.keys(), index=[''])
 
         return ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp
 
@@ -734,10 +861,11 @@ class VARS(object):
         ivarsub = ivarsub.transpose()
 
         # calculate reliability estimates based on factor ranking of sobol result
+        # calculate reliability estimates based on factor ranking of sobol result
         rel_sobol_results = []
         for param in self.parameters.keys():
             rel_sobol_results.append(
-                result_bs_sobol_ranking.eq(self.sobol_factor_ranking)[param].sum() / self.bootstrap_size)
+                result_bs_sobol_ranking[param].eq(self.st_factor_ranking[param][0]).sum() / self.bootstrap_size)
 
         rel_sobol_factor_ranking = pd.DataFrame([rel_sobol_results], columns=self.parameters.keys(), index=[''])
 
