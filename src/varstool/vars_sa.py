@@ -575,7 +575,7 @@ class VARS(object):
             'ECOV':self.ecov,
             'IVARS':self.ivars,
             'IVARSid':self.ivars_scales,
-            'rnkST':self.sobol_factor_ranking,
+            'rnkST':self.st_factor_ranking,
             'rnkIVARS':self.ivars_factor_ranking,
             'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
             'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
