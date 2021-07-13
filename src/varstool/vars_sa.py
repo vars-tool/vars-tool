@@ -562,6 +562,7 @@ class VARS(object):
         self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_list, columns=self.parameters.keys(), index=self.ivars_scales)
         if self.report_verbose:
             factor_rank_pbar.update(1)
+            factor_rank_pbar.close()
 
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
@@ -793,7 +794,7 @@ class VARS(object):
         result_bs_sobol_ranking = pd.DataFrame()
         result_bs_ivars_ranking = pd.DataFrame()
 
-        for i in tqdm(range(0, self.bootstrap_size), disable=not progress):
+        for i in tqdm(range(0, self.bootstrap_size), desc='Bootstrapping' , disable=not progress):
             # bootstrapping to get CIs
             # specify random sequence by sampling with replacement
             bootstrap_rand = np.random.choice(list(range(0, 10)), size=len(range(0, 10)), replace=True).tolist()
