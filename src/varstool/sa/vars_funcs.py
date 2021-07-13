@@ -14,11 +14,12 @@ from typing import (
     Any
 )
 
+from ..vars_sa import Model
 # helper functions
 
 
 def apply_unique(
-    func: varstool.Model,
+    func: Model,
     df: pd.DataFrame,
     axis: int=1,
     progress: bool=False,
@@ -35,7 +36,7 @@ def apply_unique(
     Parameters:
     -----------
     :param func: the function of interest to be applied to df
-    :type func: Callable
+    :type func: varstool.Model
     :param df: the Pandas DataFrame of interest
     :type df: pd.DataFrame
     :param axis: 0 for index, 1 for columns
@@ -60,7 +61,8 @@ def apply_unique(
     else:
         # adding progress bar compatible with Jupyter notebooks
         from tqdm.autonotebook import tqdm
-        tqdm.pandas(desc=str(func) + ' evaluation') # func is of type varstool.Model
+        # func is of type varstool.Model
+        tqdm.pandas(desc=str(func) + ' evaluation')
 
         applied_df = df.merge(df.drop_duplicates()
                               .assign(**{func.__name__: lambda x: x.progress_apply(func, axis=axis)}),
