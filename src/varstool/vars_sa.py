@@ -969,7 +969,7 @@ class TSVARS(VARS):
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
         model: Model = None, # model (function) to run for each star point
-        seed: Optional[int] = np.random.ranint(1, 123456789), # randomization state
+        seed: Optional[int] = np.random.randint(1, 123456789), # randomization state
         sampler: Optional[str] = None, # one of the default random samplers of varstool
         bootstrap_flag: Optional[bool] = False, # bootstrapping flag
         bootstrap_size: Optional[int]  = 1000, # bootstrapping size
