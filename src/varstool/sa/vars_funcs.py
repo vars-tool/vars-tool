@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stat
 import scipy.cluster.hierarchy as hchy
-import varstool
 
 from itertools import combinations, compress
 
@@ -734,7 +733,7 @@ def bootstrapping(
     cov_section_all: pd.DataFrame,
     bootstrap_size: int,
     bootstrap_ci: float,
-    model: varstool.Model,
+    model,
     delta_h: float,
     ivars_scales: Tuple[float, ...],
     parameters: Dict[Union[str, int], Tuple[float, float]],
