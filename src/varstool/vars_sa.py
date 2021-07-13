@@ -569,7 +569,7 @@ class VARS(object):
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
             self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
-                                                                               self.model, self.delta_h, self.ivars_scales,
+                                                                               self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
@@ -577,7 +577,7 @@ class VARS(object):
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
-                                                                               self.model, self.delta_h, self.ivars_scales,
+                                                                               self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)

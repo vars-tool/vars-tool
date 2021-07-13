@@ -733,7 +733,7 @@ def bootstrapping(
     cov_section_all: pd.DataFrame,
     bootstrap_size: int,
     bootstrap_ci: float,
-    model,
+    func: Callable,
     delta_h: float,
     ivars_scales: Tuple[float, ...],
     parameters: Dict[Union[str, int], Tuple[float, float]],
@@ -765,7 +765,7 @@ def bootstrapping(
 
         bootstrapped_ecovariogram = e_covariogram(bootstrapped_cov_section_all)
 
-        bootstrapped_var = bootstrapped_df[model.func.__name__].unique().var(ddof=1)
+        bootstrapped_var = bootstrapped_df[func.__name__].unique().var(ddof=1)
 
         bootstrapped_sobol = sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram,
                                                  bootstrapped_var, delta_h)
