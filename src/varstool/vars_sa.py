@@ -19,7 +19,7 @@ import scipy.stats as stat
 import scipy.cluster.hierarchy as hchy
 import matplotlib.pyplot as plt
 
-from tqdm.auto import tqdm
+from tqdm.auto import tqdm, trange
 
 
 from joblib import Parallel, delayed
@@ -543,10 +543,16 @@ class VARS(object):
             vars_pbar.update(1)
             vars_pbar.close()
 
+        # progress bar for factor ranking
+        if self.report_verbose:
+            factor_rank_pbar = tqdm(desc='factor ranking', total=2)
+
         # do factor ranking on sobol results
         sobol_factor_ranking_array = self._factor_ranking(self.st)
         # turn results into data frame
         self.st_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
+        if self.report_verbose:
+            factor_rank_pbar.update(1)
 
         # do factor ranking on IVARS results
         ivars_factor_ranking_list = []
@@ -554,14 +560,16 @@ class VARS(object):
             ivars_factor_ranking_list.append(self._factor_ranking(self.ivars.loc[scale]))
         # turn results into data frame
         self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_list, columns=self.parameters.keys(), index=self.ivars_scales)
+        if self.report_verbose:
+            factor_rank_pbar.update(1)
 
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
-            self.reli_st_grp, self.reli_ivars50_grp = self._bootstrapping(self.pair_df, df, self.cov_section_all)
+            self.reli_st_grp, self.reli_ivars50_grp = self._bootstrapping(self.pair_df, df, self.cov_section_all, self.report_verbose)
         else:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = self._bootstrapping(self.pair_df, df, self.cov_section_all)
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = self._bootstrapping(self.pair_df, df, self.cov_section_all, self.report_verbose)
 
         # for status update
         self.run_status = True
@@ -627,7 +635,10 @@ class VARS(object):
 
         return ranks
 
-    def _factor_grouping(self, sens_idx, num_grp=None):
+    def _factor_grouping(
+        self, 
+        sens_idx: pd.DataFrame, 
+        num_grp: int=None):
         [m, n] = sens_idx.shape
 
         # make data 1d
@@ -698,7 +709,13 @@ class VARS(object):
 
         return cutoff, clrThrshl
 
-    def _grouping(self, result_bs_ivars_df, result_bs_sobol, result_bs_ivars_ranking, result_bs_sobol_ranking):
+    def _grouping(
+        self, 
+        result_bs_ivars_df: pd.DataFrame, 
+        result_bs_sobol: pd.DataFrame, 
+        result_bs_ivars_ranking: pd.DataFrame, 
+        result_bs_sobol_ranking: pd.DataFrame,
+    ) -> Tuple:
         # group the parameters
         num_grp_ivars50, ivars50_grp_array, ClustersIvars50 = self._factor_grouping(result_bs_ivars_df.loc[0.5],
                                                                                     num_grp=self.num_grps)
@@ -762,7 +779,13 @@ class VARS(object):
 
         return ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp
 
-    def _bootstrapping(self, pair_df, df, cov_section_all):
+    def _bootstrapping(
+        self, 
+        pair_df: pd.DataFrame, 
+        df: pd.DataFrame, 
+        cov_section_all: pd.DataFrame,
+        progress: bool=False
+    ) -> Tuple:
         # create result dataframes if bootstrapping is chosen to be done
         result_bs_variogram = pd.DataFrame()
         result_bs_sobol = pd.DataFrame()
@@ -770,7 +793,7 @@ class VARS(object):
         result_bs_sobol_ranking = pd.DataFrame()
         result_bs_ivars_ranking = pd.DataFrame()
 
-        for i in range(0, self.bootstrap_size):
+        for i in tqdm(range(0, self.bootstrap_size), disable=not progress):
             # bootstrapping to get CIs
             # specify random sequence by sampling with replacement
             bootstrap_rand = np.random.choice(list(range(0, 10)), size=len(range(0, 10)), replace=True).tolist()
