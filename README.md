@@ -54,7 +54,7 @@ Under progress...
 
 * 4.1. **Quick Start**: Here is an overview of the VARS-TOOL main components and a simple example using ishigami and wavy6d models. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=tutorial%2FQuickStart-Tutorial.ipynb)
 
-* 4.2. **Real-world Example Using HBV-SASK (using TSVARS)**: Sensitivity analysis of a real-world hydrological model. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=%2Ftutorial%2FTSVARS-Tutorial.ipynb)
+* 4.2. **Real-world Example Using HBV-SASK (using TSVARS)**: Sensitivity analysis of a real-world hydrological model producing time-series results. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=%2Ftutorial%2FTSVARS-Tutorial.ipynb)
 	
 * 4.3. **Handling Correlated Factors Using Generalized VARS (GVARS)**: under progress...
 	

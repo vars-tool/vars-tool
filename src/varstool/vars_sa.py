@@ -168,8 +168,8 @@ class VARS(object):
 
     def __init__(
         self,
-        star_centres = np.array([]),  # sampled star centres (random numbers) used to create star points
-        num_stars: int = 100, #  number of stars
+        star_centres: np.ndarray = np.array([]),  # sampled star centres (random numbers) used to create star points
+        num_stars: Optional[int] = 100, #  number of stars
         parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
@@ -480,7 +480,7 @@ class VARS(object):
 
         # progress bar for vars analysis
         if self.report_verbose:
-            vars_pbar = tqdm(desc='VARS Analysis', total=10) # 10 steps for different components
+            vars_pbar = tqdm(desc='VARS analysis', total=10) # 10 steps for different components
 
         # get mu_star value
         self.mu_star_df = df[str(self.model)].groupby(level=[0,1]).mean()
@@ -552,7 +552,7 @@ class VARS(object):
 
         # progress bar for factor ranking
         if self.report_verbose:
-            factor_rank_pbar = tqdm(desc='factor ranking', total=2)
+            factor_rank_pbar = tqdm(desc='factor ranking', total=2) # only two components
 
         # do factor ranking on sobol results
         sobol_factor_ranking_array = vars_funcs.factor_ranking(self.st)
@@ -963,13 +963,13 @@ class TSVARS(VARS):
 
     def __init__(
         self, #itself
-        star_centres = [],  # sampled star centres (random numbers) used to create star points
+        star_centres = np.array([]),  # sampled star centres (random numbers) used to create star points
         num_stars: int = 100, # default number of stars
         parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
         delta_h: Optional[float] = 0.1, # delta_h for star sampling
         ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
         model: Model = None, # model (function) to run for each star point
-        seed: Optional[int] = 123456789, # randomization state
+        seed: Optional[int] = np.random.ranint(1, 123456789), # randomization state
         sampler: Optional[str] = None, # one of the default random samplers of varstool
         bootstrap_flag: Optional[bool] = False, # bootstrapping flag
         bootstrap_size: Optional[int]  = 1000, # bootstrapping size
@@ -1056,7 +1056,7 @@ class TSVARS(VARS):
     #-------------------------------------------
     # Core functions
 
-    def run_online(self, ):
+    def run_online(self):
 
         self.star_points = starvars.star(self.star_centres, # star centres
                                            delta_h=self.delta_h, # delta_h
@@ -1067,44 +1067,46 @@ class TSVARS(VARS):
 
         self.star_points = tsvars_funcs.scale(df=self.star_points, # star points must be scaled
                                              bounds={ # bounds are created while scaling
-                                             'lb':[val[0] for _, val in self.parameters.items()],
-                                             'ub':[val[1] for _, val in self.parameters.items()],
+                                                 'lb':[val[0] for _, val in self.parameters.items()],
+                                                 'ub':[val[1] for _, val in self.parameters.items()],
                                              }
                                         )
 
         # doing function evaluations either on serial or parallel mode
         if self.func_eval_method == 'serial':
-            df = self.star_points.apply(self.model, axis=1, result_type='expand')
+            if self.report_verbose:
+                tqdm.pandas(desc='function evaluation')
+                df = self.star_points.progress_apply(self.model, axis=1, result_type='expand')
+            else:
+                df = self.star_points.apply(self.model, axis=1, result_type='expand')
             df.index.names = ['centre', 'param', 'point']
 
         elif self.func_eval_method == 'parallel':
             warnings.warn(
-                "Evaluating function in parallel is not stable yet! "
+                "Evaluating function in parallel mode is not stable yet. "
                 "varstool currently uses `mapply` to parallelize function "
                 "evaluations, see https://github.com/ddelange/mapply",
                 UserWarning,
                 stacklevel=1
             )
 
-            #import mapply inside this if clause to avoid unnecessary overhead
+            #importing `mapply` inside this if clause to avoid unnecessary overhead
             import mapply
             import psutil
 
             mapply.init(
-                n_workers=-1,
-                chunk_size=1,
+                n_workers=-1, # -1 indicates max_chunks_per_worker makes the decision on parallelization
+                chunk_size=1, # 1 indicates max_chunks_per_worker makes the decision on parallelization
                 max_chunks_per_worker=int(df.shape[0]//psutil.psutil.cpu_count(logical=False)),
-                progressbar=True,
+                progressbar=True if self.report_verbose else False,
             )
-            df = self.star_points.mapply(self.model.func, axis=1, result_type='expand')
+            df = self.star_points.mapply(self.model, axis=1, result_type='expand')
             df.index.names = ['centre', 'param', 'point']
 
-        # defining a lambda function to do the pairing for each time-step
+        # defining a lambda function to build pairs for each time-step
         ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(tsvars_funcs.section_df, self.delta_h)
 
         # VARS evaluations can be done in two modes: serial and parallel
-        ## if serial mode is chosen, two engines are available:
-        ## 1. pandas dataframe `apply` method & 2. simple for loop over time-steps
         if self.vars_eval_method == 'serial':
 
             if self.vars_chunk_size: # if chunk size is provided by the user
@@ -1294,10 +1296,10 @@ class TSVARS(VARS):
 
                 self.run_status = True
 
-    def temp_func(func, name, group):
+    def _temp_func(func, name, group):
         return func(group), name
 
-    def applyParallel(dfGrouped, func):
+    def _applyParallel(dfGrouped, func):
         retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
                                     (delayed(temp_func)(func, name, group)\
                                 for name, group in dfGrouped))

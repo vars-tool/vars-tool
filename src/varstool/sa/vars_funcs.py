@@ -750,7 +750,7 @@ def bootstrapping(
     result_bs_sobol_ranking = pd.DataFrame()
     result_bs_ivars_ranking = pd.DataFrame()
 
-    for i in tqdm(range(0, bootstrap_size), desc='Bootstrapping' , disable=not progress):
+    for i in tqdm(range(0, bootstrap_size), desc='bootstrapping' , disable=not progress):
         # bootstrapping to get CIs
         # specify random sequence by sampling with replacement
         bootstrap_rand = np.random.choice(list(range(0, 10)), size=len(range(0, 10)), replace=True).tolist()
