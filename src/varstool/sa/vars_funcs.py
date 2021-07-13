@@ -58,7 +58,6 @@ def apply_unique(
     """
     if progress:
         tqdm.pandas(desc='function evaluation')
-        print('here')
         applied_df = df.merge(df.drop_duplicates()
                               .assign(**{func.__name__: lambda x: x.progress_apply(func, axis=axis)}),
                               how='left')

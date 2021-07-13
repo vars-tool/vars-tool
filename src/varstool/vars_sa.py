@@ -457,7 +457,7 @@ class VARS(object):
         df = vars_funcs.apply_unique(func=self.model.func, 
                                      df=self.star_points,
                                      axis=1,
-                                     progrss=self.report_verbose,
+                                     progress=self.report_verbose,
                             )
         df.index.names = ['centre', 'param', 'points']
 
