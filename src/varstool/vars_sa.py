@@ -464,9 +464,11 @@ class VARS(object):
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
             tqdm.pandas(desc='building pairs')
-            self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df, self.delta_h)
+            self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df, 
+                                                                                   delta_h=self.delta_h)
         else:
-            self.pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df, self.delta_h)
+            self.pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df, 
+                                                                          delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # progress bar for vars analysis
