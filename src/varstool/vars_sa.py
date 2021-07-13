@@ -417,18 +417,25 @@ class VARS(object):
 
     #-------------------------------------------
     # Core functions
-    @staticmethod
-    def generate_star(
-        star_centres: np.array, 
-        delta_h: float, 
-        param_names:list,
-    ) -> pd.DataFrame:
+    def generate_star(self) -> pd.DataFrame:
 
-        # generate star points using star.py functions
-        star_points = starvars.star(star_centres, delta_h=delta_h, parameters=param_names, rettype='DataFrame')
+        # generate star points
+        star_points = starvars.star(self.star_centres, # star centres
+                                           delta_h=self.delta_h, # delta_h
+                                           parameters=[*self.parameters], # parameters dictionary keys
+                                           rettype='DataFrame',
+                                       ) # return type is a dataframe
 
-        # figure out way to return this?
-        return star_points  # for now will just do this
+        star_points = vars_funcs.scale(df=star_points, # star points must be scaled
+                                             bounds={ # bounds are created while scaling
+                                             'lb':[val[0] for _, val in self.parameters.items()],
+                                             'ub':[val[1] for _, val in self.parameters.items()],
+                                             }
+                                        )
+
+        star_points.index.names = ['centre', 'param', 'points']
+
+        return star_points
 
     def _plot(self):
 
@@ -611,11 +618,154 @@ class VARS(object):
         return
 
 
-    def run_offline(star_points,):
+    def run_offline(self, df):
 
-        # do analysis on offline formatted star points
+        # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
+        if self.report_verbose:
+            tqdm.pandas(desc='building pairs')
+            self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df,
+                                                                                   delta_h=self.delta_h)
+        else:
+            self.pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df,
+                                                                          delta_h=self.delta_h)
+        self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
-        # figure out a way to return results
+        # progress bar for vars analysis
+        if self.report_verbose:
+            vars_pbar = tqdm(desc='VARS Analysis', total=10) # 10 steps for different components
+
+        # get mu_star value
+        self.mu_star_df = df[str(self.model)].groupby(level=[0,1]).mean()
+        self.mu_star_df.index.names = ['centre', 'param']
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
+
+        # overall mean of the unique evaluated function value over all star points
+        self.mu_overall = df[str(self.model)].unique().mean()
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
+
+        # overall variance of the unique evaluated function over all star points
+        self.var_overall = df[str(self.model)].unique().var(ddof=1)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
+
+        # sectional covariogram calculation
+        self.cov_section_all = vars_funcs.cov_section(self.pair_df, self.mu_star_df)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Sectional covariogram `cov_section_all` calculated - access via .cov_section_all')
+
+        # variogram calculation
+        # MATLAB: Gamma
+        self.gamma = vars_funcs.variogram(self.pair_df)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Variogram (`gamma`) calculated - access via .gamma')
+
+        # morris calculation
+        morris_value = vars_funcs.morris_eq(self.pair_df)
+        self.maee = morris_value[0] # MATLAB: MAEE
+        self.mee  = morris_value[1] # MATLAB: MEE
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Morris MAEE and MEE (`maee` and `mee`) calculated - access via .maee and .mee')
+
+        # overall covariogram calculation
+        # MATLAB: COV
+        self.cov = vars_funcs.covariogram(self.pair_df, self.mu_overall)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Covariogram (`cov`) calculated - access via .cov')
+
+        # expected value of the overall covariogram calculation
+        # MATLAB: ECOV
+        self.ecov = vars_funcs.e_covariogram(self.cov_section_all)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Expected value of covariogram (`ecov`) calculated - access via .ecov')
+
+        # sobol calculation
+        # MATLAB: ST
+        self.st = vars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Sobol ST (`st`) calculated - access via .st')
+
+        # IVARS calculation
+        self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+             for scale in self.ivars_scales}, 'index')
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.close()
+
+        # progress bar for factor ranking
+        if self.report_verbose:
+            factor_rank_pbar = tqdm(desc='factor ranking', total=2)
+
+        # do factor ranking on sobol results
+        sobol_factor_ranking_array = vars_funcs.factor_ranking(self.st)
+        # turn results into data frame
+        self.st_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
+        if self.report_verbose:
+            factor_rank_pbar.update(1)
+
+        # do factor ranking on IVARS results
+        ivars_factor_ranking_list = []
+        for scale in self.ivars_scales:
+            ivars_factor_ranking_list.append(vars_funcs.factor_ranking(self.ivars.loc[scale]))
+        # turn results into data frame
+        self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_list, columns=self.parameters.keys(), index=self.ivars_scales)
+        if self.report_verbose:
+            factor_rank_pbar.update(1)
+            factor_rank_pbar.close()
+
+        if self.bootstrap_flag and self.grouping_flag:
+            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
+                                                                               self.bootstrap_size, self.bootstrap_ci,
+                                                                               self.model.func, self.delta_h, self.ivars_scales,
+                                                                               self.parameters, self.st_factor_ranking,
+                                                                               self.ivars_factor_ranking, self.grouping_flag,
+                                                                               self.num_grps, self.report_verbose)
+        else:
+            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
+                                                                               self.bootstrap_size, self.bootstrap_ci,
+                                                                               self.model.func, self.delta_h, self.ivars_scales,
+                                                                               self.parameters, self.st_factor_ranking,
+                                                                               self.ivars_factor_ranking, self.grouping_flag,
+                                                                               self.num_grps, self.report_verbose)
+
+        # for status update
+        self.run_status = True
+
+        # output dictionary
+        self.output = {
+            'Gamma':self.gamma,
+            'MAEE':self.maee,
+            'MEE':self.mee,
+            'COV':self.cov,
+            'ECOV':self.ecov,
+            'IVARS':self.ivars,
+            'IVARSid':self.ivars_scales,
+            'rnkST':self.st_factor_ranking,
+            'rnkIVARS':self.ivars_factor_ranking,
+            'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
+            'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
+            'STlb':self.stlb if self.bootstrap_flag is True else None,
+            'STub':self.stub if self.bootstrap_flag is True else None,
+            'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
+            'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
+            'relST':self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
+            'relIVARS':self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
+            'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
+            'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
+        }
 
         return
 
