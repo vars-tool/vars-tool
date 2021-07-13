@@ -14,7 +14,7 @@ from typing import (
     Any
 )
 
-from varstool import Model
+from ..vars_sa import Model
 # helper functions
 
 
