@@ -14,12 +14,11 @@ from typing import (
     Any
 )
 
-from .. vars_sa import Model
 # helper functions
 
 
 def apply_unique(
-    func: Model,
+    func: Callable,
     df: pd.DataFrame,
     axis: int=1,
     progress: bool=False,
@@ -36,7 +35,7 @@ def apply_unique(
     Parameters:
     -----------
     :param func: the function of interest to be applied to df
-    :type func: varstool.Model
+    :type func: Callable
     :param df: the Pandas DataFrame of interest
     :type df: pd.DataFrame
     :param axis: 0 for index, 1 for columns
