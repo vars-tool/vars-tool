@@ -14,6 +14,9 @@ from typing import (
     Any
 )
 
+from tqdm.notebook import tqdm
+
+
 # helper functions
 
 
@@ -54,10 +57,8 @@ def apply_unique(
     Blanchard, Cordell, (2021): code in Python 3
     """
     if progress:
-        # adding progress bar compatible with Jupyter notebooks
-        from tqdm.autonotebook import tqdm
         # func is of type varstool.Model
-        tqdm.pandas(desc=str(func) + ' evaluation')
+        tqdm.pandas(desc='function evaluation')
 
         applied_df = df.merge(df.drop_duplicates()
                               .assign(**{func.__name__: lambda x: x.progress_apply(func, axis=axis)}),
