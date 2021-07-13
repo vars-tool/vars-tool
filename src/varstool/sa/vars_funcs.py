@@ -53,11 +53,7 @@ def apply_unique(
     Keshavarz, Kasra, (2021): code in Python 3
     Blanchard, Cordell, (2021): code in Python 3
     """
-    if not progress:
-        applied_df = df.merge(df.drop_duplicates()
-                              .assign(**{func.__name__: lambda x: x.apply(func, axis=axis)}),
-                              how='left')
-    else:
+    if progress:
         # adding progress bar compatible with Jupyter notebooks
         from tqdm.autonotebook import tqdm
         # func is of type varstool.Model
@@ -65,6 +61,10 @@ def apply_unique(
 
         applied_df = df.merge(df.drop_duplicates()
                               .assign(**{func.__name__: lambda x: x.progress_apply(func, axis=axis)}),
+                              how='left')
+    else:
+        applied_df = df.merge(df.drop_duplicates()
+                              .assign(**{func.__name__: lambda x: x.apply(func, axis=axis)}),
                               how='left')
 
     applied_df.index = df.index
