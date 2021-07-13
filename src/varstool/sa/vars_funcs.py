@@ -57,9 +57,8 @@ def apply_unique(
     Blanchard, Cordell, (2021): code in Python 3
     """
     if progress:
-        # func is of type varstool.Model
         tqdm.pandas(desc='function evaluation')
-
+        print('here')
         applied_df = df.merge(df.drop_duplicates()
                               .assign(**{func.__name__: lambda x: x.progress_apply(func, axis=axis)}),
                               how='left')
