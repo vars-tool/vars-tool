@@ -536,14 +536,17 @@ class VARS(object):
             vars_pbar.update(1)
             # vars_pbar.write('Sobol ST (`st`) calculated - access via .st')
 
+        # IVARS calculation
+        self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+             for scale in self.ivars_scales}, 'index')
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.close()
+
         # do factor ranking on sobol results
         sobol_factor_ranking_array = self._factor_ranking(self.st)
         # turn results into data frame
         self.st_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
-
-        # IVARS calculation
-        self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
-             for scale in self.ivars_scales}, 'index')
 
         # do factor ranking on IVARS results
         ivars_factor_ranking_list = []
