@@ -19,7 +19,7 @@ import scipy.stats as stat
 import scipy.cluster.hierarchy as hchy
 import matplotlib.pyplot as plt
 
-from tqdm.notebook import tqdm
+from tqdm.auto import tqdm
 
 
 from joblib import Parallel, delayed

@@ -14,7 +14,7 @@ from typing import (
     Any
 )
 
-from tqdm.notebook import tqdm
+from tqdm.auto import tqdm
 
 
 # helper functions
