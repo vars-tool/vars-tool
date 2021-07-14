@@ -1342,7 +1342,7 @@ class TSVARS(VARS):
 
             else:
                 # pair_df is built serially - other functions are the same as parallel
-                self.pair_df = self._applyParallel(a.groupby(level=0, axis=1), ts_pair, self.report_verbose)
+                self.pair_df = self._applyParallel(self.star_points_eval.groupby(level=0, axis=1), ts_pair, self.report_verbose)
                 self.pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
 
                 if self.report_verbose:
