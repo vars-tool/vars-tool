@@ -1218,8 +1218,8 @@ class TSVARS(VARS):
                     vars_pbar.update(1)
 
                 self.morris = tsvars_funcs.morris_eq(self.pair_df)
-                self.maee = morris[0]
-                self.mee  = morris[1]
+                self.maee = self.morris[0]
+                self.mee  = self.morris[1]
                 if self.report_verbose:
                     vars_pbar.update(1)
 
