@@ -1196,16 +1196,16 @@ class TSVARS(VARS):
                 self.pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
 
                 vars_pbar = tqdm(desc='TSVARS analysis', total=10)
-                self.mu_star_df = star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+                self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                 self.mu_star_df.index.names = ['ts', 'centre', 'param']
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.mu_overall = star_points_eval.apply(lambda x: np.mean(list(np.unique(x))))
+                self.mu_overall = self.star_points_eval.apply(lambda x: np.mean(list(np.unique(x))))
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.var_overall = star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
                 if self.report_verbose:
                     vars_pbar.update(1)
 
