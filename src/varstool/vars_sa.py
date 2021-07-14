@@ -12,6 +12,8 @@ to  Earth and Environmental System models.
 import warnings
 import decimal
 import multiprocessing
+import joblib
+import contexlib
 
 import pandas as pd
 import numpy  as np
@@ -1340,31 +1342,127 @@ class TSVARS(VARS):
 
             else:
                 # pair_df is built serially - other functions are the same as parallel
-                self.pair_df = applyParallel(a.groupby(level=0, axis=1), ts_pair)
+                self.pair_df = applyParallel(a.groupby(level=0, axis=1), ts_pair, self.report_verbose)
                 self.pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
 
-                self.mu_star_df = df.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
-                self.mu_star_df.index.names = ['ts', 'centre', 'param']
+                if self.report_verbose:
+                    vars_pbar = tqdm(desc='VARS analysis', total=10)
 
-                self.mu_overall = df.apply(lambda x: np.mean(list(np.unique(x))))
-                self.var_overall = df.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
-                self.variogram = tsvars_funcs.variogram(pair_df)
-                self.sec_covariogram = tsvars_funcs.cov_section(pair_df, mu_star_df)
-                self.morris = tsvars_funcs.morris_eq(pair_df)
-                self.covariogram = tsvars_funcs.covariogram(pair_df, mu_overall)
-                self.sobol_value = tsvars_funcs.sobol_eq(gamma, ecov, var_overall)
+                self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+                self.mu_star_df.index.names = ['ts', 'centre', 'param']
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.mu_overall = self.star_points_eval.apply(lambda x: np.mean(list(np.unique(x))))
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.gamma = tsvars_funcs.variogram(self.pair_df)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.sec_covariogram = tsvars_funcs.cov_section(self.pair_df, self.mu_star_df)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.morris = tsvars_funcs.morris_eq(self.pair_df)
+                self.maee = self.morris[0]
+                self.mee  = self.morris[1]
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.cov = tsvars_funcs.covariogram(self.pair_df, self.mu_overall)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.ecov = tsvars_funcs.e_covariogram(self.sec_covariogram)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.st = tsvars_funcs.sobol_eq(gamma, ecov, var_overall)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
                 self.ivars = pd.DataFrame.from_dict({scale: self.variogram.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index')
+                if self.report_verbose:
+                    vars_pbar.update(1)
+                    vars_pbar.close()
 
                 self.run_status = True
+
+                # output dictionary
+                self.output = {
+                    'Gamma':self.gamma,
+                    'MAEE':self.maee,
+                    'MEE':self.mee,
+                    'COV':self.cov,
+                    'ECOV':self.ecov,
+                    'IVARS':self.ivars,
+                    'IVARSid':self.ivars_scales,
+                    # 'rnkST':self.st_factor_ranking,
+                    # 'rnkIVARS':self.ivars_factor_ranking,
+                    # 'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
+                    # 'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
+                    # 'STlb':self.stlb if self.bootstrap_flag is True else None,
+                    # 'STub':self.stub if self.bootstrap_flag is True else None,
+                    # 'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
+                    # 'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
+                    # 'relST':self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
+                    # 'relIVARS':self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
+                    # 'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
+                    # 'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
+                }
+
+
+    @contextlib.contextmanager
+    def _tqdm_joblib(tqdm_object):
+        """
+        Context manager to patch joblib to report into tqdm progress bar given as argument
+        
+        Source: https://stackoverflow.com/questions/24983493
+                /tracking-progress-of-joblib-parallel-execution
+                /58936697#58936697
+        """
+        class TqdmBatchCompletionCallback(joblib.parallel.BatchCompletionCallBack):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def __call__(self, *args, **kwargs):
+                tqdm_object.update(n=self.batch_size)
+                return super().__call__(*args, **kwargs)
+
+        old_batch_callback = joblib.parallel.BatchCompletionCallBack
+        joblib.parallel.BatchCompletionCallBack = TqdmBatchCompletionCallback
+        
+        try:
+            yield tqdm_object
+        finally:
+            joblib.parallel.BatchCompletionCallBack = old_batch_callback
+            tqdm_object.close()  
 
     def _temp_func(func, name, group):
         return func(group), name
 
-    def _applyParallel(dfGrouped, func):
-        retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
-                                    (delayed(temp_func)(func, name, group)\
-                                for name, group in dfGrouped))
+    def _applyParallel(
+        dfGrouped: pd.DataFrame, 
+        func: Callable, 
+        progress: bool=False,
+        ) -> pd.DataFrame:
+        if progress:
+            with _tqdm_joblib(tqdm(desc="building pairs", total=len(dfGrouped))) as progress_bar:
+                retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
+                                            (delayed(temp_func)(func, name, group)\
+                                        for name, group in dfGrouped))
+        else:
+            retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
+                                            (delayed(temp_func)(func, name, group)\
+                                        for name, group in dfGrouped))
+
         return pd.concat(retLst, keys=top_index)
 
 
