@@ -1083,7 +1083,7 @@ class TSVARS(VARS):
                 self.star_points_eval = self.star_points.progress_apply(self.model, axis=1, result_type='expand')
             else:
                 self.star_points_eval = self.star_points.apply(self.model, axis=1, result_type='expand')
-            star_points_eval.index.names = ['centre', 'param', 'point']
+            self.star_points_eval.index.names = ['centre', 'param', 'point']
 
         elif self.func_eval_method == 'parallel':
             warnings.warn(
