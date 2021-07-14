@@ -1239,6 +1239,7 @@ class TSVARS(VARS):
                       for scale in self.ivars_scales}, 'index')
                 if self.report_verbose:
                     vars_pbar.update(1)
+                    vars_pbar.close()
 
                 self.run_status = True
 
