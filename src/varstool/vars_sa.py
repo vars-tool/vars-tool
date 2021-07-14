@@ -366,11 +366,13 @@ class VARS(object):
         status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"" if self.bootstrap_flag else "N/A")
         status_grouping = "Grouping: " + ("On" if self.grouping_flag else "Off")
         status_num_grps = "Number of Groups: " + (str(self.num_grps)+"" if self.num_grps else "None")
+        status_verbose  = "Verbose: " + ("On" if self.report_verbose else "Off")
         status_analysis = "VARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [status_star_centres, status_star_points, status_parameters, \
                               status_delta_h, status_model, status_seed, status_bstrap, \
-                              status_bstrap_size, status_bstrap_ci, status_grouping, status_num_grps, status_analysis]
+                              status_bstrap_size, status_bstrap_ci, status_grouping, \
+                              status_num_grps, status_verbose, status_analysis]
 
         return "\n".join(status_report_list)
 
@@ -1032,17 +1034,20 @@ class TSVARS(VARS):
         status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"" if self.bootstrap_flag else "N/A")
         status_grouping = "Grouping: " + ("On" if self.grouping_flag else "Off")
         status_num_grps = "Number of Groups: " + (str(self.num_grps)+"" if self.num_grps else "None")
-        status_analysis = "TSVARS Analysis: " + ("Done" if self.run_status else "Not Done")
         status_func_eval_method = "Function Evaluation Method: " + self.func_eval_method
         status_vars_eval_method = "TSVARS Evaluation Method: " + self.vars_eval_method
         status_vars_chunk_size  = "TSVARS Chunk Size: " + (str(self.vars_chunk_size) if self.vars_chunk_size else "N/A")
+        
+        status_verbose  = "Verbose: " + ("On" if self.report_verbose else "Off")
+        status_analysis = "TSVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [
                               status_star_centres, status_star_points, status_parameters, \
                               status_delta_h, status_model, status_seed, status_bstrap, \
                               status_bstrap_size, status_bstrap_ci, status_grouping, \
-                              status_num_grps, status_analysis, status_func_eval_method, \
-                              status_vars_eval_method, status_vars_chunk_size
+                              status_num_grps, , status_func_eval_method, \
+                              status_vars_eval_method, status_vars_chunk_size, \
+                              status_verbose, status_analysis
                               ]
 
         return "\n".join(status_report_list) # join lines together and show them all
@@ -1097,7 +1102,7 @@ class TSVARS(VARS):
             mapply.init(
                 n_workers=-1, # -1 indicates max_chunks_per_worker makes the decision on parallelization
                 chunk_size=1, # 1 indicates max_chunks_per_worker makes the decision on parallelization
-                max_chunks_per_worker=int(df.shape[0]//psutil.psutil.cpu_count(logical=False)),
+                max_chunks_per_worker=int(self.star_points.shape[0]//psutil.psutil.cpu_count(logical=False)),
                 progressbar=True if self.report_verbose else False,
             )
             df = self.star_points.mapply(self.model, axis=1, result_type='expand')
