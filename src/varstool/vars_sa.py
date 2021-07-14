@@ -1342,7 +1342,7 @@ class TSVARS(VARS):
 
             else:
                 # pair_df is built serially - other functions are the same as parallel
-                self.pair_df = _applyParallel(self.star_points_eval.groupby(level=0, axis=1), ts_pair, self.report_verbose)
+                self.pair_df = self._applyParallel(self.star_points_eval.groupby(level=0, axis=1), ts_pair, self.report_verbose)
                 self.pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
 
                 if self.report_verbose:
@@ -1445,14 +1445,16 @@ class TSVARS(VARS):
             joblib.parallel.BatchCompletionCallBack = old_batch_callback
             tqdm_object.close()  
 
-    def _temp_func(func, name, group):
-        return func(group), name
-
+    @staticmethod
     def _applyParallel(
         dfGrouped: pd.DataFrame, 
         func: Callable, 
         progress: bool=False,
         ) -> pd.DataFrame:
+
+        def _temp_func(func, name, group):
+            return func(group), name
+
         if progress:
             with _tqdm_joblib(tqdm(desc="building pairs", total=len(dfGrouped))) as progress_bar:
                 retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
