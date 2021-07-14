@@ -1455,7 +1455,7 @@ class TSVARS(VARS):
                 tqdm_object.close()  
 
         if progress:
-            with _tqdm_joblib(tqdm(desc="building pairs", total=len(dfGrouped)), dynamic_ncols=True) as progress_bar:
+            with _tqdm_joblib(tqdm(desc="building pairs", total=len(dfGrouped), dynamic_ncols=True)) as progress_bar:
                 retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
                                             (delayed(_temp_func)(func, name, group)\
                                         for name, group in dfGrouped))
