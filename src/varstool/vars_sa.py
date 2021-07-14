@@ -1448,7 +1448,6 @@ class TSVARS(VARS):
     def _temp_func(func, name, group):
         return func(group), name
 
-    @staticmethod
     def _applyParallel(
         dfGrouped: pd.DataFrame, 
         func: Callable, 
