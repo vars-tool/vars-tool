@@ -1457,11 +1457,11 @@ class TSVARS(VARS):
         if progress:
             with _tqdm_joblib(tqdm(desc="building pairs", total=len(dfGrouped))) as progress_bar:
                 retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
-                                            (delayed(temp_func)(func, name, group)\
+                                            (delayed(_temp_func)(func, name, group)\
                                         for name, group in dfGrouped))
         else:
             retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
-                                            (delayed(temp_func)(func, name, group)\
+                                            (delayed(_temp_func)(func, name, group)\
                                         for name, group in dfGrouped))
 
         return pd.concat(retLst, keys=top_index)
