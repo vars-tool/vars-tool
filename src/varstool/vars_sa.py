@@ -1080,10 +1080,10 @@ class TSVARS(VARS):
         if self.func_eval_method == 'serial':
             if self.report_verbose:
                 tqdm.pandas(desc='function evaluation')
-                df = self.star_points.progress_apply(self.model, axis=1, result_type='expand')
+                self.star_points_eval = self.star_points.progress_apply(self.model, axis=1, result_type='expand')
             else:
-                df = self.star_points.apply(self.model, axis=1, result_type='expand')
-            df.index.names = ['centre', 'param', 'point']
+                self.star_points_eval = self.star_points.apply(self.model, axis=1, result_type='expand')
+            star_points_eval.index.names = ['centre', 'param', 'point']
 
         elif self.func_eval_method == 'parallel':
             warnings.warn(
@@ -1104,8 +1104,8 @@ class TSVARS(VARS):
                 max_chunks_per_worker=int(self.star_points.shape[0]//psutil.cpu_count(logical=False)),
                 progressbar=True if self.report_verbose else False,
             )
-            df = self.star_points.mapply(self.model, axis=1, result_type='expand')
-            df.index.names = ['centre', 'param', 'point']
+            self.star_points_eval = self.star_points.mapply(self.model, axis=1, result_type='expand')
+            self.star_points_eval.index.names = ['centre', 'param', 'point']
 
         # defining a lambda function to build pairs for each time-step
         ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(tsvars_funcs.section_df, self.delta_h)
@@ -1186,27 +1186,84 @@ class TSVARS(VARS):
 
             else:
                 # pair_df is built serially - other functions are the same as parallel
-
-                self.pair_df = df.groupby(level=0, axis=1).apply(ts_pair)
+                if self.report_verbose: # making a progress bar
+                    tqdm.pandas(desc='building pairs')
+                    self.pair_df = self.star_points_eval.groupby(level=0, axis=1).progress_apply(ts_pair)
+                else:
+                    self.pair_df = self.star_points_eval.groupby(level=0, axis=1).apply(ts_pair)
                 self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
                 self.pair_df.columns.names = ['ts', None]
                 self.pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
 
-                self.mu_star_df = df.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+                vars_pbar = tqdm(desc='TSVARS analysis', total=10)
+                self.mu_star_df = star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                 self.mu_star_df.index.names = ['ts', 'centre', 'param']
+                if self.report_verbose:
+                    vars_pbar.update(1)
 
-                self.mu_overall = df.apply(lambda x: np.mean(list(np.unique(x))))
-                self.var_overall = df.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
-                self.variogram = tsvars_funcs.variogram(self.pair_df)
+                self.mu_overall = star_points_eval.apply(lambda x: np.mean(list(np.unique(x))))
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.var_overall = star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.gamma = tsvars_funcs.variogram(self.pair_df)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
                 self.sec_covariogram = tsvars_funcs.cov_section(self.pair_df, self.mu_star_df)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
                 self.morris = tsvars_funcs.morris_eq(self.pair_df)
-                self.covariogram = tsvars_funcs.covariogram(self.pair_df, self.mu_overall)
-                self.e_covariogram = tsvars_funcs.e_covariogram(self.sec_covariogram)
-                self.sobol_value = tsvars_funcs.sobol_eq(self.variogram, self.e_covariogram, self.var_overall, self.delta_h)
-                self.ivars = pd.DataFrame.from_dict({scale: self.variogram.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                self.maee = morris[0]
+                self.mee  = morris[1]
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.cov = tsvars_funcs.covariogram(self.pair_df, self.mu_overall)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.ecov = tsvars_funcs.e_covariogram(self.sec_covariogram)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.st = tsvars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index')
+                if self.report_verbose:
+                    vars_pbar.update(1)
 
                 self.run_status = True
+
+                # output dictionary
+                self.output = {
+                    'Gamma':self.gamma,
+                    'MAEE':self.maee,
+                    'MEE':self.mee,
+                    'COV':self.cov,
+                    'ECOV':self.ecov,
+                    'IVARS':self.ivars,
+                    'IVARSid':self.ivars_scales,
+                    # 'rnkST':self.st_factor_ranking,
+                    # 'rnkIVARS':self.ivars_factor_ranking,
+                    # 'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
+                    # 'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
+                    # 'STlb':self.stlb if self.bootstrap_flag is True else None,
+                    # 'STub':self.stub if self.bootstrap_flag is True else None,
+                    # 'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
+                    # 'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
+                    # 'relST':self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
+                    # 'relIVARS':self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
+                    # 'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
+                    # 'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
+                }
 
 
         elif self.vars_eval_method == 'parallel':
