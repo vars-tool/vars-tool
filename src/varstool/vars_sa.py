@@ -1101,7 +1101,7 @@ class TSVARS(VARS):
             mapply.init(
                 n_workers=-1, # -1 indicates max_chunks_per_worker makes the decision on parallelization
                 chunk_size=1, # 1 indicates max_chunks_per_worker makes the decision on parallelization
-                max_chunks_per_worker=int(self.star_points.shape[0]//psutil.psutil.cpu_count(logical=False)),
+                max_chunks_per_worker=int(self.star_points.shape[0]//psutil.cpu_count(logical=False)),
                 progressbar=True if self.report_verbose else False,
             )
             df = self.star_points.mapply(self.model, axis=1, result_type='expand')
