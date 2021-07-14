@@ -183,7 +183,7 @@ class VARS(object):
         bootstrap_ci: Optional[float] = 0.9, # bootstrap confidence interval
         grouping_flag: Optional[bool] = False, # grouping flag
         num_grps: Optional[int] = None, # number of groups
-        report_verbose: Optional[bool] = False, # reporting - using tqdm??
+        report_verbose: Optional[bool] = False, # reporting verbose
     ) -> None:
 
         # initialize values
@@ -474,7 +474,7 @@ class VARS(object):
 
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
-            tqdm.pandas(desc='building pairs')
+            tqdm.pandas(desc='building pairs', dynamic_ncols=True)
             self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df, 
                                                                                    delta_h=self.delta_h)
         else:
@@ -484,7 +484,7 @@ class VARS(object):
 
         # progress bar for vars analysis
         if self.report_verbose:
-            vars_pbar = tqdm(desc='VARS analysis', total=10) # 10 steps for different components
+            vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True) # 10 steps for different components
 
         # get mu_star value
         self.mu_star_df = df[str(self.model)].groupby(level=[0,1]).mean()
@@ -556,7 +556,7 @@ class VARS(object):
 
         # progress bar for factor ranking
         if self.report_verbose:
-            factor_rank_pbar = tqdm(desc='factor ranking', total=2) # only two components
+            factor_rank_pbar = tqdm(desc='factor ranking', total=2, dynamic_ncols=True) # only two components
 
         # do factor ranking on sobol results
         sobol_factor_ranking_array = vars_funcs.factor_ranking(self.st)
@@ -626,7 +626,7 @@ class VARS(object):
 
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
-            tqdm.pandas(desc='building pairs')
+            tqdm.pandas(desc='building pairs', dynamic_ncols=True)
             self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df,
                                                                                    delta_h=self.delta_h)
         else:
@@ -636,7 +636,7 @@ class VARS(object):
 
         # progress bar for vars analysis
         if self.report_verbose:
-            vars_pbar = tqdm(desc='VARS Analysis', total=10) # 10 steps for different components
+            vars_pbar = tqdm(desc='VARS Analysis', total=10, dynamic_ncols=True) # 10 steps for different components
 
         # get mu_star value
         self.mu_star_df = df[str(self.model)].groupby(level=[0,1]).mean()
@@ -708,7 +708,7 @@ class VARS(object):
 
         # progress bar for factor ranking
         if self.report_verbose:
-            factor_rank_pbar = tqdm(desc='factor ranking', total=2)
+            factor_rank_pbar = tqdm(desc='factor ranking', total=2, dynamic_ncols=True)
 
         # do factor ranking on sobol results
         sobol_factor_ranking_array = vars_funcs.factor_ranking(self.st)
@@ -980,7 +980,7 @@ class TSVARS(VARS):
         bootstrap_ci: Optional[int] = 0.9, # bootstrap confidence interval
         grouping_flag: Optional[bool] = False, # grouping flag
         num_grps: Optional[int] = None, # number of groups
-        report_verbose: Optional[bool] = False, # reporting - using tqdm??
+        report_verbose: Optional[bool] = False, # reporting verbose
         func_eval_method: Optional[str] = 'serial', # the method to evaluate the model or function
         vars_eval_method: Optional[str] = 'serial', # the method to make pair_df dataframe
         vars_chunk_size: Optional[int] = None, # the chunk size to make pair_dfs to save memory
@@ -1081,7 +1081,7 @@ class TSVARS(VARS):
         # doing function evaluations either on serial or parallel mode
         if self.func_eval_method == 'serial':
             if self.report_verbose:
-                tqdm.pandas(desc='function evaluation')
+                tqdm.pandas(desc='function evaluation', dynamic_ncols=True)
                 self.star_points_eval = self.star_points.progress_apply(self.model, axis=1, result_type='expand')
             else:
                 self.star_points_eval = self.star_points.apply(self.model, axis=1, result_type='expand')
@@ -1189,7 +1189,7 @@ class TSVARS(VARS):
             else:
                 # pair_df is built serially - other functions are the same as parallel
                 if self.report_verbose: # making a progress bar
-                    tqdm.pandas(desc='building pairs')
+                    tqdm.pandas(desc='building pairs', dynamic_ncols=True)
                     self.pair_df = self.star_points_eval.groupby(level=0, axis=1).progress_apply(ts_pair)
                 else:
                     self.pair_df = self.star_points_eval.groupby(level=0, axis=1).apply(ts_pair)
@@ -1197,7 +1197,7 @@ class TSVARS(VARS):
                 self.pair_df.columns.names = ['ts', None]
                 self.pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
 
-                vars_pbar = tqdm(desc='TSVARS analysis', total=10)
+                vars_pbar = tqdm(desc='TSVARS analysis', total=10, dynamic_ncols=True)
                 self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                 self.mu_star_df.index.names = ['ts', 'centre', 'param']
                 if self.report_verbose:
@@ -1346,7 +1346,7 @@ class TSVARS(VARS):
                 self.pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
 
                 if self.report_verbose:
-                    vars_pbar = tqdm(desc='VARS analysis', total=10)
+                    vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)
 
                 self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                 self.mu_star_df.index.names = ['ts', 'centre', 'param']
@@ -1455,7 +1455,7 @@ class TSVARS(VARS):
                 tqdm_object.close()  
 
         if progress:
-            with _tqdm_joblib(tqdm(desc="building pairs", total=len(dfGrouped))) as progress_bar:
+            with _tqdm_joblib(tqdm(desc="building pairs", total=len(dfGrouped)), dynamic_ncols=True) as progress_bar:
                 retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
                                             (delayed(_temp_func)(func, name, group)\
                                         for name, group in dfGrouped))
