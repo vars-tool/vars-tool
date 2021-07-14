@@ -1042,13 +1042,12 @@ class TSVARS(VARS):
         status_analysis = "TSVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [
-                              status_star_centres, status_star_points, status_parameters, \
-                              status_delta_h, status_model, status_seed, status_bstrap, \
-                              status_bstrap_size, status_bstrap_ci, status_grouping, \
-                              status_num_grps, , status_func_eval_method, \
-                              status_vars_eval_method, status_vars_chunk_size, \
-                              status_verbose, status_analysis
-                              ]
+                                status_star_centres, status_star_points, status_parameters, \
+                                status_delta_h, status_model, status_seed, status_bstrap, \
+                                status_bstrap_size, status_bstrap_ci, status_grouping, \
+                                status_num_grps, status_func_eval_method, status_vars_eval_method, \
+                                status_vars_chunk_size, status_verbose, status_analysis
+                            ]
 
         return "\n".join(status_report_list) # join lines together and show them all
 
