@@ -1418,7 +1418,7 @@ class TSVARS(VARS):
                     # 'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
                 }
 
-
+    @staticmethod
     @contextlib.contextmanager
     def _tqdm_joblib(tqdm_object):
         """
