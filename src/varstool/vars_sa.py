@@ -1383,7 +1383,7 @@ class TSVARS(VARS):
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.st = tsvars_funcs.sobol_eq(gamma, ecov, var_overall)
+                self.st = tsvars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall)
                 if self.report_verbose:
                     vars_pbar.update(1)
 
