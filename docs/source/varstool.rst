@@ -1,5 +1,5 @@
-varstool package
-================
+4. VARS-TOOL API Reference
+==========================
 
 Subpackages
 -----------
