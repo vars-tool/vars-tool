@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>varstool package &mdash; VARS-TOOL 2.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="varstool.funcs package" href="varstool.funcs.html" />
+    <link rel="prev" title="3. Tutorials" href="../tutorials.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> VARS-TOOL
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">1. Overview of VARS-TOOL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">2. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">3. Tutorials</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">varstool package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="varstool.funcs.html">varstool.funcs package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="varstool.plot.html">varstool.plot package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="varstool.sa.html">varstool.sa package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="varstool.sampling.html">varstool.sampling package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="varstool.util.html">varstool.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#varstool-vars-sa-macbook-air-module">varstool.vars_sa-MacBook Air module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-varstool.vars_sa">varstool.vars_sa module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vars-sensitivity-anlaysis-framework">VARS Sensitivity Anlaysis Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-varstool">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">VARS-TOOL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>varstool package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/source/varstool.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="varstool-package">
+<h1>varstool package<a class="headerlink" href="#varstool-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="varstool.funcs.html">varstool.funcs package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="varstool.funcs.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="varstool.funcs.banff.html">varstool.funcs.banff package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="varstool.funcs.banff.html#module-varstool.funcs.banff">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="varstool.funcs.oldman.html">varstool.funcs.oldman package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="varstool.funcs.oldman.html#module-varstool.funcs.oldman">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.funcs.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.funcs.html#module-varstool.funcs.hbv">varstool.funcs.hbv module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.funcs.html#module-varstool.funcs">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="varstool.plot.html">varstool.plot package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="varstool.plot.html#module-varstool.plot">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="varstool.sa.html">varstool.sa package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sa.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sa.html#module-varstool.sa.dvars_funcs">varstool.sa.dvars_funcs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sa.html#module-varstool.sa.gvars_funcs">varstool.sa.gvars_funcs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sa.html#module-varstool.sa.tsvars_funcs">varstool.sa.tsvars_funcs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sa.html#module-varstool.sa.vars_funcs">varstool.sa.vars_funcs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sa.html#module-varstool.sa">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="varstool.sampling.html">varstool.sampling package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sampling.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sampling.html#module-varstool.sampling.halton">varstool.sampling.halton module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sampling.html#module-varstool.sampling.lhs">varstool.sampling.lhs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sampling.html#module-varstool.sampling.plhs">varstool.sampling.plhs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sampling.html#module-varstool.sampling.sobol_sequence">varstool.sampling.sobol_sequence module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sampling.html#module-varstool.sampling.starvars">varstool.sampling.starvars module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sampling.html#module-varstool.sampling.symlhs">varstool.sampling.symlhs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.sampling.html#module-varstool.sampling">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="varstool.util.html">varstool.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="varstool.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.util.html#module-varstool.util.sample_funcs">varstool.util.sample_funcs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.util.html#module-varstool.util">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="varstool-vars-sa-macbook-air-module">
+<h2>varstool.vars_sa-MacBook Air module<a class="headerlink" href="#varstool-vars-sa-macbook-air-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-varstool.vars_sa">
+<span id="varstool-vars-sa-module"></span><h2>varstool.vars_sa module<a class="headerlink" href="#module-varstool.vars_sa" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="vars-sensitivity-anlaysis-framework">
+<h3>VARS Sensitivity Anlaysis Framework<a class="headerlink" href="#vars-sensitivity-anlaysis-framework" title="Permalink to this headline">¶</a></h3>
+<p>The Variogram Analysis of Response Surfaces (VARS) is a 
+powerful sensitivity analysis (SA) method first applied
+to  Earth and Environmental System models.</p>
+<dl class="py class">
+<dt id="varstool.vars_sa.DVARS">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">varstool.vars_sa.</span></code><code class="sig-name descname"><span class="pre">DVARS</span></code><a class="headerlink" href="#varstool.vars_sa.DVARS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#varstool.vars_sa.VARS" title="varstool.vars_sa.VARS"><code class="xref py py-class docutils literal notranslate"><span class="pre">varstool.vars_sa.VARS</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="varstool.vars_sa.GVARS">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">varstool.vars_sa.</span></code><code class="sig-name descname"><span class="pre">GVARS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_dist_types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corr_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_direct_samples</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_stars</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.vars_sa.GVARS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#varstool.vars_sa.VARS" title="varstool.vars_sa.VARS"><code class="xref py py-class docutils literal notranslate"><span class="pre">varstool.vars_sa.VARS</span></code></a></p>
+<p>GVARS object</p>
+<dl class="py method">
+<dt id="varstool.vars_sa.GVARS.run">
+<code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#varstool.vars_sa.GVARS.run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="varstool.vars_sa.Model">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">varstool.vars_sa.</span></code><code class="sig-name descname"><span class="pre">Model</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown_options</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.vars_sa.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A wrapper class to contain various models and functions
+to be fed into VARS and its variations. The models can be
+called by simply calling the wrapper class itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>Callable</em>) – function of interest</p></li>
+<li><p><strong>unknown_options</strong> (<em>dict</em>) – a dictionary of options with keys as
+parameters and values of parameter
+values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="varstool.vars_sa.TSVARS">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">varstool.vars_sa.</span></code><code class="sig-name descname"><span class="pre">TSVARS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">star_centres</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([],</span> <span class="pre">dtype=float64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_stars</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ivars_scales</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">(0.1,</span> <span class="pre">0.3,</span> <span class="pre">0.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#varstool.vars_sa.Model" title="varstool.vars_sa.Model"><span class="pre">varstool.vars_sa.Model</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">108077826</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_flag</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_ci</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_flag</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_grps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func_eval_method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'serial'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars_eval_method</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'serial'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars_chunk_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.vars_sa.TSVARS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#varstool.vars_sa.VARS" title="varstool.vars_sa.VARS"><code class="xref py py-class docutils literal notranslate"><span class="pre">varstool.vars_sa.VARS</span></code></a></p>
+<p>TSVARS Documentation</p>
+<dl class="py method">
+<dt id="varstool.vars_sa.TSVARS.run_online">
+<code class="sig-name descname"><span class="pre">run_online</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#varstool.vars_sa.TSVARS.run_online" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="varstool.vars_sa.VARS">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">varstool.vars_sa.</span></code><code class="sig-name descname"><span class="pre">VARS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">star_centres</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">array([],</span> <span class="pre">dtype=float64)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_stars</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ivars_scales</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">(0.1,</span> <span class="pre">0.3,</span> <span class="pre">0.5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#varstool.vars_sa.Model" title="varstool.vars_sa.Model"><span class="pre">varstool.vars_sa.Model</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">118851319</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampler</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_flag</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_ci</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_flag</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_grps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.vars_sa.VARS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The Python implementation of the Variogram Analysis of Response
+Surfaces (VARS) first introduced in Razavi and Gupta (2015) (see
+<a class="footnote-reference brackets" href="#id3" id="id1">1</a> and <a class="footnote-reference brackets" href="#id4" id="id2">2</a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>star_centres</strong> (<em>numpy.array</em>) – contains star centres of the analysis</p></li>
+<li><p><strong>num_stars</strong> (<em>int</em><em>, </em><em>numpy.int32</em><em>, </em><em>numpy.int64</em><em>, </em><em>defaults to 100</em>) – number of stars to generate</p></li>
+<li><p><strong>parameters</strong> (<em>dict</em>) – the parameters of the model including lower and
+upper bounds</p></li>
+<li><p><strong>delta_h</strong> (<em>float</em><em>, </em><em>defaults to 0.1</em>) – the resolution of star samples</p></li>
+<li><p><strong>ivars_scales</strong> (<em>tuple</em><em>, </em><em>defaults to</em><em> (</em><em>0.1</em><em>, </em><em>0.3</em><em>, </em><em>0.5</em><em>)</em>) – the IVARS scales</p></li>
+<li><p><strong>model</strong> (<em>varstool.Model</em>) – the model used in the sensitivity analysis</p></li>
+<li><p><strong>seed</strong> (<em>int</em><em>, </em><em>numpy.int32</em><em>, </em><em>numpy.int64</em>) – the seed number used in generating star centres</p></li>
+<li><p><strong>bootstrap_flag</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – flag to bootstrap the sensitivity analysis results</p></li>
+<li><p><strong>bootstrap_size</strong> (<em>int</em><em>, </em><em>defaults to 1000</em>) – the size of bootstrapping experiment</p></li>
+<li><p><strong>bootstrap_ci</strong> (<em>float</em><em>, </em><em>defaults to 0.9</em>) – the condifence interval of boostrapping</p></li>
+<li><p><strong>grouping_flag</strong> (<em>bool</em><em>, </em><em>defaults to False</em>) – flag to conduct grouping of sensitive parameters</p></li>
+<li><p><strong>num_grps</strong> (<em>int</em><em>, </em><em>defaults to None</em>) – the number of groups to categorize parameters</p></li>
+<li><p><strong>report_verbose</strong> (<em>bool</em><em>, </em><em>False</em>) – flag to show the sensitvity analysis progress</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="footnote brackets">
+<dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
+robust, and efficient global sensitivity analysis: 1. Theory. Water 
+Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
+</dd>
+<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
+robust, and efficient global sensitivity analysis: 1. Application. Water 
+Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
+</dd>
+</dl>
+<p>Razavi, Saman, (2015): algorithm, code in MATALB (c)
+Gupta, Hoshin, (2015): algorithm, code in MATLAB (c)
+Mattot, Shawn, (2019): code in C/++
+Keshavarz, Kasra, (2021): code in Python 3
+Blanchard, Cordell, (2021): code in Python 3</p>
+<dl class="py method">
+<dt id="varstool.vars_sa.VARS.generate_star">
+<code class="sig-name descname"><span class="pre">generate_star</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.vars_sa.VARS.generate_star" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="varstool.vars_sa.VARS.run_offline">
+<code class="sig-name descname"><span class="pre">run_offline</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.vars_sa.VARS.run_offline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="varstool.vars_sa.VARS.run_online">
+<code class="sig-name descname"><span class="pre">run_online</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#varstool.vars_sa.VARS.run_online" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="varstool.vars_sa.VARS.star_centres">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">star_centres</span></code><a class="headerlink" href="#varstool.vars_sa.VARS.star_centres" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="varstool.vars_sa.VARS.star_points">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">star_points</span></code><a class="headerlink" href="#varstool.vars_sa.VARS.star_points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-varstool">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-varstool" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="varstool.funcs.html" class="btn btn-neutral float-right" title="varstool.funcs package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../tutorials.html" class="btn btn-neutral float-left" title="3. Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Saman Razavi.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

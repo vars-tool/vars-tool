@@ -64,6 +64,17 @@ class Model(object):
                             parameters and values of parameter
                             values.
     :type unknown_options: dict
+
+
+    Attributes:
+    -----------
+
+
+    Methods:
+    --------
+
+
+
     """
     def __init__(
         self,
@@ -144,6 +155,14 @@ class VARS(object):
     :type num_grps: int, defaults to None
     :param report_verbose: flag to show the sensitvity analysis progress
     :type report_verbose: bool, False
+
+
+    Attributes:
+    -----------
+
+
+    Methods:
+    --------
 
 
     References:
