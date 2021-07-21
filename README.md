@@ -47,7 +47,7 @@ foo@bar:~$ python setup.py install
 
 ## 3. Documentation
 
-Under progress...
+The documentation of the project is located at the powerful ([readthedocs](https://vars-tool.readthedocs.io/en/latest/index.html))
 
 
 ## 4. Examples and Tutorials
