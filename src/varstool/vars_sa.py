@@ -460,12 +460,54 @@ class VARS(object):
 
         return star_points
 
-    def _plot(self):
+    def plot(self):
 
-        # make similar plots as the matlab plots showing the important
-        # SA results from analysis
+        if self.run_status:
 
-        pass
+            # variogram plot
+            ymax = self.gamma.unstack(0).loc[0:0.6].max().max()
+            varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)', xlim=(0, 0.5),
+                                            ylim=(0, ymax), marker='o')
+
+            # factor importance bar chart for vars-abe, ivars50, and vars-to
+            if 0.5 in self.ivars.index:
+                # normalize data using mean normalization
+                df1 = self.maee.unstack(0).iloc[0]
+                df2 = self.st
+                df3 = self.ivars.loc[0.5]
+
+                normalized_maee = df1 / df1.sum()
+                normalized_sobol = df2 / df2.sum()
+                normalized_ivars50 = df3 / df3.sum()
+
+
+                # plot bar chart
+                x = np.arange(len(self.parameters.keys()))  # the label locations
+                width = 0.1  # the width of the bars
+
+                barfig, barax = plt.subplots()
+                rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)')
+                rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50')
+                rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)')
+
+                # Add some text for labels, and custom x-axis tick labels, etc.
+                barax.set_ylabel('Ratio of Factor Importance')
+                barax.set_xlabel('Factor')
+                barax.set_xticks(x)
+                barax.set_xticklabels(self.parameters.keys())
+                barax.legend()
+
+                barfig.tight_layout()
+
+                plt.show()
+
+                return varax, barfig, barax
+            else:
+                return varax
+
+
+
+
 
     def run_online(self):
 
