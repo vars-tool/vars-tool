@@ -12,11 +12,3 @@ Subpackages
    varstool.sampling
    varstool.util
 
-
-Module contents
----------------
-
-.. automodule:: varstool
-   :members:
-   :undoc-members:
-   :show-inheritance:
