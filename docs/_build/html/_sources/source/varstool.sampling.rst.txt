@@ -52,10 +52,3 @@ varstool.sampling.symlhs module
    :undoc-members:
    :show-inheritance:
 
-Module contents
----------------
-
-.. automodule:: varstool.sampling
-   :members:
-   :undoc-members:
-   :show-inheritance:
