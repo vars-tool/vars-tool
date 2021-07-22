@@ -1,3 +1,5 @@
 # -*- coding: utf-8 -*-
+import vars_funcs
+import tsvarsfuncs
 
-__all__ = ["tsvars_funcs", "vars_funcs"]
+__all__ = ["vars_funcs", "tsvars_funcs"]

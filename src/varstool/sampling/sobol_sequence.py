@@ -5,49 +5,49 @@ import math
 from typing import List
 from scipy import stats
 
-def sobol_sequence(sp:int, params:int, seed:int=None, scramble:bool=True, skip:int=1000, leap:int=101) -> np.ndarray:
-    '''
-    Description:
-    ------------
-    Sobol' sequences are low-discrepancy, quasi-random numbers. The
-    code is taken from the `scipy dev-1.7` [1]_.
+def sobol_sequence(
+    sp:int, 
+    params:int, 
+    seed:int=None, 
+    scramble:bool=True, 
+    skip:int=1000, 
+    leap:int=101
+) -> np.ndarray:
+    '''Sobol' sequences are low-discrepancy, quasi-random numbers. The
+    code is taken from the `scipy dev-1.7` [1].
     
-    
-    Arguments:
+    Parameters
     ----------
-    :param sp: the number of sampling points
-    :type sp: {int, numpy.int32, numpy.int64}
-    :param params: the number of parameters/factors/variables
-    :type params: {int, numpy.int32, numpy.int64}
-    :param seed: randomization seed number
-    :type seed: {int, numpy.int32, numpy.int64}, optional
-    :param scramble: scrambling the produced array, defaults to ``True``
-    :type scramble: bool, optional
-    :param skip: the number of points to skip
-    :type skip: {int, numpy.int32, numpy.int64}, optional
-    :param leap: the interval of picking values
-    :type leap: {int, numpy.int32, numpy.int64}, optional
+    sp : int
+        the number of sampling points
+    params : int
+        the number of parameters/factors/variables
+    seed : int, optional
+        randomization seed number, defaults to ``None``
+    scramble : bool, optional
+        scrambling the produced array, defaults to ``True``
+    skip : int, optional
+        the number of points to skip, defaults to ``1000``
+    leap : int, optional
+        the interval of picking values, defaults to ``101``
     
+    Returns
+    -------
+    sobol_seq : array_like
+        the sobol sequence
     
-    Returns:
-    --------
-    :return sobol_seq: the sobol sequence
-    :rtype sobol_seq: numpy.ndarray
-    
-    
-    lengthotes:
-    ------
+    Notes
+    -----
     There are many versions of Sobol' sequences depending on their
-    "direction numbers". This code uses direction numbers from [4]_. Hence,
+    "direction numbers". This code uses direction numbers from [4]. Hence,
     the maximum number of dimension is 21201. The direction numbers have been
     precomputed with search criterion 6 and can be retrieved at
     https://web.maths.unsw.edu.au/~fkuo/sobol/
     
-    
-    References:
-    -----------
-    .. [1] https://github.com/scipy/scipy/stats/_qmc.py
-    .. [2] https://scipy.github.io/devdocs/generated/scipy.stats.qmc.Sobol.html
+    References
+    ----------
+    .. [1] `scipy.stats._qmcs <https://github.com/scipy/scipy/stats/_qmc.py>`_
+    .. [2] `scipy.stats.qmc.Sobol <https://scipy.github.io/devdocs/generated/scipy.stats.qmc.Sobol.html>`_
     .. [3] I. M. Sobol. The distribution of points in a cube 
            and the accurate evaluation of integrals. Zh. Vychisl.
            Mat. i Mat. Phys., 7:784-802, 1967.

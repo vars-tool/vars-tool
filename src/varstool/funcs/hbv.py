@@ -7,6 +7,8 @@ import matplotlib.pyplot as pl
 from scipy.optimize import minimize
 from IPython.display import clear_output
 
+from typing import Tuple
+
 def read_inputs(data_folder):
 
     inp={}
@@ -37,7 +39,35 @@ def read_inputs(data_folder):
     return watershed_area, ini_values, forcing, long_term
 
 
-def HBV_SASK(par_values=[], basin='banff'):
+def HBV_SASK(
+    par_values=[], 
+    basin: str='banff'
+) -> Tuple[pd.DataFrame, ...]:
+    """HBV-SASK Lumped Hydrological Model
+
+    This is a simple variation of the well-known HBV model
+    detailed in [1].
+
+    Parameters
+    ----------
+    par_values : array_like
+        a list of parameters, indexable by the string parameters of 
+        the HBV-SASK model
+    basin : str, optional
+        the options are ``'banff'`` and ``'oldman'`` that are located
+        in Alberta, Canada, as case studies of this model, defaults to
+        ``'banff'``
+
+    Returns
+    -------
+    flux : array_like
+        a Pandas DataFrame of the fluxes
+    state : array_like
+        a Pandas DataFrame of the state variables
+    forcing : array_like
+        a Pandas DataFrame of the forcing data
+
+    """
 
     # read parameters:
 #    if par_values==[]: par_values=sl.json2dict(folder+'/pars.inp')

@@ -1,5 +1,5 @@
-4. VARS-TOOL API Reference
-==========================
+varstool
+========
 
 .. toctree::
    :maxdepth: 4

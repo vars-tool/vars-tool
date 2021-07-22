@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>varstool &mdash; VARS-TOOL 2.1 documentation</title>
+  <title>varstool.funcs.oldman package &mdash; VARS-TOOL 2.1 documentation</title>
   
 
   
@@ -37,7 +37,9 @@
 
     
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="varstool.sa package" href="varstool.sa.html" />
+    <link rel="prev" title="varstool.funcs.banff package" href="varstool.funcs.banff.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,11 +84,29 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">1. Overview of VARS-TOOL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">2. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">3. Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="varstool.html">varstool package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="varstool.html">varstool package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="varstool.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="varstool.funcs.html">varstool.funcs package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="varstool.funcs.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="varstool.funcs.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="varstool.funcs.html#module-varstool.funcs.hbv">varstool.funcs.hbv module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="varstool.funcs.html#module-varstool.funcs">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="varstool.sa.html">varstool.sa package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="varstool.sampling.html">varstool.sampling package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="varstool.util.html">varstool.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.html#module-varstool.vars_sa">varstool.vars_sa module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.html#module-varstool">Module contents</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -135,13 +155,17 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>varstool</li>
+          <li><a href="varstool.html">varstool package</a> &raquo;</li>
+        
+          <li><a href="varstool.funcs.html">varstool.funcs package</a> &raquo;</li>
+        
+      <li>varstool.funcs.oldman package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/source/modules.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/source/varstool.funcs.oldman.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -154,49 +178,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="varstool">
-<h1>varstool<a class="headerlink" href="#varstool" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="varstool.html">varstool package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="varstool.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="varstool.funcs.html">varstool.funcs package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="varstool.funcs.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.funcs.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.funcs.html#module-varstool.funcs.hbv">varstool.funcs.hbv module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.funcs.html#module-varstool.funcs">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="varstool.sa.html">varstool.sa package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="varstool.sa.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.sa.html#module-varstool.sa.dvars_funcs">varstool.sa.dvars_funcs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.sa.html#module-varstool.sa.gvars_funcs">varstool.sa.gvars_funcs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.sa.html#module-varstool.sa.tsvars_funcs">varstool.sa.tsvars_funcs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.sa.html#module-varstool.sa.vars_funcs">varstool.sa.vars_funcs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.sa.html#module-varstool.sa">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="varstool.sampling.html">varstool.sampling package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="varstool.sampling.html#module-varstool.sampling">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="varstool.util.html">varstool.util package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="varstool.util.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.util.html#module-varstool.util.sample_funcs">varstool.util.sample_funcs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="varstool.util.html#module-varstool.util">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="varstool.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="varstool.html#module-varstool.vars_sa">varstool.vars_sa module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="varstool.html#vars-sensitivity-anlaysis-framework">VARS Sensitivity Anlaysis Framework</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="varstool.html#module-varstool">Module contents</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="varstool-funcs-oldman-package">
+<h1>varstool.funcs.oldman package<a class="headerlink" href="#varstool-funcs-oldman-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-varstool.funcs.oldman">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-varstool.funcs.oldman" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -205,6 +190,10 @@
            
           </div>
           <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="varstool.sa.html" class="btn btn-neutral float-right" title="varstool.sa package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="varstool.funcs.banff.html" class="btn btn-neutral float-left" title="varstool.funcs.banff package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 

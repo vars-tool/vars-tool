@@ -1,63 +1,51 @@
-'''
-The code for this sampling method is inspired from several sources,
-listed as follows:
-* https://scikit-optimize.github.io/stable/_modules/skopt/sampler/halton.html
-* https://github.com/scipy/scipy/blob/e625869f112e797d32107a658cdd9519221e9fea/scipy/stats/_sobol.pyx
-* https://github.com/scipy/scipy/blob/e625869f112e797d32107a658cdd9519221e9fea/scipy/stats/_qmc.py
-A formal list of references is printed under the docstrings of each
-corresponding algorithm.
-'''
-
 import numpy as np
 
 
-def halton(sp: int, params: int, seed: int=None, scramble: bool=True, skip: int=1000, leap: int=101) -> np.ndarray:
-    '''
-    Description:
-    ------------
+def halton(
+    sp: int,
+    params: int,
+    seed: int=None,
+    scramble: bool=True,
+    skip: int=1000,
+    leap: int=101
+) -> np.ndarray:
+    '''Generate quasi-random halton sequence numbers.
+
     This function generates (scrambled) quasi-random halton sequence.
     In brief, it generalizes the Van der Corput's sequence for multiple
     dimensions. The Halton sequence uses the base-two Van der Corput
     sequence for the first dimension, base-three for its second and
-    base-:math:`n` for its n-dimension.
+    base-:math:`n` for its :math:`n^{th}`-dimension.
 
-
-    Arguments:
+    Parameters
     ----------
-    :param sp: the number of sampling points
-    :type sp: {int, np.int32, or np.int64}
-    :param params: the number of parameters
-    :type params: {int, np.int32, np.int64}
-    :param seed: seed number for randomization, defaults to ``None``
-    :type seed: {None, int, np.int32, np.int64, `numpy.random.Generator`}, optional
-    :param scramble: scrambling flag, defaults to ``False``
-    :type scramble: bool, optional
-    :param skip: the number of points to skip
-    :type skip: {int, numpy.int32, numpy.int64}, optional
-    :param leap: the interval of picking values
-    :type leap: {int, numpy.int32, numpy.int64}, optional
+    sp : int
+        the number of sampling points
+    params : int
+        the number of parameters/factors/variables
+    seed : int or None, optional
+        seed number for randomization, defaults to ``None``
+    scramble : bool, optional
+        scrambling flag, defaults to ``False``
+    skip : int, optional
+        the number of points to skip from the beginning of the sequence, defaults to ``1000``
+    leap : int, optional
+        the interval of picking values, defaults to ``101``
 
+    Returns
+    -------
+    halton_seq : array_like
+        the halton sequence array
 
-    Returns:
-    --------
-    :return halton_seq: the halton sequence array
-    :rtype halton_seq: numpy.ndarray
-
-
-    References:
-    -----------
-    .. [1] https://github.com/scipy/scipy/scipy/stats/_qmc.py
-    .. [2] https://github.com/scipy/scipy/scipy/stats/_sobol.pyx
+    References
+    ----------
+    .. [1] `scipy.stats._qmc module <https://github.com/scipy/scipy/scipy/stats/_qmc.py>`_
+    .. [2] `scipy.stats._sobol module <https://github.com/scipy/scipy/scipy/stats/_sobol.pyx>`_
     .. [3] Halton, J.H. On the efficiency of certain quasi-random sequences of 
            points in evaluating multi-dimensional integrals. Numer. Math. 2, 
            84–90 (1960). https://doi.org/10.1007/BF01386213
     .. [4] Owen, A.B. A randomized Halton algorithm in R (2017). arXiv:1706.02808v2
 
-
-    Contributors:
-    -------------
-    Razavi, Saman, (2018): supervision, function call in MATLAB (c)
-    Keshavarz, Kasra, (2021): code in Python 3
     '''
 
     # check the seed number
@@ -95,42 +83,37 @@ def halton(sp: int, params: int, seed: int=None, scramble: bool=True, skip: int=
 
 
 def _van_der_corput(sp: int, base: int=2, start_index: int=0, scramble: bool=True, seed: int=None) -> np.ndarray:
-    '''
-    Description:
-    ------------
-    Van der Corput sequence.
+    """Van der Corput sequence.
+
     Pseudo-random number generator based on a b-adic expansion.
     Scrambling uses permutations of the remainders (see [1]_ and [2]_).
     Multiple permutations are applied to construct a point. The sequence
     of permutations has to be the same for all points of the sequence.
 
-
-    Arguments:
+    Parameters
     ----------
-    :param sp: number of elements in the sequence
-    :type sp: {int, numpy.int32, numpy.int64}
-    :param base: base of the sequence, defaults to 2.
-    :type base: {int, numpy.int32, numpy.int64}, optional
-    :param start_index: index to start the sequence from, defaults to 0.
-    :type start_index: {int, numpy.int32, numpy.int64}, optional
-    :param scramble: if ``True``, use Owen scrambling, defaults to ``True``.
-    :type scarmble: bool, optional
-    :param seed: seed number for randomization
-    :type seed: {None, int, numpy.int32, numpy.int64}, optional
+    sp : int
+        number of elements in the sequence
+    base : int
+        base of the sequence, defaults to ``2``
+    start_index : int, optional
+        index to start the sequence from, defaults to ``0``
+    scramble : bool, optional
+        if ``True``, use Owen scrambling, defaults to ``True``
+    seed : int or None, optional
+        seed number for randomization
 
+    Returns
+    -------
+    sequence : list
+        Sequence of van der Corput
 
-    Returns:
-    --------
-    :return sequence: Sequence of van der Corput
-    :rtype sequence: list
-
-
-    References:
-    -----------
+    References
+    ----------
     .. [1] A. B. Owen. "A randomized Halton algorithm in R",
-       arXiv:1706.02808, 2017.
+           arXiv:1706.02808, 2017.
     .. [2] scipy.stats.qmc, version: dev-1.7
-    '''
+    """
 
     # check seed number
     if seed:
@@ -157,27 +140,23 @@ def _van_der_corput(sp: int, base: int=2, start_index: int=0, scramble: bool=Tru
 
 
 def _n_primes(n: int) -> list:
-    '''
-    Description:
-    ------------
-    Generate ``n`` number of prime numbers, taken from [1]_
+    """
+    Generates ``n`` number of prime numbers; taken from [1]_.
 
-    Arguments:
+    Parameters
     ----------
-    :param n: the number of primes to be produced
-    :type n: {int, numpy.int32, numpy.int64}
+    n : int
+        the number of primes to be produced
 
-
-    Returns:
-    --------
-    :return primes: a list of primes with while ``len(primes)`` is `n`.
-    :rtype primes: list
-
-
-    Source:
+    Returns
     -------
-    .. [1] `Scipy <https://github.com/scipy/scipy/stats/_qmc.py>`_.
-    '''
+    primes : list
+        a list of primes with while ``len(primes)`` is `n`
+
+    Source
+    ------
+    .. [1] `Scipy.stats._qmc <https://github.com/scipy/scipy/stats/_qmc.py>`
+    """
 
     primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59,
               61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127,
@@ -205,24 +184,19 @@ def _n_primes(n: int) -> list:
 
 
 def _gen_primes(threshold: int) -> list:
-    """
-    Description:
-    ------------
-    Generate prime values using sieve of Eratosthenes method
+    """Generates prime values using sieve of Eratosthenes method
     between 2 and the ``threshold``.
 
-
-    Arguments:
+    Parameters
     ----------
-    :param threshold: the upper bound for the size of the prime values.
-                     the ``threshold`` is included in the sequence.
-    :type threshold: {int, numpy.int32, numpy.int64}
+    threshold : int
+        the upper bound for the size of the prime values;
+        the ``threshold`` is included in the sequence.
 
-
-    Returns:
-    --------
-    :return primes: all primes from 2 and up to ``threshold``.
-    :rtype primes: list
+    Returns
+    -------
+    primes : list
+        all primes from 2 and up to ``threshold``.
     """
 
     if threshold == 2:
@@ -249,3 +223,8 @@ def _gen_primes(threshold: int) -> list:
     primes = np.array([2] + [number for number in numbers if number])
 
     return primes
+
+#    Contributors
+#    ------------
+#    Razavi, Saman, (2018): supervision, function call in MATLAB (c)
+#    Keshavarz, Kasra, (2021): code in Python 3

@@ -7,40 +7,29 @@ from itertools import combinations
 
 # helper functions
 def scale(
-        df: pd.DataFrame,
-        bounds: pd.DataFrame,
-        axis: int=1
+    df: pd.DataFrame,
+    bounds: pd.DataFrame,
+    axis: int=1
 ) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    This function scales the sampled matrix `df` to the `bounds`
-    that is a defined via a dictionary with `ub`, `lb` keys;
+    """Scales the sampled matrix ``df`` to the ``bounds``
+    that is a defined via a dictionary with ``ub``, ``lb`` keys;
     the values of the dictionary are lists of the upper and lower
     bounds of the parameters/variables/factors. if (``axis = 1``)
     then each row of `df` is selected, otherwise columns.
 
+    Parameters
+    ----------
+    df : array_like
+        a dataframe of randomly sampled values
+    bounds : dict
+        a lower and upper bounds to scale the values
+    axis : ``0`` for index, ``1`` for columns
 
-    Parameters:
-    -----------
-    :param df: a dataframe of randomly sampled values
-    :type df: pd.DataFrame
-    :param bounds: a lower and upper bounds to scale the values
-    :type bounds: dict
-    :param axis: 0 for index, 1 for columns
-    :type axis: int, optional
+    Returns
+    -------
+    df : array_like
+        the returned dataframe scaled using bounds
 
-
-    Returns:
-    --------
-    :return df: the returned dataframe scaled using bounds
-    :rtype df: pd.DataFrame
-
-
-    Contributors:
-    -------------
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
 
     # numpy equivalent for math operations
@@ -53,28 +42,18 @@ def scale(
 
 
 def pairs_h(iterable) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    This function gives the pairs of numbers considering their differences.
+    """Gives the pairs of numbers considering their differences.
 
+    Parameters
+    ----------
+    iterable : iterable
+        an iterable object
 
-    Parameters:
-    -----------
-    :param iterable: an iterable object
-    :type iterable: iterable 
+    Returns
+    -------
+    pairs : array_like
+        the returned dataframe of paired values
 
-
-    Returns:
-    --------
-    :return pairs: the returned dataframe of paired values
-    :rtype pairs: pd.DataFrame
-
-
-    Contributors:
-    -------------
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
 
     interval = range(min(iterable), max(iterable) - min(iterable))
@@ -84,31 +63,24 @@ def pairs_h(iterable) -> pd.DataFrame:
     return pairs
 
 
-def section_df(df: pd.DataFrame, delta_h: float) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    This function gets the paired values of each section based on index.
+def section_df(
+    df: pd.DataFrame,
+    delta_h: float
+) -> pd.DataFrame:
+    """Gets the paired values of each section based on index.
 
+    Parameters
+    ----------
+    df : array_like
+        a dataframe of star points
+    delta_h : array_like
+        resolution of star samples
 
-    Parameters:
-    -----------
-    :param df: a dataframe of star points
-    :type df: pd.DataFrame
-    :param delta_h: resolution of star samples
-    :type delta_h: float
+    Returns
+    -------
+    sample : array_like
+        the paired values for each section of star points
 
-
-    Returns:
-    --------
-    :return sample: the paired values for each section of star points
-    :rtype sample: pd.DataFrame
-
-
-    Contributors:
-    -------------
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
 
     pairs = pairs_h(df.index.get_level_values(-1))
@@ -125,30 +97,24 @@ def section_df(df: pd.DataFrame, delta_h: float) -> pd.DataFrame:
 
 # TSVARS core functions
 def cov_section(pair_cols: pd.DataFrame, mu_star: pd.DataFrame) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    This function return the sectional covariogram of the pairs of function evaluations
+    """Returns the sectional covariogram of the pairs of function evaluations
     that resulted from each star point. This function is specific for the time-series
     varying/aggregate of the VARS sensitivity analysis.
 
+    Parameters
+    ----------
+    pair_cols : array_like
+        a Pandas Dataframe of paired values function evaluations
+    mu_star : array_like
+        a Pandas DataFrame of mu star values that are calculated separately
 
-    Parameters:
-    -----------
-    :param pair_cols: a Pandas Dataframe of paired values function evaluations
-    :type pair_cols: pd.DataFrame
-    :param mu_star: a Pandas DataFrame of mu star values that are calculated separately
-    :type mu_star: pd.DataFrame
+    Returns
+    -------
+    cov_section_values : array_like
+        the sectional covariogram dataframe
 
-
-    Returns:
-    --------
-    :return cov_section_values: the sectional covariogram dataframe
-    :rtype cov_section_values: pd.DataFrame
-
-
-    References:
-    -----------
+    References
+    ----------
     .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive, 
            robust, and efficient global sensitivity analysis: 1. Theory. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
@@ -157,13 +123,6 @@ def cov_section(pair_cols: pd.DataFrame, mu_star: pd.DataFrame) -> pd.DataFrame:
            robust, and efficient global sensitivity analysis: 1. Application. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
 
-
-    Contributors:
-    -------------
-    Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-    Matott, Shawn, (2019): code in C/++
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
 
     cov_section_values = (pair_cols.sub(mu_star, axis=0)[0] * pair_cols.sub(mu_star, axis=0)[1]).\
@@ -173,28 +132,23 @@ def cov_section(pair_cols: pd.DataFrame, mu_star: pd.DataFrame) -> pd.DataFrame:
 
 
 def variogram(pair_cols: pd.DataFrame) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    This function return the variogram calculated from the pairs of function evaluations
+    """Returns the variogram calculated from the pairs of function evaluations
     that each resulted from each star point. This function is specific for the time-series
     varying/aggregate of the VARS sensitivity analysis.
 
 
-    Parameters:
-    -----------
-    :param pair_cols: a Pandas Dataframe of paired values function evaluations
-    :type pair_cols: pd.DataFrame
+    Parameters
+    ----------
+    pair_cols : array_like
+        a Pandas Dataframe of paired values function evaluations
 
+    Returns
+    -------
+    variogram_values : array_like
+        the variogram dataframe
 
-    Returns:
-    --------
-    :return variogram_values: the variogram dataframe
-    :rtype variogram_values: pd.DataFrame
-
-
-    References:
-    -----------
+    References
+    ----------
     .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive, 
            robust, and efficient global sensitivity analysis: 1. Theory. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
@@ -203,13 +157,6 @@ def variogram(pair_cols: pd.DataFrame) -> pd.DataFrame:
            robust, and efficient global sensitivity analysis: 1. Application. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
 
-
-    Contributors:
-    -------------
-    Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-    Matott, Shawn, (2019): code in C/++
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
 
     variogram_values = 0.5 * \
@@ -219,29 +166,25 @@ def variogram(pair_cols: pd.DataFrame) -> pd.DataFrame:
     return variogram_values
 
 
-def morris_eq(pair_cols: pd.DataFrame) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    This function return the Morris Equivalent values derived from the pairs of 
+def morris_eq(
+    pair_cols: pd.DataFrame
+) -> pd.DataFrame:
+    """Return the Morris Equivalent values derived from the pairs of 
     function evaluations that each resulted from each star point. This function
     is specific for the time-series varying/aggregate of the VARS sensitivity analysis.
 
+    Parameters
+    ----------
+    pair_cols : array_like
+        a Pandas Dataframe of paired values function evaluations
 
-    Parameters:
-    -----------
-    :param pair_cols: a Pandas Dataframe of paired values function evaluations
-    :type pair_cols: pd.DataFrame
+    Returns
+    -------
+    morris_eq_values : array_like
+        the morris dataframe
 
-
-    Returns:
-    --------
-    :return morris_eq_values: the morris dataframe
-    :rtype morris_eq_values: pd.DataFrame
-
-
-    References:
-    -----------
+    References
+    ----------
     .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive, 
            robust, and efficient global sensitivity analysis: 1. Theory. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
@@ -250,46 +193,37 @@ def morris_eq(pair_cols: pd.DataFrame) -> pd.DataFrame:
            robust, and efficient global sensitivity analysis: 1. Application. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
 
-
-    Contributors:
-    -------------
-    Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-    Matott, Shawn, (2019): code in C/++
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
+
     morris_eq_values = ((pair_cols[1] - pair_cols[0]).abs().groupby(level=['ts', 'param', 'h']).mean(),
                         (pair_cols[1] - pair_cols[0]).groupby(level=['ts', 'param', 'h']).mean())
 
     return morris_eq_values
 
 
-def covariogram(pair_cols: pd.DataFrame, mu_overall: pd.Series) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    This function return the covariogram values derived from the pairs of 
+def covariogram(
+    pair_cols: pd.DataFrame,
+    mu_overall: pd.Series
+) -> pd.DataFrame:
+    """Return the covariogram values derived from the pairs of 
     function evaluations that each resulted from each star point. This function
     is specific for the time-series varying/aggregate of the VARS sensitivity analysis.
 
+    Parameters
+    ----------
+    pair_cols : array_like
+        a Pandas Dataframe of paired values function evaluations
+    mu_overall : array_like
+        a Pandas Dataframe of overall mu calculated on all
+        function evaluation values for each time-step
 
-    Parameters:
-    -----------
-    :param pair_cols: a Pandas Dataframe of paired values function evaluations
-    :type pair_cols: pd.DataFrame
-    :param mu_overall: a Pandas Dataframe of overall mu calculated on all
-                                       function evaluation values for each time-step
-    :type mu_overall: pd.DataFrame
+    Returns
+    -------
+    covariogram_values : array_like
+        the covariogram dataframe
 
-
-    Returns:
-    --------
-    :return covariogram_values: the covariogram dataframe
-    :rtype covariogram_values: pd.DataFrame
-
-
-    References:
-    -----------
+    References
+    ----------
     .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive, 
            robust, and efficient global sensitivity analysis: 1. Theory. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
@@ -298,13 +232,6 @@ def covariogram(pair_cols: pd.DataFrame, mu_overall: pd.Series) -> pd.DataFrame:
            robust, and efficient global sensitivity analysis: 1. Application. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
 
-
-    Contributors:
-    -------------
-    Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-    Matott, Shawn, (2019): code in C/++
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
 
     covariogram_values = (pair_cols[0].sub(mu_overall, level=0) * pair_cols[1].sub(mu_overall, level=0)) \
@@ -314,28 +241,22 @@ def covariogram(pair_cols: pd.DataFrame, mu_overall: pd.Series) -> pd.DataFrame:
 
 
 def e_covariogram(cov_section_all: pd.DataFrame) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    This function return the Expected value of covariogram values derived from the pairs of 
+    """Returns the Expected value of covariogram values derived from the pairs of 
     function evaluations that each resulted from each star point. This function
     is specific for the time-series varying/aggregate of the VARS sensitivity analysis.
 
+    Parameters
+    ----------
+    cov_section_all : array_like
+        a Pandas Dataframe of sectional covariograms
 
-    Parameters:
-    -----------
-    :param cov_section_all: a Pandas Dataframe of sectional covariograms
-    :type cov_section_all: pd.DataFrame
+    Returns
+    -------
+    e_covariogram_values : array_like
+        the covariogram dataframe
 
-
-    Returns:
-    --------
-    :return e_covariogram_values: the covariogram dataframe
-    :rtype e_covariogram_values: pd.DataFrame
-
-
-    References:
-    -----------
+    References
+    ----------
     .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive, 
            robust, and efficient global sensitivity analysis: 1. Theory. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
@@ -344,13 +265,6 @@ def e_covariogram(cov_section_all: pd.DataFrame) -> pd.DataFrame:
            robust, and efficient global sensitivity analysis: 1. Application. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
 
-
-    Contributors:
-    -------------
-    Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-    Matott, Shawn, (2019): code in C/++
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
 
     e_covariogram_values = cov_section_all.groupby(
@@ -360,41 +274,35 @@ def e_covariogram(cov_section_all: pd.DataFrame) -> pd.DataFrame:
 
 
 def sobol_eq(
-        gamma: pd.DataFrame,
-        ecov: pd.DataFrame,
-        variance: pd.Series,
-        delta_h: float
+    gamma: pd.DataFrame,
+    ecov: pd.DataFrame,
+    variance: pd.Series,
+    delta_h: float
 ) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    This function return the Sobol Equivalent values derived from the variogram (`gamma`),
+    """Returns the Sobol Equivalent values derived from the variogram (`gamma`),
     expected values of sectional covariograms (`ecov`), and overall variance (`variance`).
     This function is specific for the time-series varying/aggregate of the VARS sensitivity
     analysis.
 
+    Parameters
+    ----------
+    gamma : array_like
+        a Pandas Dataframe of variogram values for each time-step
+    ecov : array_like
+        a Pandas DataFrame of expected values of sectional covariograms
+        for each time-step
+    variance : array_like
+        variance of function evaluations over all time-steps
+    delta_h : float
+        resolution of star samples
 
-    Parameters:
-    -----------
-    :param gamma: a Pandas Dataframe of variogram values for each time-step
-    :type gamma: pd.DataFrame
-    :param ecov: a Pandas DataFrame of expected values of sectional covariograms
-                             for each time-step
-    :type ecov: pd.DataFrame
-    :param variance: variance of function evaluations over all time-steps
-    :type variance: pd.Series
-    :param delta_h: resolution of star samples
-    :type delta_h: float
+    Returns
+    -------
+    sobol_eq_values : array_like
+        the Sobol Equivalent values
 
-
-    Returns:
-    --------
-    :return sobol_eq_values: the Sobol Equivalent values
-    :rtype sobol_eq_values: pd.DataFrame
-
-
-    References:
-    -----------
+    References
+    ----------
     .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive, 
            robust, and efficient global sensitivity analysis: 1. Theory. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
@@ -403,13 +311,6 @@ def sobol_eq(
            robust, and efficient global sensitivity analysis: 1. Application. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
 
-
-    Contributors:
-    -------------
-    Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-    Matott, Shawn, (2019): code in C/++
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
 
     sobol_eq_values = (gamma + ecov).div(variance,
@@ -417,40 +318,32 @@ def sobol_eq(
 
     return sobol_eq_values
 
-
-# ivars function
 def ivars(
         variogram_array: pd.DataFrame,
         scale: float,
         delta_h: float
 ) -> pd.DataFrame:
-    """
-    Description:
-    ------------
-    Generates Integrated Variogram Across a Range of Scales (IVARS) by approximating 
+    """Generates Integrated Variogram Across a Range of Scales (IVARS) by approximating 
     area using right trapezoids having width of `delta_h` and hights of variogram values.
     This function is specific for the time-series varying/aggregate of the VARS sensitivity
     analysis.
 
+    Parameters
+    ----------
+    variogram_array : array_like
+        a Pandas Dataframe of variogram values for each time-step
+    scale : gloat
+        the scale for the IVARS evaluations
+    delta_h : float
+        the resolution of star point generation
 
-    Parameters:
-    -----------
-    :param variogram_array: a Pandas Dataframe of variogram values for each time-step
-    :type variogram_array: pd.DataFrame
-    :param scale: the scale for the IVARS evaluations
-    :type scale: float
-    :param delta_h: the resolution of star point generation
-    :type delta_h: float
+    Returns
+    -------
+    ivars_values : array_like
+        the Sobol Equivalent values
 
-
-    Returns:
-    --------
-    :return ivars_values: the Sobol Equivalent values
-    :rtype ivars_values: pd.DataFrame
-
-
-    References:
-    -----------
+    References
+    ----------
     .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive, 
            robust, and efficient global sensitivity analysis: 1. Theory. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
@@ -459,13 +352,6 @@ def ivars(
            robust, and efficient global sensitivity analysis: 1. Application. Water 
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
 
-
-    Contributors:
-    -------------
-    Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-    Matott, Shawn, (2019): code in C/++
-    Keshavarz, Kasra, (2021): code in Python 3
-    Blanchard, Cordell, (2021): code in Python 3
     """
 
     num_h = len(variogram_array.index.levels[-1].to_list())

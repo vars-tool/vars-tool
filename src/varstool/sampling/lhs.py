@@ -21,34 +21,32 @@ pyDOE project: https://github.com/tisimst/pyDOE
 
 def lhs(sp=None, params=1, seed=None, criterion=None, iterations=None):
     """
-    Generate a latin-hypercube design
+    Generate a latin-hypercube design.
 
-    Arguments:
+    Parameters
     ----------
-    :param n: the number of factors to generate samples for
-    :type n: {int, np.int32, np.int64}
-    :param samples: the number of samples to generate for each factor,
-                    defaults to ``n``
-    :type sanples: {int, np.int32, np.int64}
-    :param criterion: allowable values are ``center`` or ``c``, ``maximin`` or ``m``,
-                      ``centermaximin`` or ``cm``, and ``correlation`` or ``corr``.
-                      If no value given, the design is simply randomized.
-    :type criterion: str
-    :param iterations: The number of iterations in the `maximin` and
-                       correlations algorithms, default to 5
-    :type iterations: {int, np.int32, np.int64}
-
+    n : int
+        the number of factors to generate samples for
+    samples : int
+        the number of samples to generate for each factor,
+        defaults to ``n``
+    criterion : str
+        allowable values are ``center`` or ``c``, ``maximin`` or ``m``,
+        ``centermaximin`` or ``cm``, and ``correlation`` or ``corr``.
+        If no value given, the design is simply randomized.
+    iterations : int
+        The number of iterations in the `maximin` and
+        correlations algorithms, default to 5
 
     Returns
     -------
-    :return H: An n-by-samples design matrix that has
-               been normalized so factor values
-               are uniformly spaced between zero and one.
-    :rtype H: np.ndarray
+    H : array_like 
+        An n-by-samples design matrix that has
+        been normalized so factor values
+        are uniformly spaced between zero and one.
 
-
-    Example:
-    --------
+    Example
+    -------
     A 3-factor design (defaults to 3 samples)::
 
         >>> lhs(3)
@@ -90,7 +88,7 @@ def lhs(sp=None, params=1, seed=None, criterion=None, iterations=None):
         >>> lhs(4, samples=5, criterion='correlate', iterations=10)
     """
     H = None
-    
+
     # check the seed number
     if seed:
         np.random.seed(int(seed))

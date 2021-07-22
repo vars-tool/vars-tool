@@ -1,50 +1,51 @@
 import numpy as np
-#import numpy.typing as npt # let's not consider this rn
 import pandas as pd
 
 from decimal import Decimal
 from typing import Dict
 
 
-def star(star_centres:pd.DataFrame, delta_h:float=0.1, parameters:list=[], rettype:str='dict', precision:int=10) -> np.ndarray:
-    '''
-    Description:
-    ------------
-    This function generates ``star_points`` based on [1]_ for each
+def star(
+    star_centres,
+    delta_h: float=0.1,
+    parameters: list=[],
+    rettype: str='dict',
+    precision: int=10
+) -> np.ndarray:
+    ''' STAR sampling algorithm
+
+    This function generates ``star_points`` based on [1] for each
     sample set (i.e., each row consisting of ``star_centres``).
     ``star_centres`` are the points along which in each direction
     the `star_points` are generated. The resolution of sampling is
     :math:`\Delta h` (``delta_h``). This appraoch is a structured
-    sampling straregy; read more in [2]_ and [3]_.
+    sampling straregy; read more in [2] and [3].
 
-
-    Arguments:
+    Parameters
     ----------
-    :param star_centres: the 2d array (n, m) containing sample sets
-                    ``n`` is the number of sample sets and
-                    ``m`` is the number of parameters/factors/
-                    variables
-    :type star_centres: np.typing.ArrayLike
-    :param delta_h: sampling resolution, defaults to 0.1
-    :type delta_h: float
-    :param parameters: parameter names
-    :type parameters: list
-    :param rettype: the type of returned value
-    :type rettype: str
-    :param precision: the number of digits after the precision point, defaults to 0.1
-    :type precision: int, optional
+    star_centres : array_like
+        the 2d array (n, m) containing sample sets,
+        ``n`` is the number of sample sets and 
+        ``m`` is the number of parameters/factors/
+        variables
+    delta_h : float, optional
+        sampling resolution, defaults to ``0.1``
+    parameters : list
+        parameter names
+    rettype : str, optional
+        ``'dict'`` or ``'dataframe'``, defaults to ``'dict'``
+    precision : int, optional
+        the number of digits after the precision point, defaults to ``10``
 
+    Returns
+    -------
+    star_points : array_like
+        np.array of star points, each element of this 4d
+        array is a 3d np.array with each 2d array containing
+        star points along each parameter/factor/variable.
 
-    Returns:
-    --------
-    :return star_points: np.array of star points, each element of this 4d
-                         array is a 3d np.array with each 2d array containing
-                         star points along each parameter/factor/variable.
-    :rtype star_points: np.ndarray
-
-
-    References:
-    -----------
+    References
+    ----------
     .. [1] Razavi, S., Sheikholeslami, R., Gupta, H. V., &
            Haghnegahdar, A. (2019). VARS-TOOL: A toolbox for
            comprehensive, efficient, and robust sensitivity
@@ -60,12 +61,6 @@ def star(star_centres:pd.DataFrame, delta_h:float=0.1, parameters:list=[], retty
            analysis: 2. Application. Water Resources Research, 52(1),
            423-439. doi: 10.1002/2015WR017559
 
-
-    Contributors:
-    -------------
-    Razavi, Saman, (2016): algorithm, code in MATLAB (c)
-    Gupta, Hoshin, (2016): algorithm, code in MATLAB (c)
-    Keshavarz, Kasra, (2021): code in Python 3
     '''
 
     # check the type of star_cenres
@@ -81,46 +76,52 @@ def star(star_centres:pd.DataFrame, delta_h:float=0.1, parameters:list=[], retty
     # check `rettype` in inner if clauses
     if star_centres.ndim == 1:
         # star_points
-        dict_of_points = _star_sampler_dict(star_centres.reshape(1, star_centres.size), delta_h, parameters)
-        if rettype=='DataFrame':
-            return pd.concat({key:pd.concat({k:pd.DataFrame(d) for k, d in value.items()}) for key,value in dict_of_points.items()})
+        dict_of_points = _star_sampler_dict(star_centres.reshape(
+            1, star_centres.size), delta_h, parameters)
+        if rettype == 'DataFrame':
+            return pd.concat({key: pd.concat({k: pd.DataFrame(d) for k, d in value.items()}) for key, value in dict_of_points.items()})
         return dict_of_points
 
     elif star_centres.ndim == 2:
         # star_points
         dict_of_points = _star_sampler_dict(star_centres, delta_h, parameters)
-        if rettype=='DataFrame':
-            from pandas import concat # import pandas here to avoid overhead if rettype=='dict'
-            return pd.concat({key:pd.concat({k:pd.DataFrame(d) for k, d in value.items()}) for key,value in dict_of_points.items()})
+        if rettype == 'DataFrame':
+            from pandas import concat  # import pandas here to avoid overhead if rettype=='dict'
+            return pd.concat({key: pd.concat({k: pd.DataFrame(d) for k, d in value.items()}) for key, value in dict_of_points.items()})
         return dict_of_points
 
     else:
         # cannot operate on more than 2 dimensional arrays at the moment
-        raise ValueError('dimension mismatch: "star_centres" must be a 1- or 2-dimensional array')
+        raise ValueError(
+            'dimension mismatch: "star_centres" must be a 1- or 2-dimensional array')
 
 
-def _star_sampler_dict(centres, resolution=0.1, parameters=[], precision=10):
-    '''
-    Description:
-    ------------
-    This function returns a dictionary of star samples
+def _star_sampler_dict(
+        centres,
+        resolution: float=0.1,
+        parameters: list=[],
+        precision: int=10
+) -> dict:
+    '''Returning a dictionary of star samples
 
-
-    Arguments:
+    Parameters
     ----------
-    :param centres: an array of `star centres`
-    :type centres: np.ndarray
-    :param resolution: also `delta_h`, the resolution of star sampling
-    :type resolution: float, defaults to 0.1
-    :param parameters: parameter names, optional
-    :type parameters: list
+    centres : array_like
+        an array of `star centres`
+    resolution : float, optional
+        a.k.a ``delta_h``, the resolution of star sampling, defaults to ``0.1``
+    parameters : list, optional
+        parameter names, defaults to an empty list
+    precision : int, optional
+        number of digits after the precision point, defaults to ``10``
 
+    Returns
+    -------
+    dict_of_points : dict
+        a dictionary of star samples
 
-    Returns:
-    --------
-    :return dict_of_points: a dictionary of star samples
-    :rtype dict_of_points: dict
     '''
+
     if not parameters:
         parameters = list(range(centres.shape[1]))
 
@@ -129,14 +130,16 @@ def _star_sampler_dict(centres, resolution=0.1, parameters=[], precision=10):
 
     # for each row of star centres
     for i in range(centres.shape[0]):
-        row = centres[i,:]
+        row = centres[i, :]
         for k in range(row.size):
             idx_size = len(_range_vector(row[k], step=resolution))
             col_size = row.size
 
             # a bit high memory usage but nothing else comes to my minds for now (KK)
-            temp_view = np.broadcast_to(row, (idx_size, col_size)).reshape(idx_size, col_size).copy()
-            temp_view[:,k] = _range_vector(row[k], start=0, end=1, step=resolution, precision=precision)
+            temp_view = np.broadcast_to(row, (idx_size, col_size)).reshape(
+                idx_size, col_size).copy()
+            temp_view[:, k] = _range_vector(
+                row[k], start=0, end=1, step=resolution, precision=precision)
             points[parameters[k]] = temp_view
 
         dict_of_points[i] = points.copy()
@@ -157,40 +160,34 @@ def _range_vector(num, start=0, end=1, step=0.1, precision=10):
 
 
 def rangef(start, stop, step, fround=10):
-    """
-    Description:
-    ------------
-    Yields sequence of numbers from start (inclusive) to stop (inclusive)
+    """Yields sequence of numbers from start (inclusive) to stop (inclusive)
     by step (increment) with rounding set to n digits.
 
-
-    Arguments:
+    Parameters
     ----------
-    :param start: start of sequence
-    :type start: float or int
-    :param stop: end of sequence
-    :type stop: float or int
-    :param step: int or float increment (e.g. 1 or 0.001)
-    :type step: float or int
-    :param fround: float rounding, n decimal places
-    :type fround: int, defaults to 5
+    start : float or int
+        start of sequence
+    stop : float or int
+        end of sequence
+    step : float or int
+        int or float increment (e.g. 1 or 0.001)
+    fround : int
+        float rounding, n decimal places, defaults to 5
 
+    Yields
+    ------
+    int
+        yielding the next value of the `range` sequence
 
-    Returns:
-    --------
-    :return: yielding the next value of the sequence
-    :rtype: float or int
-
-
-    Credit:
-    -------
+    Source
+    ------
     The code is taken from the following link, thanks to Goran B.
     https://stackoverflow.com/a/49059292/5188208
     """
     try:
         i = 0
         while stop >= start and step > 0:
-            if i==0:
+            if i == 0:
                 yield start
             elif start >= stop:
                 yield stop
@@ -210,7 +207,10 @@ def rangef(start, stop, step, fround=10):
         pass
 
 
-def _cli_save(dict_of_points):
-    # temp
-
-    return pd.concat({key:pd.concat({k:pd.DataFrame(d) for k, d in value.items()}) for key,value in dict_of_points.items()})
+"""
+    Contributors:
+    -------------
+    Razavi, Saman, (2016): algorithm, code in MATLAB (c)
+    Gupta, Hoshin, (2016): algorithm, code in MATLAB (c)
+    Keshavarz, Kasra, (2021): code in Python 3
+"""

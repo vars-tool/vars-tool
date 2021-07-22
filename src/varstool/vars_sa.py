@@ -343,7 +343,7 @@ class VARS(object):
             self.star_centres = plhs(sp=self.num_stars,
                                        params=len(self.parameters),
                                        seed=self.seed,
-                                )
+                                )[0]
         elif self.sampler == 'sobol_seq':
             from .sampling import sobol_sequence
             self.star_centres = sobol_sequence(sp=self.num_stars,

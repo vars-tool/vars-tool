@@ -1,0 +1,2050 @@
+./vars_sa.py:5:56: W291 trailing whitespace
+./vars_sa.py:7:43: W291 trailing whitespace
+./vars_sa.py:19:13: E272 multiple spaces before keyword
+./vars_sa.py:20:1: F401 'scipy.stats as stat' imported but unused
+./vars_sa.py:21:1: F401 'scipy.cluster.hierarchy as hchy' imported but unused
+./vars_sa.py:24:1: F401 'tqdm.auto.trange' imported but unused
+./vars_sa.py:28:1: F401 'itertools.compress' imported but unused
+./vars_sa.py:61:38: W291 trailing whitespace
+./vars_sa.py:112:13: E128 continuation line under-indented for visual indent
+./vars_sa.py:170:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:171:79: W291 trailing whitespace
+./vars_sa.py:173:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:174:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:174:84: W291 trailing whitespace
+./vars_sa.py:187:5: E265 block comment should start with '# '
+./vars_sa.py:192:80: E501 line too long (116 > 79 characters)
+./vars_sa.py:193:40: E261 at least two spaces before inline comment
+./vars_sa.py:193:41: E262 inline comment should start with '# '
+./vars_sa.py:194:69: E261 at least two spaces before inline comment
+./vars_sa.py:194:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:195:40: E261 at least two spaces before inline comment
+./vars_sa.py:196:69: E261 at least two spaces before inline comment
+./vars_sa.py:196:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:197:29: E261 at least two spaces before inline comment
+./vars_sa.py:198:63: E261 at least two spaces before inline comment
+./vars_sa.py:198:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:199:39: E261 at least two spaces before inline comment
+./vars_sa.py:199:80: E501 line too long (87 > 79 characters)
+./vars_sa.py:200:48: E261 at least two spaces before inline comment
+./vars_sa.py:201:38: E221 multiple spaces before operator
+./vars_sa.py:201:47: E261 at least two spaces before inline comment
+./vars_sa.py:202:45: E261 at least two spaces before inline comment
+./vars_sa.py:203:47: E261 at least two spaces before inline comment
+./vars_sa.py:204:40: E261 at least two spaces before inline comment
+./vars_sa.py:205:48: E261 at least two spaces before inline comment
+./vars_sa.py:214:25: E221 multiple spaces before operator
+./vars_sa.py:214:45: E261 at least two spaces before inline comment
+./vars_sa.py:214:80: E501 line too long (110 > 79 characters)
+./vars_sa.py:215:25: E261 at least two spaces before inline comment
+./vars_sa.py:222:31: E261 at least two spaces before inline comment
+./vars_sa.py:249:9: E266 too many leading '#' for block comment
+./vars_sa.py:252:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:259:9: E266 too many leading '#' for block comment
+./vars_sa.py:267:9: E266 too many leading '#' for block comment
+./vars_sa.py:270:80: E501 line too long (92 > 79 characters)
+./vars_sa.py:271:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:276:9: E266 too many leading '#' for block comment
+./vars_sa.py:277:42: E225 missing whitespace around operator
+./vars_sa.py:277:43: E202 whitespace before ')'
+./vars_sa.py:282:9: E266 too many leading '#' for block comment
+./vars_sa.py:286:80: E501 line too long (92 > 79 characters)
+./vars_sa.py:290:9: E266 too many leading '#' for block comment
+./vars_sa.py:297:9: E266 too many leading '#' for block comment
+./vars_sa.py:298:54: E502 the backslash is redundant between brackets
+./vars_sa.py:299:36: E502 the backslash is redundant between brackets
+./vars_sa.py:300:13: E129 visually indented line with same indent as next logical line
+./vars_sa.py:308:9: E266 too many leading '#' for block comment
+./vars_sa.py:309:9: E266 too many leading '#' for block comment
+./vars_sa.py:323:9: E266 too many leading '#' for block comment
+./vars_sa.py:334:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:338:39: E127 continuation line over-indented for visual indent
+./vars_sa.py:339:39: E127 continuation line over-indented for visual indent
+./vars_sa.py:340:33: E124 closing bracket does not match visual indentation
+./vars_sa.py:344:40: E127 continuation line over-indented for visual indent
+./vars_sa.py:345:40: E127 continuation line over-indented for visual indent
+./vars_sa.py:346:33: E124 closing bracket does not match visual indentation
+./vars_sa.py:350:50: E127 continuation line over-indented for visual indent
+./vars_sa.py:351:50: E127 continuation line over-indented for visual indent
+./vars_sa.py:352:33: E124 closing bracket does not match visual indentation
+./vars_sa.py:356:42: E127 continuation line over-indented for visual indent
+./vars_sa.py:357:42: E127 continuation line over-indented for visual indent
+./vars_sa.py:358:33: E124 closing bracket does not match visual indentation
+./vars_sa.py:362:42: E127 continuation line over-indented for visual indent
+./vars_sa.py:363:42: E127 continuation line over-indented for visual indent
+./vars_sa.py:364:33: E124 closing bracket does not match visual indentation
+./vars_sa.py:365:27: E711 comparison to None should be 'if cond is None:'
+./vars_sa.py:374:5: E303 too many blank lines (2)
+./vars_sa.py:374:5: E265 block comment should start with '# '
+./vars_sa.py:376:5: E301 expected 1 blank line, found 0
+./vars_sa.py:379:80: E501 line too long (150 > 79 characters)
+./vars_sa.py:379:82: E225 missing whitespace around operator
+./vars_sa.py:380:80: E501 line too long (105 > 79 characters)
+./vars_sa.py:381:80: E501 line too long (121 > 79 characters)
+./vars_sa.py:382:80: E501 line too long (89 > 79 characters)
+./vars_sa.py:383:80: E501 line too long (81 > 79 characters)
+./vars_sa.py:384:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:385:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:386:80: E501 line too long (113 > 79 characters)
+./vars_sa.py:387:80: E501 line too long (107 > 79 characters)
+./vars_sa.py:388:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:389:80: E501 line too long (101 > 79 characters)
+./vars_sa.py:390:23: E221 multiple spaces before operator
+./vars_sa.py:390:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:391:80: E501 line too long (89 > 79 characters)
+./vars_sa.py:393:80: E501 line too long (91 > 79 characters)
+./vars_sa.py:393:91: E502 the backslash is redundant between brackets
+./vars_sa.py:394:80: E501 line too long (89 > 79 characters)
+./vars_sa.py:394:89: E502 the backslash is redundant between brackets
+./vars_sa.py:395:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:395:86: E502 the backslash is redundant between brackets
+./vars_sa.py:406:5: E303 too many blank lines (2)
+./vars_sa.py:406:5: E265 block comment should start with '# '
+./vars_sa.py:409:5: E266 too many leading '#' for block comment
+./vars_sa.py:410:5: E266 too many leading '#' for block comment
+./vars_sa.py:412:5: E301 expected 1 blank line, found 0
+./vars_sa.py:419:15: E128 continuation line under-indented for visual indent
+./vars_sa.py:433:15: E128 continuation line under-indented for visual indent
+./vars_sa.py:441:5: E303 too many blank lines (2)
+./vars_sa.py:441:5: E265 block comment should start with '# '
+./vars_sa.py:443:5: E301 expected 1 blank line, found 0
+./vars_sa.py:446:55: E261 at least two spaces before inline comment
+./vars_sa.py:447:44: E127 continuation line over-indented for visual indent
+./vars_sa.py:447:65: E261 at least two spaces before inline comment
+./vars_sa.py:448:44: E127 continuation line over-indented for visual indent
+./vars_sa.py:448:74: E261 at least two spaces before inline comment
+./vars_sa.py:448:80: E501 line too long (102 > 79 characters)
+./vars_sa.py:449:44: E127 continuation line over-indented for visual indent
+./vars_sa.py:450:40: E124 closing bracket does not match visual indentation
+./vars_sa.py:450:41: E261 at least two spaces before inline comment
+./vars_sa.py:452:55: E261 at least two spaces before inline comment
+./vars_sa.py:452:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:453:46: E127 continuation line over-indented for visual indent
+./vars_sa.py:453:54: E261 at least two spaces before inline comment
+./vars_sa.py:453:80: E501 line too long (88 > 79 characters)
+./vars_sa.py:454:46: E122 continuation line missing indentation or outdented
+./vars_sa.py:454:50: E231 missing whitespace after ':'
+./vars_sa.py:454:80: E501 line too long (97 > 79 characters)
+./vars_sa.py:455:46: E122 continuation line missing indentation or outdented
+./vars_sa.py:455:50: E231 missing whitespace after ':'
+./vars_sa.py:455:80: E501 line too long (97 > 79 characters)
+./vars_sa.py:457:41: E124 closing bracket does not match visual indentation
+./vars_sa.py:469:80: E501 line too long (126 > 79 characters)
+./vars_sa.py:469:100: W605 invalid escape sequence '\g'
+./vars_sa.py:470:45: E128 continuation line under-indented for visual indent
+./vars_sa.py:484:17: E303 too many blank lines (2)
+./vars_sa.py:485:80: E501 line too long (81 > 79 characters)
+./vars_sa.py:489:17: F841 local variable 'rects1' is assigned to but never used
+./vars_sa.py:489:80: E501 line too long (96 > 79 characters)
+./vars_sa.py:490:17: F841 local variable 'rects2' is assigned to but never used
+./vars_sa.py:490:80: E501 line too long (81 > 79 characters)
+./vars_sa.py:491:17: F841 local variable 'rects3' is assigned to but never used
+./vars_sa.py:491:80: E501 line too long (95 > 79 characters)
+./vars_sa.py:512:5: E303 too many blank lines (5)
+./vars_sa.py:515:60: E261 at least two spaces before inline comment
+./vars_sa.py:516:44: E127 continuation line over-indented for visual indent
+./vars_sa.py:516:65: E261 at least two spaces before inline comment
+./vars_sa.py:517:44: E127 continuation line over-indented for visual indent
+./vars_sa.py:517:74: E261 at least two spaces before inline comment
+./vars_sa.py:517:80: E501 line too long (102 > 79 characters)
+./vars_sa.py:518:44: E127 continuation line over-indented for visual indent
+./vars_sa.py:519:40: E124 closing bracket does not match visual indentation
+./vars_sa.py:519:41: E261 at least two spaces before inline comment
+./vars_sa.py:521:65: E261 at least two spaces before inline comment
+./vars_sa.py:521:80: E501 line too long (93 > 79 characters)
+./vars_sa.py:522:46: E127 continuation line over-indented for visual indent
+./vars_sa.py:522:54: E261 at least two spaces before inline comment
+./vars_sa.py:522:80: E501 line too long (88 > 79 characters)
+./vars_sa.py:523:46: E122 continuation line missing indentation or outdented
+./vars_sa.py:523:50: E231 missing whitespace after ':'
+./vars_sa.py:523:80: E501 line too long (97 > 79 characters)
+./vars_sa.py:524:46: E122 continuation line missing indentation or outdented
+./vars_sa.py:524:50: E231 missing whitespace after ':'
+./vars_sa.py:524:80: E501 line too long (97 > 79 characters)
+./vars_sa.py:526:41: E124 closing bracket does not match visual indentation
+./vars_sa.py:529:59: W291 trailing whitespace
+./vars_sa.py:533:29: E124 closing bracket does not match visual indentation
+./vars_sa.py:536:80: E501 line too long (114 > 79 characters)
+./vars_sa.py:539:64: E231 missing whitespace after ','
+./vars_sa.py:539:80: E501 line too long (105 > 79 characters)
+./vars_sa.py:539:106: W291 trailing whitespace
+./vars_sa.py:540:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:542:64: E231 missing whitespace after ','
+./vars_sa.py:542:80: E501 line too long (96 > 79 characters)
+./vars_sa.py:542:97: W291 trailing whitespace
+./vars_sa.py:543:80: E501 line too long (95 > 79 characters)
+./vars_sa.py:548:80: E501 line too long (116 > 79 characters)
+./vars_sa.py:548:81: E261 at least two spaces before inline comment
+./vars_sa.py:551:63: E231 missing whitespace after ','
+./vars_sa.py:555:80: E501 line too long (113 > 79 characters)
+./vars_sa.py:557:80: E501 line too long (82 > 79 characters)
+./vars_sa.py:561:80: E501 line too long (130 > 79 characters)
+./vars_sa.py:563:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:567:80: E501 line too long (126 > 79 characters)
+./vars_sa.py:570:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:573:80: E501 line too long (113 > 79 characters)
+./vars_sa.py:580:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:584:36: E261 at least two spaces before inline comment
+./vars_sa.py:585:17: E221 multiple spaces before operator
+./vars_sa.py:585:36: E261 at least two spaces before inline comment
+./vars_sa.py:588:80: E501 line too long (110 > 79 characters)
+./vars_sa.py:595:80: E501 line too long (81 > 79 characters)
+./vars_sa.py:602:80: E501 line too long (101 > 79 characters)
+./vars_sa.py:606:80: E501 line too long (92 > 79 characters)
+./vars_sa.py:612:80: E501 line too long (140 > 79 characters)
+./vars_sa.py:612:140: E502 the backslash is redundant between brackets
+./vars_sa.py:613:14: E128 continuation line under-indented for visual indent
+./vars_sa.py:620:80: E501 line too long (109 > 79 characters)
+./vars_sa.py:620:88: E261 at least two spaces before inline comment
+./vars_sa.py:625:80: E501 line too long (124 > 79 characters)
+./vars_sa.py:632:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:634:80: E501 line too long (137 > 79 characters)
+./vars_sa.py:640:80: E501 line too long (91 > 79 characters)
+./vars_sa.py:641:13: E122 continuation line missing indentation or outdented
+./vars_sa.py:641:80: E501 line too long (103 > 79 characters)
+./vars_sa.py:642:13: E122 continuation line missing indentation or outdented
+./vars_sa.py:642:80: E501 line too long (118 > 79 characters)
+./vars_sa.py:643:80: E501 line too long (118 > 79 characters)
+./vars_sa.py:644:80: E501 line too long (128 > 79 characters)
+./vars_sa.py:645:80: E501 line too long (119 > 79 characters)
+./vars_sa.py:646:80: E501 line too long (125 > 79 characters)
+./vars_sa.py:647:80: E501 line too long (114 > 79 characters)
+./vars_sa.py:649:80: E501 line too long (91 > 79 characters)
+./vars_sa.py:650:13: E122 continuation line missing indentation or outdented
+./vars_sa.py:650:80: E501 line too long (136 > 79 characters)
+./vars_sa.py:651:80: E501 line too long (118 > 79 characters)
+./vars_sa.py:651:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:652:80: E501 line too long (128 > 79 characters)
+./vars_sa.py:652:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:653:80: E501 line too long (119 > 79 characters)
+./vars_sa.py:653:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:654:80: E501 line too long (125 > 79 characters)
+./vars_sa.py:654:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:655:80: E501 line too long (114 > 79 characters)
+./vars_sa.py:655:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:662:20: E231 missing whitespace after ':'
+./vars_sa.py:663:19: E231 missing whitespace after ':'
+./vars_sa.py:664:18: E231 missing whitespace after ':'
+./vars_sa.py:665:18: E231 missing whitespace after ':'
+./vars_sa.py:666:19: E231 missing whitespace after ':'
+./vars_sa.py:667:20: E231 missing whitespace after ':'
+./vars_sa.py:668:22: E231 missing whitespace after ':'
+./vars_sa.py:669:20: E231 missing whitespace after ':'
+./vars_sa.py:670:23: E231 missing whitespace after ':'
+./vars_sa.py:671:22: E231 missing whitespace after ':'
+./vars_sa.py:672:22: E231 missing whitespace after ':'
+./vars_sa.py:673:19: E231 missing whitespace after ':'
+./vars_sa.py:674:19: E231 missing whitespace after ':'
+./vars_sa.py:675:22: E231 missing whitespace after ':'
+./vars_sa.py:676:22: E231 missing whitespace after ':'
+./vars_sa.py:677:20: E231 missing whitespace after ':'
+./vars_sa.py:677:80: E501 line too long (88 > 79 characters)
+./vars_sa.py:678:23: E231 missing whitespace after ':'
+./vars_sa.py:678:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:679:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:680:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:686:5: E303 too many blank lines (2)
+./vars_sa.py:688:80: E501 line too long (114 > 79 characters)
+./vars_sa.py:691:64: E231 missing whitespace after ','
+./vars_sa.py:691:80: E501 line too long (105 > 79 characters)
+./vars_sa.py:692:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:694:64: E231 missing whitespace after ','
+./vars_sa.py:694:80: E501 line too long (96 > 79 characters)
+./vars_sa.py:695:80: E501 line too long (95 > 79 characters)
+./vars_sa.py:700:80: E501 line too long (116 > 79 characters)
+./vars_sa.py:700:81: E261 at least two spaces before inline comment
+./vars_sa.py:703:63: E231 missing whitespace after ','
+./vars_sa.py:707:80: E501 line too long (113 > 79 characters)
+./vars_sa.py:709:80: E501 line too long (82 > 79 characters)
+./vars_sa.py:713:80: E501 line too long (130 > 79 characters)
+./vars_sa.py:715:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:719:80: E501 line too long (126 > 79 characters)
+./vars_sa.py:722:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:725:80: E501 line too long (113 > 79 characters)
+./vars_sa.py:732:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:736:36: E261 at least two spaces before inline comment
+./vars_sa.py:737:17: E221 multiple spaces before operator
+./vars_sa.py:737:36: E261 at least two spaces before inline comment
+./vars_sa.py:740:80: E501 line too long (110 > 79 characters)
+./vars_sa.py:747:80: E501 line too long (81 > 79 characters)
+./vars_sa.py:754:80: E501 line too long (101 > 79 characters)
+./vars_sa.py:758:80: E501 line too long (92 > 79 characters)
+./vars_sa.py:764:80: E501 line too long (140 > 79 characters)
+./vars_sa.py:764:140: E502 the backslash is redundant between brackets
+./vars_sa.py:765:14: E128 continuation line under-indented for visual indent
+./vars_sa.py:772:80: E501 line too long (87 > 79 characters)
+./vars_sa.py:777:80: E501 line too long (124 > 79 characters)
+./vars_sa.py:784:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:786:80: E501 line too long (137 > 79 characters)
+./vars_sa.py:792:80: E501 line too long (91 > 79 characters)
+./vars_sa.py:793:13: E122 continuation line missing indentation or outdented
+./vars_sa.py:793:80: E501 line too long (103 > 79 characters)
+./vars_sa.py:794:13: E122 continuation line missing indentation or outdented
+./vars_sa.py:794:80: E501 line too long (118 > 79 characters)
+./vars_sa.py:795:80: E501 line too long (118 > 79 characters)
+./vars_sa.py:796:80: E501 line too long (128 > 79 characters)
+./vars_sa.py:797:80: E501 line too long (119 > 79 characters)
+./vars_sa.py:798:80: E501 line too long (125 > 79 characters)
+./vars_sa.py:799:80: E501 line too long (114 > 79 characters)
+./vars_sa.py:801:80: E501 line too long (91 > 79 characters)
+./vars_sa.py:802:13: E122 continuation line missing indentation or outdented
+./vars_sa.py:802:80: E501 line too long (136 > 79 characters)
+./vars_sa.py:803:80: E501 line too long (118 > 79 characters)
+./vars_sa.py:803:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:804:80: E501 line too long (128 > 79 characters)
+./vars_sa.py:804:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:805:80: E501 line too long (119 > 79 characters)
+./vars_sa.py:805:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:806:80: E501 line too long (125 > 79 characters)
+./vars_sa.py:806:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:807:80: E501 line too long (114 > 79 characters)
+./vars_sa.py:807:80: E128 continuation line under-indented for visual indent
+./vars_sa.py:814:20: E231 missing whitespace after ':'
+./vars_sa.py:815:19: E231 missing whitespace after ':'
+./vars_sa.py:816:18: E231 missing whitespace after ':'
+./vars_sa.py:817:18: E231 missing whitespace after ':'
+./vars_sa.py:818:19: E231 missing whitespace after ':'
+./vars_sa.py:819:20: E231 missing whitespace after ':'
+./vars_sa.py:820:22: E231 missing whitespace after ':'
+./vars_sa.py:821:20: E231 missing whitespace after ':'
+./vars_sa.py:822:23: E231 missing whitespace after ':'
+./vars_sa.py:823:22: E231 missing whitespace after ':'
+./vars_sa.py:824:22: E231 missing whitespace after ':'
+./vars_sa.py:825:19: E231 missing whitespace after ':'
+./vars_sa.py:826:19: E231 missing whitespace after ':'
+./vars_sa.py:827:22: E231 missing whitespace after ':'
+./vars_sa.py:828:22: E231 missing whitespace after ':'
+./vars_sa.py:829:20: E231 missing whitespace after ':'
+./vars_sa.py:829:80: E501 line too long (88 > 79 characters)
+./vars_sa.py:830:23: E231 missing whitespace after ':'
+./vars_sa.py:830:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:831:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:832:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:841:5: E265 block comment should start with '# '
+./vars_sa.py:845:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:847:47: E261 at least two spaces before inline comment
+./vars_sa.py:848:40: E261 at least two spaces before inline comment
+./vars_sa.py:852:27: E261 at least two spaces before inline comment
+./vars_sa.py:858:9: E266 too many leading '#' for block comment
+./vars_sa.py:861:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:869:9: E303 too many blank lines (2)
+./vars_sa.py:869:9: E266 too many leading '#' for block comment
+./vars_sa.py:883:5: E303 too many blank lines (2)
+./vars_sa.py:883:5: E265 block comment should start with '# '
+./vars_sa.py:885:5: E301 expected 1 blank line, found 0
+./vars_sa.py:890:5: E303 too many blank lines (2)
+./vars_sa.py:895:5: E303 too many blank lines (2)
+./vars_sa.py:899:5: E265 block comment should start with '# '
+./vars_sa.py:902:5: E265 block comment should start with '# '
+./vars_sa.py:908:80: E501 line too long (107 > 79 characters)
+./vars_sa.py:912:80: E501 line too long (89 > 79 characters)
+./vars_sa.py:917:80: E501 line too long (87 > 79 characters)
+./vars_sa.py:918:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:921:9: F841 local variable 'X' is assigned to but never used
+./vars_sa.py:930:80: E501 line too long (87 > 79 characters)
+./vars_sa.py:938:80: E501 line too long (115 > 79 characters)
+./vars_sa.py:942:80: E501 line too long (106 > 79 characters)
+./vars_sa.py:945:80: E501 line too long (100 > 79 characters)
+./vars_sa.py:946:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:949:80: E501 line too long (91 > 79 characters)
+./vars_sa.py:956:80: E501 line too long (102 > 79 characters)
+./vars_sa.py:958:80: E501 line too long (85 > 79 characters)
+./vars_sa.py:983:5: E303 too many blank lines (2)
+./vars_sa.py:989:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1013:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1020:80: E501 line too long (88 > 79 characters)
+./vars_sa.py:1030:14: E261 at least two spaces before inline comment
+./vars_sa.py:1030:15: E262 inline comment should start with '# '
+./vars_sa.py:1031:21: E251 unexpected spaces around keyword / parameter equals
+./vars_sa.py:1031:23: E251 unexpected spaces around keyword / parameter equals
+./vars_sa.py:1031:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:1032:30: E261 at least two spaces before inline comment
+./vars_sa.py:1033:69: E261 at least two spaces before inline comment
+./vars_sa.py:1033:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1034:40: E261 at least two spaces before inline comment
+./vars_sa.py:1035:69: E261 at least two spaces before inline comment
+./vars_sa.py:1035:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:1036:29: E261 at least two spaces before inline comment
+./vars_sa.py:1037:63: E261 at least two spaces before inline comment
+./vars_sa.py:1037:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:1038:39: E261 at least two spaces before inline comment
+./vars_sa.py:1038:80: E501 line too long (87 > 79 characters)
+./vars_sa.py:1039:48: E261 at least two spaces before inline comment
+./vars_sa.py:1040:38: E221 multiple spaces before operator
+./vars_sa.py:1040:47: E261 at least two spaces before inline comment
+./vars_sa.py:1041:43: E261 at least two spaces before inline comment
+./vars_sa.py:1042:47: E261 at least two spaces before inline comment
+./vars_sa.py:1043:40: E261 at least two spaces before inline comment
+./vars_sa.py:1044:48: E261 at least two spaces before inline comment
+./vars_sa.py:1045:52: E261 at least two spaces before inline comment
+./vars_sa.py:1045:80: E501 line too long (98 > 79 characters)
+./vars_sa.py:1046:52: E261 at least two spaces before inline comment
+./vars_sa.py:1046:80: E501 line too long (90 > 79 characters)
+./vars_sa.py:1047:47: E261 at least two spaces before inline comment
+./vars_sa.py:1047:80: E501 line too long (95 > 79 characters)
+./vars_sa.py:1065:10: E261 at least two spaces before inline comment
+./vars_sa.py:1084:5: E303 too many blank lines (2)
+./vars_sa.py:1084:5: E265 block comment should start with '# '
+./vars_sa.py:1086:5: E301 expected 1 blank line, found 0
+./vars_sa.py:1089:80: E501 line too long (108 > 79 characters)
+./vars_sa.py:1090:80: E501 line too long (105 > 79 characters)
+./vars_sa.py:1091:80: E501 line too long (121 > 79 characters)
+./vars_sa.py:1092:80: E501 line too long (89 > 79 characters)
+./vars_sa.py:1093:80: E501 line too long (81 > 79 characters)
+./vars_sa.py:1094:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:1095:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1096:80: E501 line too long (113 > 79 characters)
+./vars_sa.py:1097:80: E501 line too long (107 > 79 characters)
+./vars_sa.py:1098:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1099:80: E501 line too long (101 > 79 characters)
+./vars_sa.py:1100:80: E501 line too long (88 > 79 characters)
+./vars_sa.py:1101:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1102:31: E221 multiple spaces before operator
+./vars_sa.py:1102:80: E501 line too long (120 > 79 characters)
+./vars_sa.py:1103:1: W293 blank line contains whitespace
+./vars_sa.py:1104:23: E221 multiple spaces before operator
+./vars_sa.py:1104:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1105:80: E501 line too long (91 > 79 characters)
+./vars_sa.py:1108:80: E501 line too long (93 > 79 characters)
+./vars_sa.py:1108:93: E502 the backslash is redundant between brackets
+./vars_sa.py:1109:80: E501 line too long (91 > 79 characters)
+./vars_sa.py:1109:91: E502 the backslash is redundant between brackets
+./vars_sa.py:1110:80: E501 line too long (88 > 79 characters)
+./vars_sa.py:1110:88: E502 the backslash is redundant between brackets
+./vars_sa.py:1111:80: E501 line too long (100 > 79 characters)
+./vars_sa.py:1111:100: E502 the backslash is redundant between brackets
+./vars_sa.py:1112:80: E501 line too long (87 > 79 characters)
+./vars_sa.py:1115:45: E261 at least two spaces before inline comment
+./vars_sa.py:1115:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:1118:5: E303 too many blank lines (2)
+./vars_sa.py:1123:5: E303 too many blank lines (2)
+./vars_sa.py:1123:5: E265 block comment should start with '# '
+./vars_sa.py:1126:5: E301 expected 1 blank line, found 0
+./vars_sa.py:1128:60: E261 at least two spaces before inline comment
+./vars_sa.py:1129:44: E127 continuation line over-indented for visual indent
+./vars_sa.py:1129:65: E261 at least two spaces before inline comment
+./vars_sa.py:1130:44: E127 continuation line over-indented for visual indent
+./vars_sa.py:1130:74: E261 at least two spaces before inline comment
+./vars_sa.py:1130:80: E501 line too long (102 > 79 characters)
+./vars_sa.py:1131:44: E127 continuation line over-indented for visual indent
+./vars_sa.py:1132:40: E124 closing bracket does not match visual indentation
+./vars_sa.py:1132:41: E261 at least two spaces before inline comment
+./vars_sa.py:1135:67: E261 at least two spaces before inline comment
+./vars_sa.py:1135:80: E501 line too long (95 > 79 characters)
+./vars_sa.py:1136:46: E128 continuation line under-indented for visual indent
+./vars_sa.py:1136:54: E261 at least two spaces before inline comment
+./vars_sa.py:1136:80: E501 line too long (88 > 79 characters)
+./vars_sa.py:1137:54: E231 missing whitespace after ':'
+./vars_sa.py:1137:80: E501 line too long (101 > 79 characters)
+./vars_sa.py:1138:54: E231 missing whitespace after ':'
+./vars_sa.py:1138:80: E501 line too long (101 > 79 characters)
+./vars_sa.py:1146:80: E501 line too long (113 > 79 characters)
+./vars_sa.py:1148:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:1160:13: E265 block comment should start with '# '
+./vars_sa.py:1160:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:1165:30: E261 at least two spaces before inline comment
+./vars_sa.py:1165:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:1166:30: E261 at least two spaces before inline comment
+./vars_sa.py:1166:80: E501 line too long (103 > 79 characters)
+./vars_sa.py:1167:80: E501 line too long (102 > 79 characters)
+./vars_sa.py:1170:80: E501 line too long (101 > 79 characters)
+./vars_sa.py:1174:9: E731 do not assign a lambda expression, use a def
+./vars_sa.py:1174:80: E501 line too long (111 > 79 characters)
+./vars_sa.py:1179:37: E261 at least two spaces before inline comment
+./vars_sa.py:1194:40: F821 undefined name 'df'
+./vars_sa.py:1194:78: E261 at least two spaces before inline comment
+./vars_sa.py:1194:80: E501 line too long (102 > 79 characters)
+./vars_sa.py:1197:31: F821 undefined name 'df'
+./vars_sa.py:1197:80: E501 line too long (119 > 79 characters)
+./vars_sa.py:1197:105: F821 undefined name 'df'
+./vars_sa.py:1200:80: E501 line too long (82 > 79 characters)
+./vars_sa.py:1201:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:1203:72: E231 missing whitespace after ','
+./vars_sa.py:1203:80: E501 line too long (118 > 79 characters)
+./vars_sa.py:1203:81: E231 missing whitespace after ','
+./vars_sa.py:1203:89: E231 missing whitespace after ','
+./vars_sa.py:1203:93: E231 missing whitespace after ','
+./vars_sa.py:1207:67: E231 missing whitespace after ','
+./vars_sa.py:1207:80: E501 line too long (134 > 79 characters)
+./vars_sa.py:1207:116: E231 missing whitespace after ','
+./vars_sa.py:1207:118: E231 missing whitespace after ','
+./vars_sa.py:1212:80: E501 line too long (90 > 79 characters)
+./vars_sa.py:1213:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:1215:21: E265 block comment should start with '# '
+./vars_sa.py:1216:80: E501 line too long (98 > 79 characters)
+./vars_sa.py:1217:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1219:21: E265 block comment should start with '# '
+./vars_sa.py:1221:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1223:21: E265 block comment should start with '# '
+./vars_sa.py:1224:80: E501 line too long (95 > 79 characters)
+./vars_sa.py:1225:80: E501 line too long (98 > 79 characters)
+./vars_sa.py:1227:21: E265 block comment should start with '# '
+./vars_sa.py:1231:21: E265 block comment should start with '# '
+./vars_sa.py:1232:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:1233:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1235:21: E265 block comment should start with '# '
+./vars_sa.py:1236:80: E501 line too long (89 > 79 characters)
+./vars_sa.py:1237:80: E501 line too long (92 > 79 characters)
+./vars_sa.py:1239:21: E265 block comment should start with '# '
+./vars_sa.py:1240:80: E501 line too long (116 > 79 characters)
+./vars_sa.py:1243:21: E265 block comment should start with '# '
+./vars_sa.py:1244:72: F821 undefined name 'temp_variogram_values'
+./vars_sa.py:1244:80: E501 line too long (186 > 79 characters)
+./vars_sa.py:1244:186: E502 the backslash is redundant between brackets
+./vars_sa.py:1245:23: E128 continuation line under-indented for visual indent
+./vars_sa.py:1246:80: E501 line too long (82 > 79 characters)
+./vars_sa.py:1251:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1252:40: E261 at least two spaces before inline comment
+./vars_sa.py:1254:80: E501 line too long (105 > 79 characters)
+./vars_sa.py:1256:80: E501 line too long (96 > 79 characters)
+./vars_sa.py:1259:80: E501 line too long (103 > 79 characters)
+./vars_sa.py:1259:81: E231 missing whitespace after ','
+./vars_sa.py:1259:83: E231 missing whitespace after ','
+./vars_sa.py:1259:85: E231 missing whitespace after ','
+./vars_sa.py:1259:87: E231 missing whitespace after ','
+./vars_sa.py:1261:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1262:80: E501 line too long (147 > 79 characters)
+./vars_sa.py:1262:80: E231 missing whitespace after ','
+./vars_sa.py:1262:129: E231 missing whitespace after ','
+./vars_sa.py:1262:131: E231 missing whitespace after ','
+./vars_sa.py:1267:80: E501 line too long (100 > 79 characters)
+./vars_sa.py:1271:80: E501 line too long (108 > 79 characters)
+./vars_sa.py:1279:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:1285:25: E221 multiple spaces before operator
+./vars_sa.py:1289:80: E501 line too long (82 > 79 characters)
+./vars_sa.py:1297:80: E501 line too long (102 > 79 characters)
+./vars_sa.py:1301:80: E501 line too long (164 > 79 characters)
+./vars_sa.py:1301:164: E502 the backslash is redundant between brackets
+./vars_sa.py:1302:23: E128 continuation line under-indented for visual indent
+./vars_sa.py:1311:28: E231 missing whitespace after ':'
+./vars_sa.py:1312:27: E231 missing whitespace after ':'
+./vars_sa.py:1313:26: E231 missing whitespace after ':'
+./vars_sa.py:1314:26: E231 missing whitespace after ':'
+./vars_sa.py:1315:27: E231 missing whitespace after ':'
+./vars_sa.py:1316:28: E231 missing whitespace after ':'
+./vars_sa.py:1317:30: E231 missing whitespace after ':'
+./vars_sa.py:1320:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1321:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1322:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1323:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1324:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1325:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1326:80: E501 line too long (98 > 79 characters)
+./vars_sa.py:1327:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:1328:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:1329:80: E501 line too long (114 > 79 characters)
+./vars_sa.py:1333:9: E303 too many blank lines (2)
+./vars_sa.py:1335:37: E261 at least two spaces before inline comment
+./vars_sa.py:1350:40: F821 undefined name 'df'
+./vars_sa.py:1350:78: E261 at least two spaces before inline comment
+./vars_sa.py:1350:80: E501 line too long (102 > 79 characters)
+./vars_sa.py:1353:31: F821 undefined name 'df'
+./vars_sa.py:1353:80: E501 line too long (119 > 79 characters)
+./vars_sa.py:1353:105: F821 undefined name 'df'
+./vars_sa.py:1356:36: F821 undefined name 'applyParallel'
+./vars_sa.py:1356:50: F821 undefined name 'a'
+./vars_sa.py:1356:80: E501 line too long (85 > 79 characters)
+./vars_sa.py:1357:80: E501 line too long (89 > 79 characters)
+./vars_sa.py:1361:67: E231 missing whitespace after ','
+./vars_sa.py:1361:80: E501 line too long (134 > 79 characters)
+./vars_sa.py:1361:116: E231 missing whitespace after ','
+./vars_sa.py:1361:118: E231 missing whitespace after ','
+./vars_sa.py:1366:80: E501 line too long (90 > 79 characters)
+./vars_sa.py:1367:80: E501 line too long (83 > 79 characters)
+./vars_sa.py:1369:21: E265 block comment should start with '# '
+./vars_sa.py:1370:80: E501 line too long (98 > 79 characters)
+./vars_sa.py:1371:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1373:21: E265 block comment should start with '# '
+./vars_sa.py:1375:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1377:21: E265 block comment should start with '# '
+./vars_sa.py:1378:80: E501 line too long (95 > 79 characters)
+./vars_sa.py:1379:80: E501 line too long (98 > 79 characters)
+./vars_sa.py:1381:21: E265 block comment should start with '# '
+./vars_sa.py:1385:21: E265 block comment should start with '# '
+./vars_sa.py:1386:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:1387:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1389:21: E265 block comment should start with '# '
+./vars_sa.py:1390:80: E501 line too long (89 > 79 characters)
+./vars_sa.py:1391:80: E501 line too long (92 > 79 characters)
+./vars_sa.py:1393:21: E265 block comment should start with '# '
+./vars_sa.py:1394:80: E501 line too long (116 > 79 characters)
+./vars_sa.py:1397:21: E265 block comment should start with '# '
+./vars_sa.py:1398:72: F821 undefined name 'temp_variogram_values'
+./vars_sa.py:1398:80: E501 line too long (186 > 79 characters)
+./vars_sa.py:1398:186: E502 the backslash is redundant between brackets
+./vars_sa.py:1399:23: E128 continuation line under-indented for visual indent
+./vars_sa.py:1400:80: E501 line too long (82 > 79 characters)
+./vars_sa.py:1405:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1406:80: E501 line too long (128 > 79 characters)
+./vars_sa.py:1407:80: E501 line too long (85 > 79 characters)
+./vars_sa.py:1410:80: E501 line too long (88 > 79 characters)
+./vars_sa.py:1412:80: E501 line too long (147 > 79 characters)
+./vars_sa.py:1412:80: E231 missing whitespace after ','
+./vars_sa.py:1412:129: E231 missing whitespace after ','
+./vars_sa.py:1412:131: E231 missing whitespace after ','
+./vars_sa.py:1417:80: E501 line too long (100 > 79 characters)
+./vars_sa.py:1421:80: E501 line too long (108 > 79 characters)
+./vars_sa.py:1429:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:1435:25: E221 multiple spaces before operator
+./vars_sa.py:1439:80: E501 line too long (82 > 79 characters)
+./vars_sa.py:1447:80: E501 line too long (102 > 79 characters)
+./vars_sa.py:1451:80: E501 line too long (164 > 79 characters)
+./vars_sa.py:1451:164: E502 the backslash is redundant between brackets
+./vars_sa.py:1452:23: E128 continuation line under-indented for visual indent
+./vars_sa.py:1461:28: E231 missing whitespace after ':'
+./vars_sa.py:1462:27: E231 missing whitespace after ':'
+./vars_sa.py:1463:26: E231 missing whitespace after ':'
+./vars_sa.py:1464:26: E231 missing whitespace after ':'
+./vars_sa.py:1465:27: E231 missing whitespace after ':'
+./vars_sa.py:1466:28: E231 missing whitespace after ':'
+./vars_sa.py:1467:30: E231 missing whitespace after ':'
+./vars_sa.py:1470:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1471:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1472:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1473:80: E501 line too long (80 > 79 characters)
+./vars_sa.py:1474:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1475:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1476:80: E501 line too long (98 > 79 characters)
+./vars_sa.py:1477:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:1478:80: E501 line too long (104 > 79 characters)
+./vars_sa.py:1479:80: E501 line too long (114 > 79 characters)
+./vars_sa.py:1484:33: W291 trailing whitespace
+./vars_sa.py:1485:24: W291 trailing whitespace
+./vars_sa.py:1486:23: E252 missing whitespace around parameter equals
+./vars_sa.py:1486:24: E252 missing whitespace around parameter equals
+./vars_sa.py:1487:9: E125 continuation line with same indent as next logical line
+./vars_sa.py:1495:80: E501 line too long (94 > 79 characters)
+./vars_sa.py:1496:1: W293 blank line contains whitespace
+./vars_sa.py:1501:80: E501 line too long (87 > 79 characters)
+./vars_sa.py:1510:80: E501 line too long (81 > 79 characters)
+./vars_sa.py:1511:1: W293 blank line contains whitespace
+./vars_sa.py:1516:36: W291 trailing whitespace
+./vars_sa.py:1519:80: E501 line too long (117 > 79 characters)
+./vars_sa.py:1519:105: F841 local variable 'progress_bar' is assigned to but never used
+./vars_sa.py:1520:80: E501 line too long (86 > 79 characters)
+./vars_sa.py:1520:86: E502 the backslash is redundant between brackets
+./vars_sa.py:1520:86: E211 whitespace before '('
+./vars_sa.py:1521:45: E127 continuation line over-indented for visual indent
+./vars_sa.py:1521:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:1521:84: E502 the backslash is redundant between brackets
+./vars_sa.py:1524:80: E501 line too long (82 > 79 characters)
+./vars_sa.py:1524:82: E502 the backslash is redundant between brackets
+./vars_sa.py:1524:82: E211 whitespace before '('
+./vars_sa.py:1525:45: E127 continuation line over-indented for visual indent
+./vars_sa.py:1525:80: E501 line too long (84 > 79 characters)
+./vars_sa.py:1525:84: E502 the backslash is redundant between brackets
+./vars_sa.py:1526:41: E128 continuation line under-indented for visual indent
+./__init__.py:15:1: F401 'varstool.vars_sa.VARS' imported but unused
+./__init__.py:15:1: F401 'varstool.vars_sa.GVARS' imported but unused
+./__init__.py:15:1: F401 'varstool.vars_sa.DVARS' imported but unused
+./__init__.py:15:1: F401 'varstool.vars_sa.TSVARS' imported but unused
+./__init__.py:15:1: F401 'varstool.vars_sa.Model' imported but unused
+./util/sample_funcs.py:8:4: W291 trailing whitespace
+./util/sample_funcs.py:17:80: E501 line too long (93 > 79 characters)
+./util/sample_funcs.py:18:80: E501 line too long (98 > 79 characters)
+./util/sample_funcs.py:22:22: E225 missing whitespace around operator
+./util/sample_funcs.py:23:80: E501 line too long (88 > 79 characters)
+./sampling/symlhs.py:4:1: E302 expected 2 blank lines, found 1
+./sampling/symlhs.py:4:14: E231 missing whitespace after ':'
+./sampling/symlhs.py:4:26: E231 missing whitespace after ':'
+./sampling/symlhs.py:4:36: E231 missing whitespace after ':'
+./sampling/symlhs.py:4:40: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:4:41: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:4:56: E231 missing whitespace after ':'
+./sampling/symlhs.py:4:60: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:4:61: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:4:80: E501 line too long (104 > 79 characters)
+./sampling/symlhs.py:4:82: E231 missing whitespace after ':'
+./sampling/symlhs.py:4:86: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:4:87: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:11:1: W293 blank line contains whitespace
+./sampling/symlhs.py:12:1: W293 blank line contains whitespace
+./sampling/symlhs.py:22:59: W291 trailing whitespace
+./sampling/symlhs.py:28:1: W293 blank line contains whitespace
+./sampling/symlhs.py:29:1: W293 blank line contains whitespace
+./sampling/symlhs.py:34:1: W293 blank line contains whitespace
+./sampling/symlhs.py:35:1: W293 blank line contains whitespace
+./sampling/symlhs.py:43:1: W293 blank line contains whitespace
+./sampling/symlhs.py:47:1: W293 blank line contains whitespace
+./sampling/symlhs.py:49:80: E501 line too long (82 > 79 characters)
+./sampling/symlhs.py:52:1: W293 blank line contains whitespace
+./sampling/symlhs.py:53:1: W293 blank line contains whitespace
+./sampling/symlhs.py:54:5: E303 too many blank lines (2)
+./sampling/symlhs.py:58:1: W293 blank line contains whitespace
+./sampling/symlhs.py:62:1: W293 blank line contains whitespace
+./sampling/symlhs.py:67:1: W293 blank line contains whitespace
+./sampling/symlhs.py:69:1: W293 blank line contains whitespace
+./sampling/symlhs.py:73:5: E303 too many blank lines (2)
+./sampling/symlhs.py:76:1: W293 blank line contains whitespace
+./sampling/symlhs.py:80:1: W293 blank line contains whitespace
+./sampling/symlhs.py:85:1: W293 blank line contains whitespace
+./sampling/symlhs.py:91:23: E231 missing whitespace after ':'
+./sampling/symlhs.py:91:35: E231 missing whitespace after ':'
+./sampling/symlhs.py:96:1: W293 blank line contains whitespace
+./sampling/symlhs.py:97:1: W293 blank line contains whitespace
+./sampling/symlhs.py:104:1: W293 blank line contains whitespace
+./sampling/symlhs.py:105:1: W293 blank line contains whitespace
+./sampling/symlhs.py:110:1: W293 blank line contains whitespace
+./sampling/symlhs.py:112:1: W293 blank line contains whitespace
+./sampling/symlhs.py:115:1: W293 blank line contains whitespace
+./sampling/symlhs.py:119:1: W293 blank line contains whitespace
+./sampling/symlhs.py:126:17: E231 missing whitespace after ','
+./sampling/symlhs.py:129:5: E303 too many blank lines (2)
+./sampling/symlhs.py:130:17: E231 missing whitespace after ','
+./sampling/symlhs.py:132:41: E231 missing whitespace after ','
+./sampling/symlhs.py:133:25: E231 missing whitespace after ','
+./sampling/symlhs.py:134:19: E231 missing whitespace after ','
+./sampling/symlhs.py:134:38: E231 missing whitespace after ','
+./sampling/symlhs.py:135:1: W293 blank line contains whitespace
+./sampling/symlhs.py:137:1: W293 blank line contains whitespace
+./sampling/symlhs.py:143:1: W293 blank line contains whitespace
+./sampling/symlhs.py:147:18: E231 missing whitespace after ':'
+./sampling/symlhs.py:147:26: E231 missing whitespace after ':'
+./sampling/symlhs.py:147:38: E231 missing whitespace after ':'
+./sampling/symlhs.py:147:48: E231 missing whitespace after ':'
+./sampling/symlhs.py:147:52: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:147:53: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:185:9: E221 multiple spaces before operator
+./sampling/symlhs.py:192:1: W293 blank line contains whitespace
+./sampling/symlhs.py:201:14: E231 missing whitespace after ':'
+./sampling/symlhs.py:201:31: E231 missing whitespace after ':'
+./sampling/symlhs.py:201:45: E231 missing whitespace after ':'
+./sampling/symlhs.py:201:80: E501 line too long (83 > 79 characters)
+./sampling/symlhs.py:202:1: W293 blank line contains whitespace
+./sampling/symlhs.py:207:1: W293 blank line contains whitespace
+./sampling/symlhs.py:208:1: W293 blank line contains whitespace
+./sampling/symlhs.py:217:1: W293 blank line contains whitespace
+./sampling/symlhs.py:218:1: W293 blank line contains whitespace
+./sampling/symlhs.py:223:76: W291 trailing whitespace
+./sampling/symlhs.py:227:1: W293 blank line contains whitespace
+./sampling/symlhs.py:229:50: E231 missing whitespace after ','
+./sampling/symlhs.py:230:22: E127 continuation line over-indented for visual indent
+./sampling/symlhs.py:230:36: E231 missing whitespace after ','
+./sampling/symlhs.py:231:1: W293 blank line contains whitespace
+./sampling/symlhs.py:232:59: W291 trailing whitespace
+./sampling/symlhs.py:236:34: E231 missing whitespace after ','
+./sampling/symlhs.py:237:1: W293 blank line contains whitespace
+./sampling/symlhs.py:239:29: E202 whitespace before ']'
+./sampling/symlhs.py:240:1: W293 blank line contains whitespace
+./sampling/symlhs.py:245:1: W293 blank line contains whitespace
+./sampling/symlhs.py:246:33: E202 whitespace before ']'
+./sampling/symlhs.py:247:1: W293 blank line contains whitespace
+./sampling/symlhs.py:251:26: E231 missing whitespace after ':'
+./sampling/symlhs.py:251:40: E231 missing whitespace after ':'
+./sampling/symlhs.py:251:44: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:251:45: E252 missing whitespace around parameter equals
+./sampling/symlhs.py:255:80: E501 line too long (80 > 79 characters)
+./sampling/symlhs.py:257:1: W293 blank line contains whitespace
+./sampling/symlhs.py:258:1: W293 blank line contains whitespace
+./sampling/symlhs.py:263:1: W293 blank line contains whitespace
+./sampling/symlhs.py:264:1: W293 blank line contains whitespace
+./sampling/symlhs.py:270:1: W293 blank line contains whitespace
+./sampling/symlhs.py:271:38: E261 at least two spaces before inline comment
+./sampling/symlhs.py:273:1: W293 blank line contains whitespace
+./sampling/symlhs.py:277:18: E231 missing whitespace after ':'
+./sampling/symlhs.py:283:1: W293 blank line contains whitespace
+./sampling/symlhs.py:284:1: W293 blank line contains whitespace
+./sampling/symlhs.py:289:1: W293 blank line contains whitespace
+./sampling/symlhs.py:290:1: W293 blank line contains whitespace
+./sampling/symlhs.py:297:69: W292 no newline at end of file
+./sampling/__init__.py:7:1: F401 '.starvars.star' imported but unused
+./sampling/halton.py:5:80: E501 line too long (101 > 79 characters)
+./sampling/halton.py:6:80: E501 line too long (98 > 79 characters)
+./sampling/halton.py:14:43: E252 missing whitespace around parameter equals
+./sampling/halton.py:14:44: E252 missing whitespace around parameter equals
+./sampling/halton.py:14:64: E252 missing whitespace around parameter equals
+./sampling/halton.py:14:65: E252 missing whitespace around parameter equals
+./sampling/halton.py:14:80: E501 line too long (115 > 79 characters)
+./sampling/halton.py:14:80: E252 missing whitespace around parameter equals
+./sampling/halton.py:14:81: E252 missing whitespace around parameter equals
+./sampling/halton.py:14:96: E252 missing whitespace around parameter equals
+./sampling/halton.py:14:97: E252 missing whitespace around parameter equals
+./sampling/halton.py:32:80: E501 line too long (83 > 79 characters)
+./sampling/halton.py:51:79: W291 trailing whitespace
+./sampling/halton.py:52:77: W291 trailing whitespace
+./sampling/halton.py:54:80: E501 line too long (83 > 79 characters)
+./sampling/halton.py:84:80: E501 line too long (87 > 79 characters)
+./sampling/halton.py:97:39: E252 missing whitespace around parameter equals
+./sampling/halton.py:97:40: E252 missing whitespace around parameter equals
+./sampling/halton.py:97:59: E252 missing whitespace around parameter equals
+./sampling/halton.py:97:60: E252 missing whitespace around parameter equals
+./sampling/halton.py:97:77: E252 missing whitespace around parameter equals
+./sampling/halton.py:97:78: E252 missing whitespace around parameter equals
+./sampling/halton.py:97:80: E501 line too long (113 > 79 characters)
+./sampling/halton.py:97:93: E252 missing whitespace around parameter equals
+./sampling/halton.py:97:94: E252 missing whitespace around parameter equals
+./sampling/lhs.py:2:1: F401 'math.factorial' imported but unused
+./sampling/lhs.py:33:80: E501 line too long (85 > 79 characters)
+./sampling/lhs.py:34:80: E501 line too long (83 > 79 characters)
+./sampling/lhs.py:93:1: W293 blank line contains whitespace
+./sampling/lhs.py:104:80: E501 line too long (99 > 79 characters)
+./sampling/lhs.py:195:80: E501 line too long (90 > 79 characters)
+./sampling/lhs.py:210:80: E501 line too long (83 > 79 characters)
+./sampling/sobol_sequence.py:8:1: E302 expected 2 blank lines, found 1
+./sampling/sobol_sequence.py:8:22: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:8:34: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:8:44: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:8:48: E252 missing whitespace around parameter equals
+./sampling/sobol_sequence.py:8:49: E252 missing whitespace around parameter equals
+./sampling/sobol_sequence.py:8:63: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:8:68: E252 missing whitespace around parameter equals
+./sampling/sobol_sequence.py:8:69: E252 missing whitespace around parameter equals
+./sampling/sobol_sequence.py:8:79: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:8:80: E501 line too long (117 > 79 characters)
+./sampling/sobol_sequence.py:8:83: E252 missing whitespace around parameter equals
+./sampling/sobol_sequence.py:8:84: E252 missing whitespace around parameter equals
+./sampling/sobol_sequence.py:8:94: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:8:98: E252 missing whitespace around parameter equals
+./sampling/sobol_sequence.py:8:99: E252 missing whitespace around parameter equals
+./sampling/sobol_sequence.py:14:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:15:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:30:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:31:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:36:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:37:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:45:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:46:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:51:61: W291 trailing whitespace
+./sampling/sobol_sequence.py:62:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:69:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:71:80: E501 line too long (86 > 79 characters)
+./sampling/sobol_sequence.py:76:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:82:1: E302 expected 2 blank lines, found 1
+./sampling/sobol_sequence.py:87:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:88:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:95:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:96:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:101:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:102:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:106:38: W291 trailing whitespace
+./sampling/sobol_sequence.py:107:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:108:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:112:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:113:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:121:30: W291 trailing whitespace
+./sampling/sobol_sequence.py:141:19: E211 whitespace before '('
+./sampling/sobol_sequence.py:148:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:157:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:158:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:165:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:166:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:171:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:172:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:176:38: W291 trailing whitespace
+./sampling/sobol_sequence.py:177:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:178:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:182:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:183:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:192:30: W291 trailing whitespace
+./sampling/sobol_sequence.py:220:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:224:25: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:224:32: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:224:42: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:256:38: W291 trailing whitespace
+./sampling/sobol_sequence.py:263:20: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:266:15: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:267:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:271:22: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:271:32: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:302:38: W291 trailing whitespace
+./sampling/sobol_sequence.py:332:32: W291 trailing whitespace
+./sampling/sobol_sequence.py:333:80: W291 trailing whitespace
+./sampling/sobol_sequence.py:335:41: W291 trailing whitespace
+./sampling/sobol_sequence.py:351:8: E713 test for membership should be 'not in'
+./sampling/sobol_sequence.py:364:15: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:364:36: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:365:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:366:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:367:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:368:41: E202 whitespace before ']'
+./sampling/sobol_sequence.py:370:15: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:370:36: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:371:37: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:372:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:373:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:374:41: E202 whitespace before ']'
+./sampling/sobol_sequence.py:376:15: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:376:36: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:377:34: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:378:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:379:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:380:41: E202 whitespace before ']'
+./sampling/sobol_sequence.py:382:15: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:382:36: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:383:20: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:383:23: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:383:28: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:384:26: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:384:29: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:384:32: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:384:38: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:384:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:385:17: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:385:26: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:385:35: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:385:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:386:14: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:386:20: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:386:23: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:386:41: E202 whitespace before ']'
+./sampling/sobol_sequence.py:388:15: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:388:36: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:389:17: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:389:22: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:390:15: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:390:18: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:390:21: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:390:24: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:390:27: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:390:30: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:390:36: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:390:39: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:390:44: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:391:14: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:391:17: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:391:23: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:391:26: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:391:32: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:391:35: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:391:38: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:391:43: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:392:21: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:392:24: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:392:30: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:392:36: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:392:42: E202 whitespace before ']'
+./sampling/sobol_sequence.py:394:16: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:394:37: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:395:12: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:395:21: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:395:24: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:395:27: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:395:32: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:396:12: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:396:15: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:396:18: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:396:21: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:396:27: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:396:30: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:396:33: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:396:36: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:396:41: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:397:11: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:397:14: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:397:17: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:397:20: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:397:23: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:397:26: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:397:29: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:397:32: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:397:35: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:397:38: E202 whitespace before ']'
+./sampling/sobol_sequence.py:399:16: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:399:37: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:400:17: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:401:15: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:401:35: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:401:47: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:401:53: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:402:29: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:402:45: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:402:49: E202 whitespace before ']'
+./sampling/sobol_sequence.py:404:16: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:404:37: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:405:22: E202 whitespace before ']'
+./sampling/sobol_sequence.py:408:9: E303 too many blank lines (2)
+./sampling/sobol_sequence.py:408:18: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:409:50: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:410:57: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:411:63: E502 the backslash is redundant between brackets
+./sampling/sobol_sequence.py:412:61: E202 whitespace before ']'
+./sampling/sobol_sequence.py:420:12: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:424:20: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:424:33: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:429:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:432:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:433:5: E115 expected an indented block (comment)
+./sampling/sobol_sequence.py:434:5: E115 expected an indented block (comment)
+./sampling/sobol_sequence.py:437:20: E201 whitespace after '('
+./sampling/sobol_sequence.py:437:22: E202 whitespace before ')'
+./sampling/sobol_sequence.py:438:31: E211 whitespace before '('
+./sampling/sobol_sequence.py:438:33: E201 whitespace after '('
+./sampling/sobol_sequence.py:438:40: E202 whitespace before ')'
+./sampling/sobol_sequence.py:439:21: E201 whitespace after '('
+./sampling/sobol_sequence.py:439:28: E202 whitespace before ')'
+./sampling/sobol_sequence.py:443:80: E501 line too long (89 > 79 characters)
+./sampling/sobol_sequence.py:450:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:454:29: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:455:17: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:457:21: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:459:47: E201 whitespace after '('
+./sampling/sobol_sequence.py:459:72: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:459:80: E501 line too long (81 > 79 characters)
+./sampling/sobol_sequence.py:459:80: E202 whitespace before ')'
+./sampling/sobol_sequence.py:460:22: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:461:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:463:9: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:465:13: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:466:24: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:466:43: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:470:14: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:474:12: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:478:9: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:479:14: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:484:9: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:486:14: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:489:9: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:493:13: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:495:71: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:497:9: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:502:13: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:504:44: E211 whitespace before '('
+./sampling/sobol_sequence.py:504:72: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:505:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:506:9: E741 ambiguous variable name 'l'
+./sampling/sobol_sequence.py:509:14: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:516:63: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:552:38: W291 trailing whitespace
+./sampling/sobol_sequence.py:585:80: E501 line too long (86 > 79 characters)
+./sampling/sobol_sequence.py:591:12: F821 undefined name 'mod'
+./sampling/sobol_sequence.py:593:13: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:593:16: E203 whitespace before ':'
+./sampling/sobol_sequence.py:617:16: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:639:38: W291 trailing whitespace
+./sampling/sobol_sequence.py:671:15: E231 missing whitespace after ':'
+./sampling/sobol_sequence.py:675:62: W291 trailing whitespace
+./sampling/sobol_sequence.py:700:9: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:700:22: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:702:6: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:703:12: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:704:13: E228 missing whitespace around modulo operator
+./sampling/sobol_sequence.py:704:15: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:706:10: E225 missing whitespace around operator
+./sampling/sobol_sequence.py:707:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:709:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:718:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:719:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:730:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:731:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:736:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:737:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:744:62: E703 statement ends with a semicolon
+./sampling/sobol_sequence.py:747:50: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:759:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:760:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:771:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:772:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:777:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:783:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:784:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:791:54: E703 statement ends with a semicolon
+./sampling/sobol_sequence.py:795:53: E703 statement ends with a semicolon
+./sampling/sobol_sequence.py:805:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:806:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:811:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:812:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:817:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:823:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:824:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:831:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:834:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:835:80: E501 line too long (83 > 79 characters)
+./sampling/sobol_sequence.py:836:23: E231 missing whitespace after ','
+./sampling/sobol_sequence.py:838:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:840:26: E703 statement ends with a semicolon
+./sampling/sobol_sequence.py:841:43: E703 statement ends with a semicolon
+./sampling/sobol_sequence.py:842:31: E703 statement ends with a semicolon
+./sampling/sobol_sequence.py:843:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:845:31: E703 statement ends with a semicolon
+./sampling/sobol_sequence.py:846:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:851:1: W293 blank line contains whitespace
+./sampling/sobol_sequence.py:853:1: W391 blank line at end of file
+./sampling/starvars.py:2:1: E265 block comment should start with '# '
+./sampling/starvars.py:5:1: F401 'decimal.Decimal' imported but unused
+./sampling/starvars.py:6:1: F401 'typing.Dict' imported but unused
+./sampling/starvars.py:9:22: E231 missing whitespace after ':'
+./sampling/starvars.py:9:44: E231 missing whitespace after ':'
+./sampling/starvars.py:9:50: E252 missing whitespace around parameter equals
+./sampling/starvars.py:9:51: E252 missing whitespace around parameter equals
+./sampling/starvars.py:9:66: E231 missing whitespace after ':'
+./sampling/starvars.py:9:71: E252 missing whitespace around parameter equals
+./sampling/starvars.py:9:72: E252 missing whitespace around parameter equals
+./sampling/starvars.py:9:80: E501 line too long (127 > 79 characters)
+./sampling/starvars.py:9:83: E231 missing whitespace after ':'
+./sampling/starvars.py:9:87: E252 missing whitespace around parameter equals
+./sampling/starvars.py:9:88: E252 missing whitespace around parameter equals
+./sampling/starvars.py:9:105: E231 missing whitespace after ':'
+./sampling/starvars.py:9:109: E252 missing whitespace around parameter equals
+./sampling/starvars.py:9:110: E252 missing whitespace around parameter equals
+./sampling/starvars.py:17:12: W605 invalid escape sequence '\D'
+./sampling/starvars.py:34:80: E501 line too long (85 > 79 characters)
+./sampling/starvars.py:84:80: E501 line too long (108 > 79 characters)
+./sampling/starvars.py:85:19: E225 missing whitespace around operator
+./sampling/starvars.py:86:34: E231 missing whitespace after ':'
+./sampling/starvars.py:86:47: E231 missing whitespace after ':'
+./sampling/starvars.py:86:80: E501 line too long (132 > 79 characters)
+./sampling/starvars.py:86:99: E231 missing whitespace after ','
+./sampling/starvars.py:92:19: E225 missing whitespace around operator
+./sampling/starvars.py:93:13: F401 'pandas.concat' imported but unused
+./sampling/starvars.py:93:38: E261 at least two spaces before inline comment
+./sampling/starvars.py:93:80: E501 line too long (95 > 79 characters)
+./sampling/starvars.py:94:34: E231 missing whitespace after ':'
+./sampling/starvars.py:94:47: E231 missing whitespace after ':'
+./sampling/starvars.py:94:80: E501 line too long (132 > 79 characters)
+./sampling/starvars.py:94:99: E231 missing whitespace after ','
+./sampling/starvars.py:99:80: E501 line too long (98 > 79 characters)
+./sampling/starvars.py:132:24: E231 missing whitespace after ','
+./sampling/starvars.py:137:80: E501 line too long (85 > 79 characters)
+./sampling/starvars.py:138:80: E501 line too long (101 > 79 characters)
+./sampling/starvars.py:139:24: E231 missing whitespace after ','
+./sampling/starvars.py:139:80: E501 line too long (104 > 79 characters)
+./sampling/starvars.py:193:17: E225 missing whitespace around operator
+./sampling/starvars.py:216:26: E231 missing whitespace after ':'
+./sampling/starvars.py:216:39: E231 missing whitespace after ':'
+./sampling/starvars.py:216:80: E501 line too long (124 > 79 characters)
+./sampling/starvars.py:216:91: E231 missing whitespace after ','
+./sampling/plhs.py:5:1: E302 expected 2 blank lines, found 1
+./sampling/plhs.py:5:20: E231 missing whitespace after ':'
+./sampling/plhs.py:5:32: E231 missing whitespace after ':'
+./sampling/plhs.py:5:44: E231 missing whitespace after ':'
+./sampling/plhs.py:5:80: E501 line too long (97 > 79 characters)
+./sampling/plhs.py:42:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:43:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:56:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:74:5: E303 too many blank lines (2)
+./sampling/plhs.py:74:5: F841 local variable 'slice_sp' is assigned to but never used
+./sampling/plhs.py:79:15: E128 continuation line under-indented for visual indent
+./sampling/plhs.py:79:47: E231 missing whitespace after ','
+./sampling/plhs.py:85:5: E731 do not assign a lambda expression, use a def
+./sampling/plhs.py:85:80: E501 line too long (88 > 79 characters)
+./sampling/plhs.py:86:51: E231 missing whitespace after ','
+./sampling/plhs.py:86:72: E261 at least two spaces before inline comment
+./sampling/plhs.py:86:80: E501 line too long (81 > 79 characters)
+./sampling/plhs.py:92:80: E501 line too long (93 > 79 characters)
+./sampling/plhs.py:93:59: E261 at least two spaces before inline comment
+./sampling/plhs.py:99:61: E502 the backslash is redundant between brackets
+./sampling/plhs.py:100:62: E231 missing whitespace after ','
+./sampling/plhs.py:100:80: E501 line too long (93 > 79 characters)
+./sampling/plhs.py:105:18: E231 missing whitespace after ':'
+./sampling/plhs.py:105:35: E231 missing whitespace after ':'
+./sampling/plhs.py:105:39: E252 missing whitespace around parameter equals
+./sampling/plhs.py:105:40: E252 missing whitespace around parameter equals
+./sampling/plhs.py:136:19: E231 missing whitespace after ':'
+./sampling/plhs.py:136:36: E231 missing whitespace after ':'
+./sampling/plhs.py:136:40: E252 missing whitespace around parameter equals
+./sampling/plhs.py:136:41: E252 missing whitespace around parameter equals
+./sampling/plhs.py:165:13: E261 at least two spaces before inline comment
+./sampling/plhs.py:169:43: E231 missing whitespace after ','
+./sampling/plhs.py:171:71: E231 missing whitespace after ','
+./sampling/plhs.py:171:74: E225 missing whitespace around operator
+./sampling/plhs.py:171:80: E501 line too long (84 > 79 characters)
+./sampling/plhs.py:175:16: E231 missing whitespace after ':'
+./sampling/plhs.py:175:28: E231 missing whitespace after ':'
+./sampling/plhs.py:175:40: E231 missing whitespace after ':'
+./sampling/plhs.py:175:50: E231 missing whitespace after ':'
+./sampling/plhs.py:175:54: E252 missing whitespace around parameter equals
+./sampling/plhs.py:175:55: E252 missing whitespace around parameter equals
+./sampling/plhs.py:206:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:207:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:223:5: E303 too many blank lines (2)
+./sampling/plhs.py:224:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:246:5: E303 too many blank lines (2)
+./sampling/plhs.py:247:28: E261 at least two spaces before inline comment
+./sampling/plhs.py:250:5: E731 do not assign a lambda expression, use a def
+./sampling/plhs.py:250:80: E501 line too long (116 > 79 characters)
+./sampling/plhs.py:251:80: E501 line too long (82 > 79 characters)
+./sampling/plhs.py:259:5: E731 do not assign a lambda expression, use a def
+./sampling/plhs.py:259:54: E225 missing whitespace around operator
+./sampling/plhs.py:259:80: E501 line too long (88 > 79 characters)
+./sampling/plhs.py:270:13: E722 do not use bare 'except'
+./sampling/plhs.py:270:20: E261 at least two spaces before inline comment
+./sampling/plhs.py:271:80: E501 line too long (82 > 79 characters)
+./sampling/plhs.py:278:18: E231 missing whitespace after ':'
+./sampling/plhs.py:278:26: E231 missing whitespace after ':'
+./sampling/plhs.py:278:38: E231 missing whitespace after ':'
+./sampling/plhs.py:278:48: E231 missing whitespace after ':'
+./sampling/plhs.py:278:52: E252 missing whitespace around parameter equals
+./sampling/plhs.py:278:53: E252 missing whitespace around parameter equals
+./sampling/plhs.py:316:9: E221 multiple spaces before operator
+./sampling/plhs.py:332:14: E231 missing whitespace after ':'
+./sampling/plhs.py:332:31: E231 missing whitespace after ':'
+./sampling/plhs.py:332:45: E231 missing whitespace after ':'
+./sampling/plhs.py:332:80: E501 line too long (83 > 79 characters)
+./sampling/plhs.py:360:50: E231 missing whitespace after ','
+./sampling/plhs.py:361:22: E127 continuation line over-indented for visual indent
+./sampling/plhs.py:361:36: E231 missing whitespace after ','
+./sampling/plhs.py:367:34: E231 missing whitespace after ','
+./sampling/plhs.py:370:29: E202 whitespace before ']'
+./sampling/plhs.py:377:33: E202 whitespace before ']'
+./sampling/plhs.py:382:26: E231 missing whitespace after ':'
+./sampling/plhs.py:382:40: E231 missing whitespace after ':'
+./sampling/plhs.py:382:44: E252 missing whitespace around parameter equals
+./sampling/plhs.py:382:45: E252 missing whitespace around parameter equals
+./sampling/plhs.py:386:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:402:38: E261 at least two spaces before inline comment
+./sampling/plhs.py:408:18: E231 missing whitespace after ':'
+./sampling/plhs.py:431:22: E231 missing whitespace after ':'
+./sampling/plhs.py:454:30: E231 missing whitespace after ':'
+./sampling/plhs.py:454:44: E231 missing whitespace after ':'
+./sampling/plhs.py:454:48: E252 missing whitespace around parameter equals
+./sampling/plhs.py:454:49: E252 missing whitespace around parameter equals
+./sampling/plhs.py:480:1: E302 expected 2 blank lines, found 1
+./sampling/plhs.py:480:12: E231 missing whitespace after ':'
+./sampling/plhs.py:480:24: E231 missing whitespace after ':'
+./sampling/plhs.py:480:36: E231 missing whitespace after ':'
+./sampling/plhs.py:480:46: E231 missing whitespace after ':'
+./sampling/plhs.py:480:50: E252 missing whitespace around parameter equals
+./sampling/plhs.py:480:51: E252 missing whitespace around parameter equals
+./sampling/plhs.py:480:67: E231 missing whitespace after ':'
+./sampling/plhs.py:480:71: E252 missing whitespace around parameter equals
+./sampling/plhs.py:480:72: E252 missing whitespace around parameter equals
+./sampling/plhs.py:480:80: E501 line too long (133 > 79 characters)
+./sampling/plhs.py:480:85: E231 missing whitespace after ':'
+./sampling/plhs.py:480:89: E252 missing whitespace around parameter equals
+./sampling/plhs.py:480:90: E252 missing whitespace around parameter equals
+./sampling/plhs.py:517:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:518:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:530:5: F841 local variable 'slice_sp' is assigned to but never used
+./sampling/plhs.py:542:80: E501 line too long (90 > 79 characters)
+./sampling/plhs.py:542:90: E502 the backslash is redundant between brackets
+./sampling/plhs.py:543:77: E128 continuation line under-indented for visual indent
+./sampling/plhs.py:543:80: E501 line too long (133 > 79 characters)
+./sampling/plhs.py:553:80: E501 line too long (109 > 79 characters)
+./sampling/plhs.py:595:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:596:80: E501 line too long (80 > 79 characters)
+./sampling/plhs.py:613:5: E303 too many blank lines (2)
+./sampling/plhs.py:614:80: E501 line too long (82 > 79 characters)
+./sampling/plhs.py:621:28: E261 at least two spaces before inline comment
+./sampling/plhs.py:644:80: E501 line too long (91 > 79 characters)
+./sampling/plhs.py:668:80: E501 line too long (89 > 79 characters)
+./sa/__init__.py:3:41: W292 no newline at end of file
+./sa/vars_funcs.py:13:1: F401 'typing.Optional' imported but unused
+./sa/vars_funcs.py:13:1: F401 'typing.Any' imported but unused
+./sa/vars_funcs.py:30:14: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:30:15: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:31:19: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:31:20: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:39:71: W291 trailing whitespace
+./sa/vars_funcs.py:66:80: E501 line too long (102 > 79 characters)
+./sa/vars_funcs.py:70:80: E501 line too long (93 > 79 characters)
+./sa/vars_funcs.py:88:29: W291 trailing whitespace
+./sa/vars_funcs.py:110:60: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:110:61: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:182:80: E501 line too long (122 > 79 characters)
+./sa/vars_funcs.py:189:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:193:80: E501 line too long (87 > 79 characters)
+./sa/vars_funcs.py:194:80: E501 line too long (85 > 79 characters)
+./sa/vars_funcs.py:202:80: E501 line too long (87 > 79 characters)
+./sa/vars_funcs.py:214:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:214:81: W291 trailing whitespace
+./sa/vars_funcs.py:215:79: W291 trailing whitespace
+./sa/vars_funcs.py:218:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:218:81: W291 trailing whitespace
+./sa/vars_funcs.py:219:80: E501 line too long (83 > 79 characters)
+./sa/vars_funcs.py:219:84: W291 trailing whitespace
+./sa/vars_funcs.py:230:80: E501 line too long (98 > 79 characters)
+./sa/vars_funcs.py:240:80: E501 line too long (88 > 79 characters)
+./sa/vars_funcs.py:241:80: E501 line too long (90 > 79 characters)
+./sa/vars_funcs.py:259:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:259:81: W291 trailing whitespace
+./sa/vars_funcs.py:260:79: W291 trailing whitespace
+./sa/vars_funcs.py:263:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:263:81: W291 trailing whitespace
+./sa/vars_funcs.py:264:80: E501 line too long (83 > 79 characters)
+./sa/vars_funcs.py:264:84: W291 trailing whitespace
+./sa/vars_funcs.py:287:80: W291 trailing whitespace
+./sa/vars_funcs.py:289:80: E501 line too long (87 > 79 characters)
+./sa/vars_funcs.py:306:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:306:81: W291 trailing whitespace
+./sa/vars_funcs.py:307:79: W291 trailing whitespace
+./sa/vars_funcs.py:310:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:310:81: W291 trailing whitespace
+./sa/vars_funcs.py:311:80: E501 line too long (83 > 79 characters)
+./sa/vars_funcs.py:311:84: W291 trailing whitespace
+./sa/vars_funcs.py:323:80: E501 line too long (97 > 79 characters)
+./sa/vars_funcs.py:324:80: E501 line too long (91 > 79 characters)
+./sa/vars_funcs.py:329:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:333:74: W291 trailing whitespace
+./sa/vars_funcs.py:335:80: E501 line too long (87 > 79 characters)
+./sa/vars_funcs.py:355:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:355:81: W291 trailing whitespace
+./sa/vars_funcs.py:356:79: W291 trailing whitespace
+./sa/vars_funcs.py:359:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:359:81: W291 trailing whitespace
+./sa/vars_funcs.py:360:80: E501 line too long (83 > 79 characters)
+./sa/vars_funcs.py:360:84: W291 trailing whitespace
+./sa/vars_funcs.py:381:80: E501 line too long (91 > 79 characters)
+./sa/vars_funcs.py:381:92: W291 trailing whitespace
+./sa/vars_funcs.py:383:80: E501 line too long (87 > 79 characters)
+./sa/vars_funcs.py:400:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:400:81: W291 trailing whitespace
+./sa/vars_funcs.py:401:79: W291 trailing whitespace
+./sa/vars_funcs.py:404:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:404:81: W291 trailing whitespace
+./sa/vars_funcs.py:405:80: E501 line too long (83 > 79 characters)
+./sa/vars_funcs.py:405:84: W291 trailing whitespace
+./sa/vars_funcs.py:431:80: E501 line too long (90 > 79 characters)
+./sa/vars_funcs.py:432:80: E501 line too long (90 > 79 characters)
+./sa/vars_funcs.py:433:80: E501 line too long (91 > 79 characters)
+./sa/vars_funcs.py:441:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:458:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:458:81: W291 trailing whitespace
+./sa/vars_funcs.py:459:79: W291 trailing whitespace
+./sa/vars_funcs.py:462:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:462:81: W291 trailing whitespace
+./sa/vars_funcs.py:463:80: E501 line too long (83 > 79 characters)
+./sa/vars_funcs.py:463:84: W291 trailing whitespace
+./sa/vars_funcs.py:481:80: E501 line too long (87 > 79 characters)
+./sa/vars_funcs.py:485:80: E501 line too long (84 > 79 characters)
+./sa/vars_funcs.py:485:85: W291 trailing whitespace
+./sa/vars_funcs.py:486:80: E501 line too long (89 > 79 characters)
+./sa/vars_funcs.py:487:80: E501 line too long (91 > 79 characters)
+./sa/vars_funcs.py:493:80: E501 line too long (85 > 79 characters)
+./sa/vars_funcs.py:509:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:509:81: W291 trailing whitespace
+./sa/vars_funcs.py:510:79: W291 trailing whitespace
+./sa/vars_funcs.py:513:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:513:81: W291 trailing whitespace
+./sa/vars_funcs.py:514:80: E501 line too long (83 > 79 characters)
+./sa/vars_funcs.py:514:84: W291 trailing whitespace
+./sa/vars_funcs.py:546:33: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:546:34: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:546:45: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:546:46: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:550:80: E501 line too long (93 > 79 characters)
+./sa/vars_funcs.py:552:80: E501 line too long (86 > 79 characters)
+./sa/vars_funcs.py:568:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:571:80: E501 line too long (86 > 79 characters)
+./sa/vars_funcs.py:575:11: E128 continuation line under-indented for visual indent
+./sa/vars_funcs.py:590:1: E302 expected 2 blank lines, found 1
+./sa/vars_funcs.py:592:5: E125 continuation line with same indent as next logical line
+./sa/vars_funcs.py:592:17: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:592:18: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:649:80: E501 line too long (98 > 79 characters)
+./sa/vars_funcs.py:656:1: E302 expected 2 blank lines, found 1
+./sa/vars_funcs.py:668:80: E501 line too long (103 > 79 characters)
+./sa/vars_funcs.py:669:80: E501 line too long (97 > 79 characters)
+./sa/vars_funcs.py:669:81: E127 continuation line over-indented for visual indent
+./sa/vars_funcs.py:670:80: E501 line too long (85 > 79 characters)
+./sa/vars_funcs.py:671:75: E127 continuation line over-indented for visual indent
+./sa/vars_funcs.py:671:80: E501 line too long (91 > 79 characters)
+./sa/vars_funcs.py:679:80: E501 line too long (91 > 79 characters)
+./sa/vars_funcs.py:685:80: E501 line too long (81 > 79 characters)
+./sa/vars_funcs.py:686:80: E501 line too long (97 > 79 characters)
+./sa/vars_funcs.py:689:80: E501 line too long (106 > 79 characters)
+./sa/vars_funcs.py:693:80: E501 line too long (100 > 79 characters)
+./sa/vars_funcs.py:695:80: E501 line too long (83 > 79 characters)
+./sa/vars_funcs.py:698:80: E501 line too long (104 > 79 characters)
+./sa/vars_funcs.py:699:80: E501 line too long (81 > 79 characters)
+./sa/vars_funcs.py:700:80: E501 line too long (89 > 79 characters)
+./sa/vars_funcs.py:708:80: E501 line too long (105 > 79 characters)
+./sa/vars_funcs.py:710:80: E501 line too long (104 > 79 characters)
+./sa/vars_funcs.py:715:80: E501 line too long (96 > 79 characters)
+./sa/vars_funcs.py:716:80: E501 line too long (101 > 79 characters)
+./sa/vars_funcs.py:725:80: E501 line too long (91 > 79 characters)
+./sa/vars_funcs.py:726:80: E501 line too long (86 > 79 characters)
+./sa/vars_funcs.py:730:1: E302 expected 2 blank lines, found 1
+./sa/vars_funcs.py:744:19: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:744:20: E252 missing whitespace around parameter equals
+./sa/vars_funcs.py:753:65: E203 whitespace before ','
+./sa/vars_funcs.py:753:80: E501 line too long (109 > 79 characters)
+./sa/vars_funcs.py:756:80: E501 line too long (108 > 79 characters)
+./sa/vars_funcs.py:757:80: E501 line too long (108 > 79 characters)
+./sa/vars_funcs.py:758:80: E501 line too long (96 > 79 characters)
+./sa/vars_funcs.py:761:80: E501 line too long (116 > 79 characters)
+./sa/vars_funcs.py:763:80: E501 line too long (86 > 79 characters)
+./sa/vars_funcs.py:770:80: E501 line too long (88 > 79 characters)
+./sa/vars_funcs.py:771:50: E127 continuation line over-indented for visual indent
+./sa/vars_funcs.py:774:80: E501 line too long (85 > 79 characters)
+./sa/vars_funcs.py:775:80: E501 line too long (84 > 79 characters)
+./sa/vars_funcs.py:775:84: E502 the backslash is redundant between brackets
+./sa/vars_funcs.py:780:80: E501 line too long (87 > 79 characters)
+./sa/vars_funcs.py:786:80: E501 line too long (107 > 79 characters)
+./sa/vars_funcs.py:788:80: E501 line too long (124 > 79 characters)
+./sa/vars_funcs.py:789:50: E128 continuation line under-indented for visual indent
+./sa/vars_funcs.py:798:80: E501 line too long (89 > 79 characters)
+./sa/vars_funcs.py:800:80: E501 line too long (83 > 79 characters)
+./sa/vars_funcs.py:801:80: E501 line too long (101 > 79 characters)
+./sa/vars_funcs.py:802:80: E501 line too long (101 > 79 characters)
+./sa/vars_funcs.py:804:80: E501 line too long (80 > 79 characters)
+./sa/vars_funcs.py:812:80: E501 line too long (103 > 79 characters)
+./sa/vars_funcs.py:815:80: E501 line too long (101 > 79 characters)
+./sa/vars_funcs.py:826:80: E501 line too long (101 > 79 characters)
+./sa/vars_funcs.py:827:80: E501 line too long (93 > 79 characters)
+./sa/vars_funcs.py:828:80: E501 line too long (99 > 79 characters)
+./sa/vars_funcs.py:838:80: E501 line too long (110 > 79 characters)
+./sa/vars_funcs.py:841:80: E501 line too long (108 > 79 characters)
+./sa/vars_funcs.py:853:80: E501 line too long (98 > 79 characters)
+./sa/vars_funcs.py:855:80: E501 line too long (103 > 79 characters)
+./sa/vars_funcs.py:864:80: E501 line too long (92 > 79 characters)
+./sa/vars_funcs.py:866:80: E501 line too long (106 > 79 characters)
+./sa/vars_funcs.py:869:80: E501 line too long (84 > 79 characters)
+./sa/vars_funcs.py:870:50: E127 continuation line over-indented for visual indent
+./sa/vars_funcs.py:874:80: E501 line too long (98 > 79 characters)
+./sa/vars_funcs.py:877:80: E501 line too long (108 > 79 characters)
+./sa/vars_funcs.py:877:108: E502 the backslash is redundant between brackets
+./sa/vars_funcs.py:878:80: E501 line too long (99 > 79 characters)
+./sa/vars_funcs.py:880:80: E501 line too long (89 > 79 characters)
+./sa/vars_funcs.py:881:80: E501 line too long (94 > 79 characters)
+./sa/vars_funcs.py:884:80: E501 line too long (90 > 79 characters)
+./sa/tsvars_funcs.py:12:18: E252 missing whitespace around parameter equals
+./sa/tsvars_funcs.py:12:19: E252 missing whitespace around parameter equals
+./sa/tsvars_funcs.py:65:29: W291 trailing whitespace
+./sa/tsvars_funcs.py:117:80: E501 line too long (92 > 79 characters)
+./sa/tsvars_funcs.py:118:80: E501 line too long (92 > 79 characters)
+./sa/tsvars_funcs.py:127:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:131:80: E501 line too long (87 > 79 characters)
+./sa/tsvars_funcs.py:132:80: E501 line too long (85 > 79 characters)
+./sa/tsvars_funcs.py:140:80: E501 line too long (87 > 79 characters)
+./sa/tsvars_funcs.py:152:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:152:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:153:79: W291 trailing whitespace
+./sa/tsvars_funcs.py:156:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:156:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:157:80: E501 line too long (83 > 79 characters)
+./sa/tsvars_funcs.py:157:84: W291 trailing whitespace
+./sa/tsvars_funcs.py:169:80: E501 line too long (98 > 79 characters)
+./sa/tsvars_funcs.py:179:80: E501 line too long (88 > 79 characters)
+./sa/tsvars_funcs.py:180:80: E501 line too long (90 > 79 characters)
+./sa/tsvars_funcs.py:198:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:198:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:199:79: W291 trailing whitespace
+./sa/tsvars_funcs.py:202:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:202:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:203:80: E501 line too long (83 > 79 characters)
+./sa/tsvars_funcs.py:203:84: W291 trailing whitespace
+./sa/tsvars_funcs.py:226:80: W291 trailing whitespace
+./sa/tsvars_funcs.py:228:80: E501 line too long (87 > 79 characters)
+./sa/tsvars_funcs.py:245:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:245:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:246:79: W291 trailing whitespace
+./sa/tsvars_funcs.py:249:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:249:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:250:80: E501 line too long (83 > 79 characters)
+./sa/tsvars_funcs.py:250:84: W291 trailing whitespace
+./sa/tsvars_funcs.py:261:80: E501 line too long (103 > 79 characters)
+./sa/tsvars_funcs.py:262:80: E501 line too long (97 > 79 characters)
+./sa/tsvars_funcs.py:267:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:271:74: W291 trailing whitespace
+./sa/tsvars_funcs.py:273:80: E501 line too long (87 > 79 characters)
+./sa/tsvars_funcs.py:281:80: E501 line too long (84 > 79 characters)
+./sa/tsvars_funcs.py:293:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:293:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:294:79: W291 trailing whitespace
+./sa/tsvars_funcs.py:297:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:297:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:298:80: E501 line too long (83 > 79 characters)
+./sa/tsvars_funcs.py:298:84: W291 trailing whitespace
+./sa/tsvars_funcs.py:310:80: E501 line too long (106 > 79 characters)
+./sa/tsvars_funcs.py:320:80: E501 line too long (91 > 79 characters)
+./sa/tsvars_funcs.py:320:92: W291 trailing whitespace
+./sa/tsvars_funcs.py:322:80: E501 line too long (87 > 79 characters)
+./sa/tsvars_funcs.py:339:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:339:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:340:79: W291 trailing whitespace
+./sa/tsvars_funcs.py:343:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:343:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:344:80: E501 line too long (83 > 79 characters)
+./sa/tsvars_funcs.py:344:84: W291 trailing whitespace
+./sa/tsvars_funcs.py:371:80: E501 line too long (90 > 79 characters)
+./sa/tsvars_funcs.py:372:80: E501 line too long (90 > 79 characters)
+./sa/tsvars_funcs.py:373:80: E501 line too long (91 > 79 characters)
+./sa/tsvars_funcs.py:381:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:398:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:398:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:399:79: W291 trailing whitespace
+./sa/tsvars_funcs.py:402:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:402:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:403:80: E501 line too long (83 > 79 characters)
+./sa/tsvars_funcs.py:403:84: W291 trailing whitespace
+./sa/tsvars_funcs.py:430:80: E501 line too long (84 > 79 characters)
+./sa/tsvars_funcs.py:430:85: W291 trailing whitespace
+./sa/tsvars_funcs.py:431:80: E501 line too long (89 > 79 characters)
+./sa/tsvars_funcs.py:432:80: E501 line too long (91 > 79 characters)
+./sa/tsvars_funcs.py:438:80: E501 line too long (85 > 79 characters)
+./sa/tsvars_funcs.py:454:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:454:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:455:79: W291 trailing whitespace
+./sa/tsvars_funcs.py:458:80: E501 line too long (80 > 79 characters)
+./sa/tsvars_funcs.py:458:81: W291 trailing whitespace
+./sa/tsvars_funcs.py:459:80: E501 line too long (83 > 79 characters)
+./sa/tsvars_funcs.py:459:84: W291 trailing whitespace
+./funcs/hbv.py:5:1: E265 block comment should start with '# '
+./funcs/hbv.py:10:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:12:5: F841 local variable 'inp' is assigned to but never used
+./funcs/hbv.py:12:8: E225 missing whitespace around operator
+./funcs/hbv.py:15:5: E303 too many blank lines (2)
+./funcs/hbv.py:18:7: E225 missing whitespace around operator
+./funcs/hbv.py:19:9: E225 missing whitespace around operator
+./funcs/hbv.py:19:23: E231 missing whitespace after ','
+./funcs/hbv.py:19:37: E231 missing whitespace after ','
+./funcs/hbv.py:20:19: E225 missing whitespace around operator
+./funcs/hbv.py:21:15: E225 missing whitespace around operator
+./funcs/hbv.py:24:7: E225 missing whitespace around operator
+./funcs/hbv.py:25:12: E225 missing whitespace around operator
+./funcs/hbv.py:25:27: E231 missing whitespace after ','
+./funcs/hbv.py:25:49: E231 missing whitespace after ','
+./funcs/hbv.py:25:61: E231 missing whitespace after ','
+./funcs/hbv.py:25:78: E231 missing whitespace after ','
+./funcs/hbv.py:25:80: E501 line too long (94 > 79 characters)
+./funcs/hbv.py:25:89: E231 missing whitespace after ','
+./funcs/hbv.py:26:5: E265 block comment should start with '# '
+./funcs/hbv.py:26:80: E501 line too long (80 > 79 characters)
+./funcs/hbv.py:27:5: E265 block comment should start with '# '
+./funcs/hbv.py:27:80: E501 line too long (82 > 79 characters)
+./funcs/hbv.py:28:33: E225 missing whitespace around operator
+./funcs/hbv.py:31:7: E225 missing whitespace around operator
+./funcs/hbv.py:32:9: E231 missing whitespace after ','
+./funcs/hbv.py:32:15: E225 missing whitespace around operator
+./funcs/hbv.py:32:29: E231 missing whitespace after ','
+./funcs/hbv.py:32:44: E231 missing whitespace after ','
+./funcs/hbv.py:33:14: E225 missing whitespace around operator
+./funcs/hbv.py:34:35: E225 missing whitespace around operator
+./funcs/hbv.py:35:36: E225 missing whitespace around operator
+./funcs/hbv.py:43:1: E115 expected an indented block (comment)
+./funcs/hbv.py:47:6: E201 whitespace after '['
+./funcs/hbv.py:47:53: E202 whitespace before ']'
+./funcs/hbv.py:47:80: E501 line too long (82 > 79 characters)
+./funcs/hbv.py:47:82: E703 statement ends with a semicolon
+./funcs/hbv.py:49:10: E231 missing whitespace after ','
+./funcs/hbv.py:49:12: E231 missing whitespace after ','
+./funcs/hbv.py:49:16: E231 missing whitespace after ','
+./funcs/hbv.py:49:20: E231 missing whitespace after ','
+./funcs/hbv.py:49:23: E231 missing whitespace after ','
+./funcs/hbv.py:49:26: E231 missing whitespace after ','
+./funcs/hbv.py:49:36: E231 missing whitespace after ','
+./funcs/hbv.py:49:44: E231 missing whitespace after ','
+./funcs/hbv.py:49:48: E231 missing whitespace after ','
+./funcs/hbv.py:49:52: E231 missing whitespace after ','
+./funcs/hbv.py:49:55: E231 missing whitespace after ','
+./funcs/hbv.py:49:58: E225 missing whitespace around operator
+./funcs/hbv.py:49:79: E231 missing whitespace after ','
+./funcs/hbv.py:49:80: E501 line too long (123 > 79 characters)
+./funcs/hbv.py:49:94: E231 missing whitespace after ','
+./funcs/hbv.py:49:105: E231 missing whitespace after ','
+./funcs/hbv.py:49:113: E231 missing whitespace after ','
+./funcs/hbv.py:52:9: E225 missing whitespace around operator
+./funcs/hbv.py:63:10: E225 missing whitespace around operator
+./funcs/hbv.py:63:63: E231 missing whitespace after ','
+./funcs/hbv.py:63:80: E501 line too long (90 > 79 characters)
+./funcs/hbv.py:63:80: E231 missing whitespace after ','
+./funcs/hbv.py:72:25: E231 missing whitespace after ','
+./funcs/hbv.py:72:40: E231 missing whitespace after ','
+./funcs/hbv.py:72:51: E231 missing whitespace after ','
+./funcs/hbv.py:72:59: E231 missing whitespace after ','
+./funcs/hbv.py:86:13: E225 missing whitespace around operator
+./funcs/hbv.py:91:11: E225 missing whitespace around operator
+./funcs/hbv.py:93:11: E225 missing whitespace around operator
+./funcs/hbv.py:95:17: E703 statement ends with a semicolon
+./funcs/hbv.py:98:32: E702 multiple statements on one line (semicolon)
+./funcs/hbv.py:98:61: E703 statement ends with a semicolon
+./funcs/hbv.py:99:15: E225 missing whitespace around operator
+./funcs/hbv.py:99:30: E702 multiple statements on one line (semicolon)
+./funcs/hbv.py:99:60: E703 statement ends with a semicolon
+./funcs/hbv.py:109:8: E225 missing whitespace around operator
+./funcs/hbv.py:110:25: E703 statement ends with a semicolon
+./funcs/hbv.py:112:8: E225 missing whitespace around operator
+./funcs/hbv.py:113:25: E703 statement ends with a semicolon
+./funcs/hbv.py:115:7: E225 missing whitespace around operator
+./funcs/hbv.py:118:7: E225 missing whitespace around operator
+./funcs/hbv.py:122:5: E303 too many blank lines (2)
+./funcs/hbv.py:122:12: E225 missing whitespace around operator
+./funcs/hbv.py:123:8: E225 missing whitespace around operator
+./funcs/hbv.py:124:8: E225 missing whitespace around operator
+./funcs/hbv.py:125:7: E225 missing whitespace around operator
+./funcs/hbv.py:126:7: E225 missing whitespace around operator
+./funcs/hbv.py:130:17: E231 missing whitespace after ','
+./funcs/hbv.py:130:28: E225 missing whitespace around operator
+./funcs/hbv.py:130:56: E231 missing whitespace after ','
+./funcs/hbv.py:130:61: E231 missing whitespace after ','
+./funcs/hbv.py:130:66: E231 missing whitespace after ','
+./funcs/hbv.py:130:69: E231 missing whitespace after ','
+./funcs/hbv.py:132:15: E231 missing whitespace after ','
+./funcs/hbv.py:132:22: E225 missing whitespace around operator
+./funcs/hbv.py:132:55: E231 missing whitespace after ','
+./funcs/hbv.py:132:60: E231 missing whitespace after ','
+./funcs/hbv.py:132:80: E501 line too long (125 > 79 characters)
+./funcs/hbv.py:132:81: E231 missing whitespace after ','
+./funcs/hbv.py:132:99: E231 missing whitespace after ','
+./funcs/hbv.py:132:118: E231 missing whitespace after ','
+./funcs/hbv.py:132:122: E231 missing whitespace after ','
+./funcs/hbv.py:134:17: E231 missing whitespace after ','
+./funcs/hbv.py:134:25: E231 missing whitespace after ','
+./funcs/hbv.py:134:33: E231 missing whitespace after ','
+./funcs/hbv.py:134:39: E231 missing whitespace after ','
+./funcs/hbv.py:134:45: E225 missing whitespace around operator
+./funcs/hbv.py:134:80: E501 line too long (92 > 79 characters)
+./funcs/hbv.py:135:49: E128 continuation line under-indented for visual indent
+./funcs/hbv.py:140:10: E225 missing whitespace around operator
+./funcs/hbv.py:142:17: E231 missing whitespace after ','
+./funcs/hbv.py:142:19: E231 missing whitespace after ','
+./funcs/hbv.py:142:23: E231 missing whitespace after ','
+./funcs/hbv.py:142:27: E231 missing whitespace after ','
+./funcs/hbv.py:142:30: E231 missing whitespace after ','
+./funcs/hbv.py:142:33: E231 missing whitespace after ','
+./funcs/hbv.py:142:43: E231 missing whitespace after ','
+./funcs/hbv.py:142:51: E231 missing whitespace after ','
+./funcs/hbv.py:142:55: E231 missing whitespace after ','
+./funcs/hbv.py:142:59: E231 missing whitespace after ','
+./funcs/hbv.py:142:62: E231 missing whitespace after ','
+./funcs/hbv.py:144:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:144:26: E201 whitespace after '('
+./funcs/hbv.py:145:1: E115 expected an indented block (comment)
+./funcs/hbv.py:145:80: E501 line too long (87 > 79 characters)
+./funcs/hbv.py:146:1: E115 expected an indented block (comment)
+./funcs/hbv.py:147:1: E115 expected an indented block (comment)
+./funcs/hbv.py:148:1: E115 expected an indented block (comment)
+./funcs/hbv.py:149:1: E115 expected an indented block (comment)
+./funcs/hbv.py:152:28: E221 multiple spaces before operator
+./funcs/hbv.py:153:45: E231 missing whitespace after ','
+./funcs/hbv.py:154:39: E261 at least two spaces before inline comment
+./funcs/hbv.py:155:34: E261 at least two spaces before inline comment
+./funcs/hbv.py:155:80: E501 line too long (82 > 79 characters)
+./funcs/hbv.py:159:20: E261 at least two spaces before inline comment
+./funcs/hbv.py:160:33: E261 at least two spaces before inline comment
+./funcs/hbv.py:160:80: E501 line too long (81 > 79 characters)
+./funcs/hbv.py:164:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:164:34: E231 missing whitespace after ','
+./funcs/hbv.py:164:36: E231 missing whitespace after ','
+./funcs/hbv.py:164:68: E231 missing whitespace after ','
+./funcs/hbv.py:164:80: E501 line too long (95 > 79 characters)
+./funcs/hbv.py:164:87: E231 missing whitespace after ','
+./funcs/hbv.py:164:91: E231 missing whitespace after ','
+./funcs/hbv.py:165:1: E115 expected an indented block (comment)
+./funcs/hbv.py:166:1: E115 expected an indented block (comment)
+./funcs/hbv.py:166:80: E501 line too long (80 > 79 characters)
+./funcs/hbv.py:167:1: E115 expected an indented block (comment)
+./funcs/hbv.py:168:1: E115 expected an indented block (comment)
+./funcs/hbv.py:168:80: E501 line too long (110 > 79 characters)
+./funcs/hbv.py:169:1: E115 expected an indented block (comment)
+./funcs/hbv.py:169:80: E501 line too long (113 > 79 characters)
+./funcs/hbv.py:170:1: E115 expected an indented block (comment)
+./funcs/hbv.py:171:1: E115 expected an indented block (comment)
+./funcs/hbv.py:174:12: E201 whitespace after '('
+./funcs/hbv.py:174:24: E201 whitespace after '('
+./funcs/hbv.py:174:62: E202 whitespace before ')'
+./funcs/hbv.py:174:64: E202 whitespace before ')'
+./funcs/hbv.py:174:80: E501 line too long (102 > 79 characters)
+./funcs/hbv.py:180:22: E201 whitespace after '('
+./funcs/hbv.py:180:31: E202 whitespace before ')'
+./funcs/hbv.py:182:26: E261 at least two spaces before inline comment
+./funcs/hbv.py:184:15: E231 missing whitespace after ','
+./funcs/hbv.py:186:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:186:80: E501 line too long (90 > 79 characters)
+./funcs/hbv.py:187:1: E115 expected an indented block (comment)
+./funcs/hbv.py:188:1: E115 expected an indented block (comment)
+./funcs/hbv.py:188:80: E501 line too long (84 > 79 characters)
+./funcs/hbv.py:189:1: E115 expected an indented block (comment)
+./funcs/hbv.py:190:1: E115 expected an indented block (comment)
+./funcs/hbv.py:190:80: E501 line too long (114 > 79 characters)
+./funcs/hbv.py:191:1: E115 expected an indented block (comment)
+./funcs/hbv.py:191:80: E501 line too long (117 > 79 characters)
+./funcs/hbv.py:192:1: E115 expected an indented block (comment)
+./funcs/hbv.py:195:1: E115 expected an indented block (comment)
+./funcs/hbv.py:196:1: E115 expected an indented block (comment)
+./funcs/hbv.py:197:1: E115 expected an indented block (comment)
+./funcs/hbv.py:197:80: E501 line too long (88 > 79 characters)
+./funcs/hbv.py:198:1: E115 expected an indented block (comment)
+./funcs/hbv.py:198:80: E501 line too long (95 > 79 characters)
+./funcs/hbv.py:199:1: E115 expected an indented block (comment)
+./funcs/hbv.py:202:36: E201 whitespace after '('
+./funcs/hbv.py:202:45: E202 whitespace before ')'
+./funcs/hbv.py:202:54: E261 at least two spaces before inline comment
+./funcs/hbv.py:202:80: E501 line too long (82 > 79 characters)
+./funcs/hbv.py:204:31: E261 at least two spaces before inline comment
+./funcs/hbv.py:208:80: E501 line too long (86 > 79 characters)
+./funcs/hbv.py:214:39: E201 whitespace after '('
+./funcs/hbv.py:214:48: E202 whitespace before ')'
+./funcs/hbv.py:217:10: E225 missing whitespace around operator
+./funcs/hbv.py:218:11: E225 missing whitespace around operator
+./funcs/hbv.py:228:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:237:1: W293 blank line contains whitespace
+./funcs/hbv.py:238:11: E225 missing whitespace around operator
+./funcs/hbv.py:240:21: E231 missing whitespace after ','
+./funcs/hbv.py:242:49: E231 missing whitespace after ','
+./funcs/hbv.py:242:51: E231 missing whitespace after ','
+./funcs/hbv.py:242:77: E231 missing whitespace after ','
+./funcs/hbv.py:242:79: E231 missing whitespace after ','
+./funcs/hbv.py:242:80: E501 line too long (186 > 79 characters)
+./funcs/hbv.py:242:82: E202 whitespace before ')'
+./funcs/hbv.py:242:88: E201 whitespace after '('
+./funcs/hbv.py:242:110: E222 multiple spaces after operator
+./funcs/hbv.py:242:119: E201 whitespace after '('
+./funcs/hbv.py:242:140: E231 missing whitespace after ','
+./funcs/hbv.py:242:142: E231 missing whitespace after ','
+./funcs/hbv.py:242:159: E231 missing whitespace after ','
+./funcs/hbv.py:242:161: E231 missing whitespace after ','
+./funcs/hbv.py:242:164: E202 whitespace before ')'
+./funcs/hbv.py:242:170: E201 whitespace after '('
+./funcs/hbv.py:242:185: E202 whitespace before ')'
+./funcs/hbv.py:244:34: E201 whitespace after '('
+./funcs/hbv.py:244:48: E231 missing whitespace after ','
+./funcs/hbv.py:244:50: E231 missing whitespace after ','
+./funcs/hbv.py:244:53: E202 whitespace before ')'
+./funcs/hbv.py:244:59: E201 whitespace after '('
+./funcs/hbv.py:246:42: E231 missing whitespace after ','
+./funcs/hbv.py:246:44: E231 missing whitespace after ','
+./funcs/hbv.py:250:13: E225 missing whitespace around operator
+./funcs/hbv.py:251:21: E231 missing whitespace after ','
+./funcs/hbv.py:253:25: E231 missing whitespace after ','
+./funcs/hbv.py:253:33: E201 whitespace after '('
+./funcs/hbv.py:258:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:260:7: E225 missing whitespace around operator
+./funcs/hbv.py:261:9: E225 missing whitespace around operator
+./funcs/hbv.py:261:24: E231 missing whitespace after ','
+./funcs/hbv.py:261:46: E231 missing whitespace after ','
+./funcs/hbv.py:261:58: E231 missing whitespace after ','
+./funcs/hbv.py:261:75: E231 missing whitespace after ','
+./funcs/hbv.py:261:80: E501 line too long (87 > 79 characters)
+./funcs/hbv.py:263:1: W293 blank line contains whitespace
+./funcs/hbv.py:264:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:264:28: E231 missing whitespace after ','
+./funcs/hbv.py:264:34: E231 missing whitespace after ','
+./funcs/hbv.py:264:41: E231 missing whitespace after ','
+./funcs/hbv.py:264:52: E231 missing whitespace after ','
+./funcs/hbv.py:264:63: E231 missing whitespace after ','
+./funcs/hbv.py:264:66: E231 missing whitespace after ','
+./funcs/hbv.py:268:6: E201 whitespace after '['
+./funcs/hbv.py:268:53: E202 whitespace before ']'
+./funcs/hbv.py:268:80: E501 line too long (82 > 79 characters)
+./funcs/hbv.py:268:82: E703 statement ends with a semicolon
+./funcs/hbv.py:271:9: E225 missing whitespace around operator
+./funcs/hbv.py:274:12: E225 missing whitespace around operator
+./funcs/hbv.py:275:9: E225 missing whitespace around operator
+./funcs/hbv.py:278:7: E225 missing whitespace around operator
+./funcs/hbv.py:282:11: E225 missing whitespace around operator
+./funcs/hbv.py:282:30: E231 missing whitespace after ','
+./funcs/hbv.py:282:33: E231 missing whitespace after ','
+./funcs/hbv.py:282:42: E231 missing whitespace after ','
+./funcs/hbv.py:282:53: E231 missing whitespace after ','
+./funcs/hbv.py:282:60: E231 missing whitespace after ','
+./funcs/hbv.py:282:65: E231 missing whitespace after ','
+./funcs/hbv.py:282:80: E501 line too long (129 > 79 characters)
+./funcs/hbv.py:282:112: E231 missing whitespace after ','
+./funcs/hbv.py:282:119: E231 missing whitespace after ','
+./funcs/hbv.py:283:7: E225 missing whitespace around operator
+./funcs/hbv.py:284:10: E231 missing whitespace after ','
+./funcs/hbv.py:284:22: E231 missing whitespace after ','
+./funcs/hbv.py:284:26: E701 multiple statements on one line (colon)
+./funcs/hbv.py:284:41: E225 missing whitespace around operator
+./funcs/hbv.py:288:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:288:17: E231 missing whitespace after ','
+./funcs/hbv.py:288:20: E231 missing whitespace after ','
+./funcs/hbv.py:288:31: E231 missing whitespace after ','
+./funcs/hbv.py:288:38: E231 missing whitespace after ','
+./funcs/hbv.py:288:43: E231 missing whitespace after ','
+./funcs/hbv.py:288:80: E501 line too long (97 > 79 characters)
+./funcs/hbv.py:288:90: E231 missing whitespace after ','
+./funcs/hbv.py:289:1: W293 blank line contains whitespace
+./funcs/hbv.py:290:10: E231 missing whitespace after ','
+./funcs/hbv.py:290:22: E231 missing whitespace after ','
+./funcs/hbv.py:290:26: E701 multiple statements on one line (colon)
+./funcs/hbv.py:290:41: E225 missing whitespace around operator
+./funcs/hbv.py:291:10: E231 missing whitespace after ','
+./funcs/hbv.py:291:12: E231 missing whitespace after ','
+./funcs/hbv.py:291:16: E231 missing whitespace after ','
+./funcs/hbv.py:291:20: E231 missing whitespace after ','
+./funcs/hbv.py:291:23: E231 missing whitespace after ','
+./funcs/hbv.py:291:26: E231 missing whitespace after ','
+./funcs/hbv.py:291:36: E231 missing whitespace after ','
+./funcs/hbv.py:291:44: E231 missing whitespace after ','
+./funcs/hbv.py:291:48: E231 missing whitespace after ','
+./funcs/hbv.py:291:52: E231 missing whitespace after ','
+./funcs/hbv.py:291:55: E231 missing whitespace after ','
+./funcs/hbv.py:291:58: E225 missing whitespace around operator
+./funcs/hbv.py:291:79: E231 missing whitespace after ','
+./funcs/hbv.py:291:80: E501 line too long (123 > 79 characters)
+./funcs/hbv.py:291:94: E231 missing whitespace after ','
+./funcs/hbv.py:291:105: E231 missing whitespace after ','
+./funcs/hbv.py:291:113: E231 missing whitespace after ','
+./funcs/hbv.py:292:6: E225 missing whitespace around operator
+./funcs/hbv.py:293:11: E225 missing whitespace around operator
+./funcs/hbv.py:294:6: E225 missing whitespace around operator
+./funcs/hbv.py:295:8: E225 missing whitespace around operator
+./funcs/hbv.py:295:32: E231 missing whitespace after ','
+./funcs/hbv.py:295:34: E231 missing whitespace after ','
+./funcs/hbv.py:298:22: E251 unexpected spaces around keyword / parameter equals
+./funcs/hbv.py:298:24: E251 unexpected spaces around keyword / parameter equals
+./funcs/hbv.py:299:10: E231 missing whitespace after ','
+./funcs/hbv.py:299:22: E231 missing whitespace after ','
+./funcs/hbv.py:299:26: E701 multiple statements on one line (colon)
+./funcs/hbv.py:299:42: E228 missing whitespace around modulo operator
+./funcs/hbv.py:299:45: E231 missing whitespace after ','
+./funcs/hbv.py:300:23: E228 missing whitespace around modulo operator
+./funcs/hbv.py:300:31: E231 missing whitespace after ','
+./funcs/hbv.py:304:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:304:21: E231 missing whitespace after ','
+./funcs/hbv.py:304:23: E231 missing whitespace after ','
+./funcs/hbv.py:316:13: E225 missing whitespace around operator
+./funcs/hbv.py:317:10: E225 missing whitespace around operator
+./funcs/hbv.py:338:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:338:21: E231 missing whitespace after ','
+./funcs/hbv.py:338:24: E231 missing whitespace after ','
+./funcs/hbv.py:338:27: E231 missing whitespace after ','
+./funcs/hbv.py:338:38: E231 missing whitespace after ','
+./funcs/hbv.py:338:49: E231 missing whitespace after ','
+./funcs/hbv.py:338:54: E231 missing whitespace after ','
+./funcs/hbv.py:339:14: E225 missing whitespace around operator
+./funcs/hbv.py:339:35: E231 missing whitespace after ','
+./funcs/hbv.py:340:10: E231 missing whitespace after ','
+./funcs/hbv.py:341:19: E231 missing whitespace after ','
+./funcs/hbv.py:341:30: E225 missing whitespace around operator
+./funcs/hbv.py:342:20: E231 missing whitespace after ','
+./funcs/hbv.py:342:23: E225 missing whitespace around operator
+./funcs/hbv.py:342:35: E231 missing whitespace after ','
+./funcs/hbv.py:344:8: E225 missing whitespace around operator
+./funcs/hbv.py:345:9: E225 missing whitespace around operator
+./funcs/hbv.py:347:80: E501 line too long (86 > 79 characters)
+./funcs/hbv.py:347:86: E703 statement ends with a semicolon
+./funcs/hbv.py:350:9: E225 missing whitespace around operator
+./funcs/hbv.py:353:12: E225 missing whitespace around operator
+./funcs/hbv.py:354:9: E225 missing whitespace around operator
+./funcs/hbv.py:357:11: E225 missing whitespace around operator
+./funcs/hbv.py:357:23: E231 missing whitespace after ','
+./funcs/hbv.py:358:14: E231 missing whitespace after ','
+./funcs/hbv.py:358:26: E231 missing whitespace after ','
+./funcs/hbv.py:358:30: E701 multiple statements on one line (colon)
+./funcs/hbv.py:358:45: E225 missing whitespace around operator
+./funcs/hbv.py:359:1: W293 blank line contains whitespace
+./funcs/hbv.py:360:9: E265 block comment should start with '# '
+./funcs/hbv.py:361:1: W293 blank line contains whitespace
+./funcs/hbv.py:362:14: E231 missing whitespace after ','
+./funcs/hbv.py:362:16: E231 missing whitespace after ','
+./funcs/hbv.py:362:20: E231 missing whitespace after ','
+./funcs/hbv.py:362:24: E231 missing whitespace after ','
+./funcs/hbv.py:362:27: E231 missing whitespace after ','
+./funcs/hbv.py:362:30: E231 missing whitespace after ','
+./funcs/hbv.py:362:40: E231 missing whitespace after ','
+./funcs/hbv.py:362:48: E231 missing whitespace after ','
+./funcs/hbv.py:362:52: E231 missing whitespace after ','
+./funcs/hbv.py:362:56: E231 missing whitespace after ','
+./funcs/hbv.py:362:59: E231 missing whitespace after ','
+./funcs/hbv.py:362:62: E225 missing whitespace around operator
+./funcs/hbv.py:362:80: E501 line too long (127 > 79 characters)
+./funcs/hbv.py:362:83: E231 missing whitespace after ','
+./funcs/hbv.py:362:98: E231 missing whitespace after ','
+./funcs/hbv.py:362:109: E231 missing whitespace after ','
+./funcs/hbv.py:362:117: E231 missing whitespace after ','
+./funcs/hbv.py:363:13: E225 missing whitespace around operator
+./funcs/hbv.py:365:1: W293 blank line contains whitespace
+./funcs/hbv.py:366:15: E225 missing whitespace around operator
+./funcs/hbv.py:366:80: E501 line too long (159 > 79 characters)
+./funcs/hbv.py:366:91: E231 missing whitespace after ','
+./funcs/hbv.py:366:153: E231 missing whitespace after ','
+./funcs/hbv.py:367:16: E225 missing whitespace around operator
+./funcs/hbv.py:367:80: E501 line too long (160 > 79 characters)
+./funcs/hbv.py:367:91: E231 missing whitespace after ','
+./funcs/hbv.py:367:153: E231 missing whitespace after ','
+./funcs/hbv.py:368:26: E251 unexpected spaces around keyword / parameter equals
+./funcs/hbv.py:368:28: E251 unexpected spaces around keyword / parameter equals
+./funcs/hbv.py:369:39: E228 missing whitespace around modulo operator
+./funcs/hbv.py:371:21: E231 missing whitespace after ','
+./funcs/hbv.py:371:25: E231 missing whitespace after ','
+./funcs/hbv.py:373:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:373:25: E231 missing whitespace after ','
+./funcs/hbv.py:373:32: E231 missing whitespace after ','
+./funcs/hbv.py:373:44: E231 missing whitespace after ','
+./funcs/hbv.py:373:47: E231 missing whitespace after ','
+./funcs/hbv.py:374:6: E225 missing whitespace around operator
+./funcs/hbv.py:375:13: E225 missing whitespace around operator
+./funcs/hbv.py:375:17: E231 missing whitespace after ','
+./funcs/hbv.py:375:19: E231 missing whitespace after ','
+./funcs/hbv.py:375:21: E231 missing whitespace after ','
+./funcs/hbv.py:375:24: E231 missing whitespace after ','
+./funcs/hbv.py:375:27: E231 missing whitespace after ','
+./funcs/hbv.py:375:29: E231 missing whitespace after ','
+./funcs/hbv.py:375:31: E231 missing whitespace after ','
+./funcs/hbv.py:375:34: E231 missing whitespace after ','
+./funcs/hbv.py:375:37: E231 missing whitespace after ','
+./funcs/hbv.py:375:39: E231 missing whitespace after ','
+./funcs/hbv.py:375:42: E231 missing whitespace after ','
+./funcs/hbv.py:376:14: E128 continuation line under-indented for visual indent
+./funcs/hbv.py:376:16: E231 missing whitespace after ','
+./funcs/hbv.py:376:18: E231 missing whitespace after ','
+./funcs/hbv.py:376:20: E231 missing whitespace after ','
+./funcs/hbv.py:376:23: E231 missing whitespace after ','
+./funcs/hbv.py:376:26: E231 missing whitespace after ','
+./funcs/hbv.py:376:28: E231 missing whitespace after ','
+./funcs/hbv.py:376:31: E231 missing whitespace after ','
+./funcs/hbv.py:376:34: E231 missing whitespace after ','
+./funcs/hbv.py:376:37: E231 missing whitespace after ','
+./funcs/hbv.py:376:39: E231 missing whitespace after ','
+./funcs/hbv.py:376:42: E231 missing whitespace after ','
+./funcs/hbv.py:377:14: E128 continuation line under-indented for visual indent
+./funcs/hbv.py:377:16: E231 missing whitespace after ','
+./funcs/hbv.py:377:18: E231 missing whitespace after ','
+./funcs/hbv.py:377:21: E231 missing whitespace after ','
+./funcs/hbv.py:377:25: E231 missing whitespace after ','
+./funcs/hbv.py:377:28: E231 missing whitespace after ','
+./funcs/hbv.py:377:30: E231 missing whitespace after ','
+./funcs/hbv.py:377:33: E231 missing whitespace after ','
+./funcs/hbv.py:377:37: E231 missing whitespace after ','
+./funcs/hbv.py:377:40: E231 missing whitespace after ','
+./funcs/hbv.py:377:42: E231 missing whitespace after ','
+./funcs/hbv.py:377:45: E231 missing whitespace after ','
+./funcs/hbv.py:378:14: E128 continuation line under-indented for visual indent
+./funcs/hbv.py:378:16: E231 missing whitespace after ','
+./funcs/hbv.py:378:18: E231 missing whitespace after ','
+./funcs/hbv.py:378:21: E231 missing whitespace after ','
+./funcs/hbv.py:378:25: E231 missing whitespace after ','
+./funcs/hbv.py:378:28: E231 missing whitespace after ','
+./funcs/hbv.py:378:30: E231 missing whitespace after ','
+./funcs/hbv.py:378:33: E231 missing whitespace after ','
+./funcs/hbv.py:378:37: E231 missing whitespace after ','
+./funcs/hbv.py:378:40: E231 missing whitespace after ','
+./funcs/hbv.py:378:42: E231 missing whitespace after ','
+./funcs/hbv.py:378:45: E231 missing whitespace after ','
+./funcs/hbv.py:379:7: E231 missing whitespace after ','
+./funcs/hbv.py:379:10: E231 missing whitespace after ','
+./funcs/hbv.py:379:13: E231 missing whitespace after ','
+./funcs/hbv.py:379:16: E225 missing whitespace around operator
+./funcs/hbv.py:381:26: E231 missing whitespace after ','
+./funcs/hbv.py:383:22: E231 missing whitespace after ','
+./funcs/hbv.py:383:25: E231 missing whitespace after ','
+./funcs/hbv.py:384:28: E231 missing whitespace after ','
+./funcs/hbv.py:384:31: E231 missing whitespace after ','
+./funcs/hbv.py:384:38: E231 missing whitespace after ','
+./funcs/hbv.py:385:33: E225 missing whitespace around operator
+./funcs/hbv.py:386:15: E225 missing whitespace around operator
+./funcs/hbv.py:387:23: E231 missing whitespace after ','
+./funcs/hbv.py:387:46: E231 missing whitespace after ','
+./funcs/hbv.py:387:69: E231 missing whitespace after ','
+./funcs/hbv.py:388:37: E225 missing whitespace around operator
+./funcs/hbv.py:388:60: E231 missing whitespace after ','
+./funcs/hbv.py:388:63: E231 missing whitespace after ','
+./funcs/hbv.py:388:77: E225 missing whitespace around operator
+./funcs/hbv.py:388:80: E501 line too long (106 > 79 characters)
+./funcs/hbv.py:388:101: E231 missing whitespace after ','
+./funcs/hbv.py:389:24: E231 missing whitespace after ','
+./funcs/hbv.py:390:16: E225 missing whitespace around operator
+./funcs/hbv.py:390:27: E701 multiple statements on one line (colon)
+./funcs/hbv.py:390:50: E231 missing whitespace after ','
+./funcs/hbv.py:393:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:393:16: E231 missing whitespace after ','
+./funcs/hbv.py:393:19: E231 missing whitespace after ','
+./funcs/hbv.py:393:29: E231 missing whitespace after ','
+./funcs/hbv.py:393:40: E231 missing whitespace after ','
+./funcs/hbv.py:395:14: E225 missing whitespace around operator
+./funcs/hbv.py:395:31: E225 missing whitespace around operator
+./funcs/hbv.py:395:54: E231 missing whitespace after ','
+./funcs/hbv.py:396:7: E225 missing whitespace around operator
+./funcs/hbv.py:397:1: W293 blank line contains whitespace
+./funcs/hbv.py:398:6: E225 missing whitespace around operator
+./funcs/hbv.py:399:8: E225 missing whitespace around operator
+./funcs/hbv.py:401:11: E225 missing whitespace around operator
+./funcs/hbv.py:401:23: E231 missing whitespace after ','
+./funcs/hbv.py:402:14: E231 missing whitespace after ','
+./funcs/hbv.py:402:26: E231 missing whitespace after ','
+./funcs/hbv.py:402:30: E701 multiple statements on one line (colon)
+./funcs/hbv.py:402:45: E225 missing whitespace around operator
+./funcs/hbv.py:403:13: E231 missing whitespace after ','
+./funcs/hbv.py:403:19: E231 missing whitespace after ','
+./funcs/hbv.py:403:27: E225 missing whitespace around operator
+./funcs/hbv.py:403:56: E231 missing whitespace after ','
+./funcs/hbv.py:404:13: E225 missing whitespace around operator
+./funcs/hbv.py:405:15: E225 missing whitespace around operator
+./funcs/hbv.py:406:1: W293 blank line contains whitespace
+./funcs/hbv.py:408:11: E225 missing whitespace around operator
+./funcs/hbv.py:409:18: E225 missing whitespace around operator
+./funcs/hbv.py:410:18: E225 missing whitespace around operator
+./funcs/hbv.py:411:18: E225 missing whitespace around operator
+./funcs/hbv.py:412:19: E225 missing whitespace around operator
+./funcs/hbv.py:413:1: W293 blank line contains whitespace
+./funcs/hbv.py:414:13: E225 missing whitespace around operator
+./funcs/hbv.py:415:20: E225 missing whitespace around operator
+./funcs/hbv.py:416:20: E225 missing whitespace around operator
+./funcs/hbv.py:417:20: E225 missing whitespace around operator
+./funcs/hbv.py:418:21: E225 missing whitespace around operator
+./funcs/hbv.py:419:1: W293 blank line contains whitespace
+./funcs/hbv.py:420:13: E231 missing whitespace after ','
+./funcs/hbv.py:420:20: E231 missing whitespace after ','
+./funcs/hbv.py:420:24: E231 missing whitespace after ','
+./funcs/hbv.py:423:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:423:17: E231 missing whitespace after ','
+./funcs/hbv.py:423:23: E231 missing whitespace after ','
+./funcs/hbv.py:424:6: E225 missing whitespace around operator
+./funcs/hbv.py:425:19: E701 multiple statements on one line (colon)
+./funcs/hbv.py:425:22: E225 missing whitespace around operator
+./funcs/hbv.py:426:6: E225 missing whitespace around operator
+./funcs/hbv.py:427:6: E225 missing whitespace around operator
+./funcs/hbv.py:430:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:430:26: E231 missing whitespace after ','
+./funcs/hbv.py:430:32: E231 missing whitespace after ','
+./funcs/hbv.py:430:40: E231 missing whitespace after ','
+./funcs/hbv.py:430:46: E231 missing whitespace after ','
+./funcs/hbv.py:432:6: E225 missing whitespace around operator
+./funcs/hbv.py:433:6: E225 missing whitespace around operator
+./funcs/hbv.py:433:19: E231 missing whitespace after ','
+./funcs/hbv.py:433:25: E231 missing whitespace after ','
+./funcs/hbv.py:434:5: F841 local variable 'P' is assigned to but never used
+./funcs/hbv.py:434:6: E225 missing whitespace around operator
+./funcs/hbv.py:435:8: E225 missing whitespace around operator
+./funcs/hbv.py:436:6: E225 missing whitespace around operator
+./funcs/hbv.py:438:26: E231 missing whitespace after ','
+./funcs/hbv.py:439:22: E231 missing whitespace after ','
+./funcs/hbv.py:439:30: E231 missing whitespace after ','
+./funcs/hbv.py:439:52: E231 missing whitespace after ','
+./funcs/hbv.py:440:22: E231 missing whitespace after ','
+./funcs/hbv.py:440:28: E231 missing whitespace after ','
+./funcs/hbv.py:440:52: E231 missing whitespace after ','
+./funcs/hbv.py:441:22: E231 missing whitespace after ','
+./funcs/hbv.py:441:24: E231 missing whitespace after ','
+./funcs/hbv.py:441:47: E231 missing whitespace after ','
+./funcs/hbv.py:441:56: W605 invalid escape sequence '\D'
+./funcs/hbv.py:442:45: E231 missing whitespace after ','
+./funcs/hbv.py:442:66: E231 missing whitespace after ','
+./funcs/hbv.py:447:35: E231 missing whitespace after ','
+./funcs/hbv.py:447:48: E702 multiple statements on one line (semicolon)
+./funcs/hbv.py:448:1: W293 blank line contains whitespace
+./funcs/hbv.py:449:1: E302 expected 2 blank lines, found 1
+./funcs/hbv.py:449:24: E231 missing whitespace after ','
+./funcs/hbv.py:449:30: E231 missing whitespace after ','
+./funcs/hbv.py:449:38: E231 missing whitespace after ','
+./funcs/hbv.py:449:44: E231 missing whitespace after ','
+./funcs/hbv.py:449:48: E231 missing whitespace after ','
+./funcs/hbv.py:451:7: E225 missing whitespace around operator
+./funcs/hbv.py:452:8: E225 missing whitespace around operator
+./funcs/hbv.py:453:8: E225 missing whitespace around operator
+./funcs/hbv.py:454:7: E225 missing whitespace around operator
+./funcs/hbv.py:455:7: E225 missing whitespace around operator
+./funcs/hbv.py:457:6: E225 missing whitespace around operator
+./funcs/hbv.py:458:6: E225 missing whitespace around operator
+./funcs/hbv.py:459:8: E225 missing whitespace around operator
+./funcs/hbv.py:460:8: E225 missing whitespace around operator
+./funcs/hbv.py:461:6: E225 missing whitespace around operator
+./funcs/hbv.py:464:5: E303 too many blank lines (2)
+./funcs/hbv.py:464:26: E231 missing whitespace after ','
+./funcs/hbv.py:465:17: E231 missing whitespace after ','
+./funcs/hbv.py:465:19: E231 missing whitespace after ','
+./funcs/hbv.py:466:22: E231 missing whitespace after ','
+./funcs/hbv.py:466:26: E231 missing whitespace after ','
+./funcs/hbv.py:466:49: E231 missing whitespace after ','
+./funcs/hbv.py:466:61: E231 missing whitespace after ','
+./funcs/hbv.py:467:14: E231 missing whitespace after ','
+./funcs/hbv.py:467:16: E231 missing whitespace after ','
+./funcs/hbv.py:467:26: E231 missing whitespace after ','
+./funcs/hbv.py:468:14: E231 missing whitespace after ','
+./funcs/hbv.py:468:16: E231 missing whitespace after ','
+./funcs/hbv.py:468:26: E231 missing whitespace after ','
+./funcs/hbv.py:469:14: E231 missing whitespace after ','
+./funcs/hbv.py:469:18: E231 missing whitespace after ','
+./funcs/hbv.py:469:30: E231 missing whitespace after ','
+./funcs/hbv.py:471:28: E231 missing whitespace after ','
+./funcs/hbv.py:471:41: E702 multiple statements on one line (semicolon)
+./funcs/hbv.py:473:17: E231 missing whitespace after ','
+./funcs/hbv.py:473:19: E231 missing whitespace after ','
+./funcs/hbv.py:474:15: E231 missing whitespace after ','
+./funcs/hbv.py:474:19: E231 missing whitespace after ','
+./funcs/hbv.py:474:31: E231 missing whitespace after ','
+./funcs/hbv.py:475:15: E231 missing whitespace after ','
+./funcs/hbv.py:475:19: E231 missing whitespace after ','
+./funcs/hbv.py:475:31: E231 missing whitespace after ','
+./funcs/hbv.py:476:15: E231 missing whitespace after ','
+./funcs/hbv.py:476:18: E231 missing whitespace after ','
+./funcs/hbv.py:476:29: E231 missing whitespace after ','
+./funcs/hbv.py:477:15: E231 missing whitespace after ','
+./funcs/hbv.py:477:18: E231 missing whitespace after ','
+./funcs/hbv.py:477:29: E231 missing whitespace after ','
+./funcs/hbv.py:479:28: E231 missing whitespace after ','
+./funcs/hbv.py:479:41: E702 multiple statements on one line (semicolon)
+./funcs/hbv.py:480:1: W391 blank line at end of file

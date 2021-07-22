@@ -23,7 +23,7 @@ The underlying approach of the VARS-TOOL toolkit is described in detail in the f
 
 If you have Python3 and pip installed on your machine, then the VARS-TOOL package can be installed as following:
 ```console
-foo@bar:~$  pip install varstool
+foo@bar:~$ pip install varstool
 ```
 
 ### 2.2. Installing from source code
@@ -74,7 +74,7 @@ Once the packages are installed to contribute do the following:
 4. When the branch is ready to be merged, you can create a Pull Request ([how to create a pull request](https://gist.github.com/MarcDiethelm/7303312)).
 
 
-## 6. References
+## 6. Citations
 
 Under progress...
 
