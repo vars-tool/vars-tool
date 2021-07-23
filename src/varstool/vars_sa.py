@@ -1479,6 +1479,14 @@ class TSVARS(VARS):
                     # 'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
                 }
 
+        # defining aggregated values
+        self.gamme.aggregate = self.gamma.groupby(level=-1).mean()
+        self.maee.aggregate  = self.maee.groupby(level=-1).mean()
+        self.mee.aggregate   = self.mee.groupby(level=-1).mean()
+        self.cov.aggregate   = self.cov.groupby(level=-1).mean()
+        self.ecov.aggregate  = self.ecov.groupby(level=-1).mean()
+        self.ivars.aggregate = self.ivars.groupby(level=-1).mean()
+
     @staticmethod
     def _applyParallel(
         dfGrouped: pd.DataFrame, 
