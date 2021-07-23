@@ -1350,7 +1350,7 @@ class TSVARS(VARS):
 
                 for chunk in trange(
                     int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1,
-                    {'desc':'Chunks', 'dynamic_ncols':True}
+                    desc='Chunks', dynamic_ncols=True,
                 ): # total number of chunks
 
                     # make a chunk of the main df (result of func eval)
