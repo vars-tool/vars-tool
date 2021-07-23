@@ -1348,10 +1348,10 @@ class TSVARS(VARS):
                 self.st = pd.Series()
                 self.ivars = pd.Series()
 
-                for chunk in trange(int(star_points_eval.shape[1]//self.vars_chunk_size)+1): # total number of chunks
+                for chunk in trange(int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1): # total number of chunks
 
                     # make a chunk of the main df (result of func eval)
-                    df_temp = star_points_eval.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, star_points_eval.shape[1]-1)]
+                    df_temp = self.star_points_eval.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, self.star_points_eval.shape[1]-1)]
 
                     # make pairs for each chunk
                     temp_pair_df = self._applyParallel(self.star_points_eval.groupby(level=0, axis=1), ts_pair, self.report_verbose)
