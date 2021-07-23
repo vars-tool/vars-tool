@@ -1370,7 +1370,7 @@ class TSVARS(VARS):
                     self.mu_star_df = pd.concat([self.mu_star_df, temp_mu_star])
 
                     # mu overall
-                    temp_mu_overall = df_temp..apply(lambda x: np.mean(list(np.unique(x))))
+                    temp_mu_overall = df_temp.apply(lambda x: np.mean(list(np.unique(x))))
                     if self.report_verbose:
                         vars_pbar.update(1)
                     self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall])
