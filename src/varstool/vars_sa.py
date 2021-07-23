@@ -1338,7 +1338,7 @@ class TSVARS(VARS):
                 self.pair_df = pd.DataFrame()
                 self.sec_covariogram = pd.DataFrame()
                 self.gamma = pd.DataFrame()
-                self.mu_star_df = pd.DataFrameDataFrame()
+                self.mu_star_df = pd.DataFrame()
                 self.mu_overall = pd.DataFrame()
                 self.var_overall = pd.DataFrame()
                 self.maee = pd.DataFrame()
