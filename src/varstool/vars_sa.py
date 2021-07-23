@@ -1191,11 +1191,13 @@ class TSVARS(VARS):
                 self.st = pd.DataFrame()
                 self.ivars = pd.DataFrame()
 
-                for chunk in trange(
-                    int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1,
-                    desc='chunks', 
+                i_range = tqdm(
+                    range(int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1),
+                    desc='chunks',
                     dynamic_ncols=True,
-                ): # total number of chunks
+                )
+
+                for chunk in i_range:
 
                     # make a chunk of the main df (result of func eval)
                     df_temp = self.star_points_eval.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, self.star_points_eval.shape[1]-1)]
@@ -1209,6 +1211,7 @@ class TSVARS(VARS):
                     
                     # there is a bug that is solved with the following line - needs to be fixed better
                     if temp_pair_df.empty:
+                        i_range.close()
                         break
 
                     temp_pair_df.columns.names = ['ts', None]
