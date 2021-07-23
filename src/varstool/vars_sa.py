@@ -1205,7 +1205,8 @@ class TSVARS(VARS):
                         tqdm.pandas(desc='building pairs', dynamic_ncols=True)
                         temp_pair_df = df_temp.groupby(level=0, axis=1).progress_apply(ts_pair)
                     else:
-                        self.pair_df = df_temp.groupby(level=0, axis=1).apply(ts_pair)
+                        temp_pair_df = df_temp.groupby(level=0, axis=1).apply(ts_pair)
+                    print(temp_pair_df)
                     temp_pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
                     self.pair_df = pd.concat([self.pair_df, temp_pair_df])
 
