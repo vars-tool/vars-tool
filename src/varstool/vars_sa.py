@@ -2,9 +2,9 @@
 VARS Sensitivity Anlaysis Framework
 -----------------------------------
 
-The Variogram Analysis of Response Surfaces (VARS) is a 
+The Variogram Analysis of Response Surfaces (VARS) is a
 powerful sensitivity analysis (SA) method first applied
-to  Earth and Environmental System models. 
+to  Earth and Environmental System models.
 
 """
 
@@ -58,7 +58,7 @@ class Model(object):
 
     Parameters:
     -----------
-    :param func: function of interest 
+    :param func: function of interest
     :type func: Callable
     :param unknown_options: a dictionary of options with keys as
                             parameters and values of parameter
@@ -168,10 +168,10 @@ class VARS(object):
     References:
     -----------
     .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
-           robust, and efficient global sensitivity analysis: 1. Theory. Water 
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
     .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
-           robust, and efficient global sensitivity analysis: 1. Application. Water 
+           robust, and efficient global sensitivity analysis: 1. Application. Water
            Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
 
 
@@ -460,14 +460,19 @@ class VARS(object):
 
         return star_points
 
-    def plot(self):
+    def plot(self, logy : bool=False):
 
         if self.run_status:
 
             # variogram plot
-            ymax = self.gamma.unstack(0).loc[0:0.6].max().max()
-            varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)', xlim=(0, 0.5),
-                                            ylim=(0, ymax), marker='o')
+            # option to make y axis log scale so to see results more clearly
+            if logy:
+                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)', xlim=(0, 0.5),
+                                                logy=True, marker='o')
+            else:
+                ymax = self.gamma.unstack(0).loc[0:0.6].max().max()
+                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)', xlim=(0, 0.5),
+                                                ylim=(0, ymax), marker='o')
 
             # factor importance bar chart for vars-abe, ivars50, and vars-to
             if 0.5 in self.ivars.index:
@@ -526,7 +531,7 @@ class VARS(object):
                                         )
 
         # apply model to the generated star points
-        df = vars_funcs.apply_unique(func=self.model.func, 
+        df = vars_funcs.apply_unique(func=self.model.func,
                                      df=self.star_points,
                                      axis=1,
                                      progress=self.report_verbose,
@@ -536,10 +541,10 @@ class VARS(object):
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
             tqdm.pandas(desc='building pairs', dynamic_ncols=True)
-            self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df, 
+            self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df,
                                                                                    delta_h=self.delta_h)
         else:
-            self.pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df, 
+            self.pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df,
                                                                           delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
@@ -1102,7 +1107,7 @@ class TSVARS(VARS):
         status_func_eval_method = "Function Evaluation Method: " + self.func_eval_method
         status_vars_eval_method = "TSVARS Evaluation Method: " + self.vars_eval_method
         status_vars_chunk_size  = "TSVARS Chunk Size: " + (str(self.vars_chunk_size) if self.vars_chunk_size else "N/A")
-        
+
         status_verbose  = "Verbose: " + ("On" if self.report_verbose else "Off")
         status_analysis = "TSVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
@@ -1264,7 +1269,7 @@ class TSVARS(VARS):
 
                 for chunk in trange(
                     int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1,
-                    desc='chunks', 
+                    desc='chunks',
                     dynamic_ncols=True,
                 ): # total number of chunks
 
@@ -1439,8 +1444,8 @@ class TSVARS(VARS):
 
     @staticmethod
     def _applyParallel(
-        dfGrouped: pd.DataFrame, 
-        func: Callable, 
+        dfGrouped: pd.DataFrame,
+        func: Callable,
         progress: bool=False,
         ) -> pd.DataFrame:
 
@@ -1451,7 +1456,7 @@ class TSVARS(VARS):
         def _tqdm_joblib(tqdm_object):
             """
             Context manager to patch joblib to report into tqdm progress bar given as argument
-            
+
             Source: https://stackoverflow.com/questions/24983493
                     /tracking-progress-of-joblib-parallel-execution
                     /58936697#58936697
@@ -1466,12 +1471,12 @@ class TSVARS(VARS):
 
             old_batch_callback = joblib.parallel.BatchCompletionCallBack
             joblib.parallel.BatchCompletionCallBack = TqdmBatchCompletionCallback
-            
+
             try:
                 yield tqdm_object
             finally:
                 joblib.parallel.BatchCompletionCallBack = old_batch_callback
-                tqdm_object.close()  
+                tqdm_object.close()
 
         if progress:
             with _tqdm_joblib(tqdm(desc="building pairs", total=len(dfGrouped), dynamic_ncols=True)) as progress_bar:
