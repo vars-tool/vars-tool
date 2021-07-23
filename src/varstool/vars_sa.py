@@ -1348,7 +1348,10 @@ class TSVARS(VARS):
                 self.st = pd.Series()
                 self.ivars = pd.Series()
 
-                for chunk in trange(int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1): # total number of chunks
+                for chunk in trange(
+                    int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1,
+                    {'desc':'Chunks', 'dynamic_ncols':True}
+                ): # total number of chunks
 
                     # make a chunk of the main df (result of func eval)
                     df_temp = self.star_points_eval.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, self.star_points_eval.shape[1]-1)]
@@ -1426,6 +1429,8 @@ class TSVARS(VARS):
                     if self.report_verbose:
                         vars_pbar.update(1)
                     self.ivars = pd.concat([self.ivars, temp_ivars_values])
+
+                    vars_pbar.close()
 
                     self.run_status = True
 
