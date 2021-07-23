@@ -4,6 +4,8 @@ import numpy as np
 
 from itertools import combinations
 
+from typing import Tuple
+
 
 # helper functions
 def scale(
