@@ -1336,17 +1336,17 @@ class TSVARS(VARS):
             if self.vars_chunk_size: # if chunk size is provided by the user
 
                 self.pair_df = pd.DataFrame()
-                self.sec_covariogram = pd.Series()
-                self.gamma = pd.Series()
-                self.mu_star_df = pd.Series()
-                self.mu_overall = pd.Series()
-                self.var_overall = pd.Series()
-                self.maee = pd.Series()
-                self.mee  = pd.Series()
-                self.cov = pd.Series()
-                self.ecov = pd.Series()
-                self.st = pd.Series()
-                self.ivars = pd.Series()
+                self.sec_covariogram = pd.DataFrame()
+                self.gamma = pd.DataFrame()
+                self.mu_star_df = pd.DataFrame()
+                self.mu_overall = pd.DataFrame()
+                self.var_overall = pd.DataFrame()
+                self.maee = pd.DataFrame()
+                self.mee  = pd.DataFrame()
+                self.cov = pd.DataFrame()
+                self.ecov = pd.DataFrame()
+                self.st = pd.DataFrame()
+                self.ivars = pd.DataFrame()
 
                 for chunk in trange(
                     int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1,
