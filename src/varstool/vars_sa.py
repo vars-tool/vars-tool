@@ -1336,69 +1336,96 @@ class TSVARS(VARS):
             if self.vars_chunk_size: # if chunk size is provided by the user
 
                 self.pair_df = pd.DataFrame()
-                self.sec_covariogram = pd.DataFrame()
-                self.variogram = pd.DataFrame()
-                self.mu_star = pd.DataFrame()
-                self.mu_overall = pd.DataFrame()
-                self.var_overall = pd.DataFrame()
-                self.sec_covariogram = pd.DataFrame()
-                self.morris = pd.DataFrame()
-                self.covariogram = pd.DataFrame()
-                self.e_covariogram = pd.DataFrame()
-                self.sobol = pd.DataFrame()
-                self.ivars = pd.DataFrame()
+                self.sec_covariogram = pd.Series()
+                self.gamma = pd.Series()
+                self.mu_star_df = pd.Series()
+                self.mu_overall = pd.Series()
+                self.var_overall = pd.Series()
+                self.maee = pd.Series()
+                self.mee  = pd.Series()
+                self.cov = pd.Series()
+                self.ecov = pd.Series()
+                self.st = pd.Series()
+                self.ivars = pd.Series()
 
-                for chunk in range(int(df.shape[1]//self.vars_chunk_size)+1): # total number of chunks
+                for chunk in trange(int(df.shape[1]//self.vars_chunk_size)+1): # total number of chunks
 
                     # make a chunk of the main df (result of func eval)
                     df_temp = df.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, df.shape[1]-1)]
 
                     # make pairs for each chunk
-                    temp_pair_df = applyParallel(a.groupby(level=0, axis=1), ts_pair)
+                    temp_pair_df = self._applyParallel(self.star_points_eval.groupby(level=0, axis=1), ts_pair, self.report_verbose)
                     temp_pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
+
+                    if self.report_verbose:
+                        vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)
+
                     self.pair_df = pd.concat([self.pair_df, temp_pair_df])
 
                     # mu star
                     temp_mu_star = df_temp.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                     temp_mu_star.index.names = ['ts', 'centre', 'param']
-                    self.mu_star = pd.concat([self.mu_star, temp_mu_star])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.mu_star_df = pd.concat([self.mu_star_df, temp_mu_star])
 
                     # mu overall
-                    temp_mu_overall = df_temp.apply(lambda x: np.mean(list(np.unique(x))))
+                    temp_mu_overall = df_temp..apply(lambda x: np.mean(list(np.unique(x))))
+                    if self.report_verbose:
+                        vars_pbar.update(1)
                     self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall])
 
                     #var overall
                     temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                    if self.report_verbose:
+                        vars_pbar.update(1)
                     self.var_overall = pd.concat([self.var_overall, temp_var_overall])
 
                     #variogram
-                    temp_variogram = tsvars_funcs.variogram(temp_pair_df)
-                    self.variogram = pd.concat([self.variogram, temp_variogram])
+                    temp_gamma = tsvars_funcs.variogram(temp_pair_df)
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.gamma = pd.concat([self.gamma, temp_gamma])
 
                     #sectional variogram
                     temp_sec_covariogram = tsvars_funcs.cov_section(temp_pair_df, temp_mu_star)
+                    if self.report_verbose:
+                        vars_pbar.update(1)
                     self.sec_covariogram = pd.concat([self.sec_covariogram, temp_sec_covariogram])
 
                     #morris
                     temp_morris_values = tsvars_funcs.morris_eq(temp_pair_df)
-                    self.morris = pd.concat([self.morris, temp_morris_values])
+                    temp_maee = temp_morris_values[0]
+                    temp_mee  = temp_morris_values[1]
+                    self.maee = pd.concat([self.maee, temp_maee])
+                    self.mee  = pd.concat([self.mee, temp_mee])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
 
                     #covariogram
                     temp_covariogram = tsvars_funcs.covariogram(temp_pair_df, temp_mu_overall)
-                    self.covariogram = pd.concat([self.covariogram, temp_covariogram])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.cov = pd.concat([self.cov, temp_covariogram])
 
                     #e_covariogram
                     temp_e_covariogram = tsvars_funcs.e_covariogram(temp_sec_covariogram)
-                    self.e_covariogram = pd.concat([self.e_covariogram, temp_e_covariogram])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.ecov = pd.concat([self.ecov, temp_e_covariogram])
 
                     #sobol
                     temp_sobol_values = tsvars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
-                    self.sobol = pd.concat([self.sobol, temp_sobol_values])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.st = pd.concat([self.st, temp_sobol_values])
 
                     #ivars
-                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_variogram_values.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
-                      for scale in self.ivars_scales}, 'index')
-                    self.ivars = pd.concat([self.ivars_values, temp_ivars_values])
+                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                      for scale in self.ivars_scales}, 'index').unstack()
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.ivars = pd.concat([self.ivars, temp_ivars_values])
 
                     self.run_status = True
 
