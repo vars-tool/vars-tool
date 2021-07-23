@@ -1338,7 +1338,7 @@ class TSVARS(VARS):
                 self.pair_df = pd.DataFrame()
                 self.sec_covariogram = pd.DataFrame()
                 self.gamma = pd.DataFrame()
-                self.mu_star_df = pd.DataFrame()
+                self.mu_star_df = pd.DataFrameDataFrame()
                 self.mu_overall = pd.DataFrame()
                 self.var_overall = pd.DataFrame()
                 self.maee = pd.DataFrame()
@@ -1371,38 +1371,38 @@ class TSVARS(VARS):
                     temp_mu_star.index.names = ['ts', 'centre', 'param']
                     if self.report_verbose:
                         vars_pbar.update(1)
-                    self.mu_star_df = self.mu_star_df.append(temp_mu_star)
+                    self.mu_star_df = pd.concat([self.mu_star_df, temp_mu_star.to_frame()])
 
                     # mu overall
                     temp_mu_overall = df_temp.apply(lambda x: np.mean(list(np.unique(x))))
                     if self.report_verbose:
                         vars_pbar.update(1)
-                    self.mu_overall = self.mu_overall.append(temp_mu_overall)
+                    self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall.to_frame()])
 
                     #var overall
                     temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
                     if self.report_verbose:
                         vars_pbar.update(1)
-                    self.var_overall = self.var_overall.append(temp_var_overall)
+                    self.var_overall = pd.concat([self.var_overall, temp_var_overall.to_frame()])
 
                     #variogram
                     temp_gamma = tsvars_funcs.variogram(temp_pair_df)
                     if self.report_verbose:
                         vars_pbar.update(1)
-                    self.gamma = self.gamma.append(temp_gamma)
+                    self.gamma = pd.concat([self.gamma, temp_gamma.to_frame()])
 
                     #sectional variogram
                     temp_sec_covariogram = tsvars_funcs.cov_section(temp_pair_df, temp_mu_star)
                     if self.report_verbose:
                         vars_pbar.update(1)
-                    self.sec_covariogram = self.sec_covariogram.append(temp_sec_covariogram)
+                    self.sec_covariogram = pd.concat([self.sec_covariogram, temp_sec_covariogram.to_frame()])
 
                     #morris
                     temp_morris_values = tsvars_funcs.morris_eq(temp_pair_df)
                     temp_maee = temp_morris_values[0]
                     temp_mee  = temp_morris_values[1]
-                    self.maee = self.maee.append(temp_maee)
-                    self.mee = self.mee.append(temp_mee)
+                    self.maee = pd.concat([self.maee, temp_maee.to_frame()])
+                    self.mee = pd.concat([self.mee, temp_mee.to_frame()])
                     if self.report_verbose:
                         vars_pbar.update(1)
 
@@ -1410,26 +1410,26 @@ class TSVARS(VARS):
                     temp_covariogram = tsvars_funcs.covariogram(temp_pair_df, temp_mu_overall)
                     if self.report_verbose:
                         vars_pbar.update(1)
-                    self.cov = self.cov.append(temp_covariogram)
+                    self.cov = pd.concat([self.cov, temp_covariogram.to_frame()])
 
                     #e_covariogram
                     temp_e_covariogram = tsvars_funcs.e_covariogram(temp_sec_covariogram)
                     if self.report_verbose:
                         vars_pbar.update(1)
-                    self.ecov =self.ecov.append(temp_e_covariogram)
+                    self.ecov = pd.concat([self.ecov, temp_e_covariogram.to_frame()])
 
                     #sobol
                     temp_sobol_values = tsvars_funcs.sobol_eq(temp_gamma, temp_e_covariogram, temp_var_overall, self.delta_h)
                     if self.report_verbose:
                         vars_pbar.update(1)
-                    self.st = self.st.append(temp_sobol_values)
+                    self.st = pd.concat([self.st, temp_sobol_values.to_frame()])
 
                     #ivars
                     temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
                     if self.report_verbose:
                         vars_pbar.update(1)
-                    self.ivars = self.ivars.append(temp_ivars_values)
+                    self.ivars = pd.concat([self.ivars, temp_ivars_values.to_frame()])
 
                     vars_pbar.close()
 
