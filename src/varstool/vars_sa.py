@@ -1299,7 +1299,7 @@ class TSVARS(VARS):
                     vars_pbar.update(1)
 
                 self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
-                      for scale in self.ivars_scales}, 'index')
+                      for scale in self.ivars_scales}, 'index').unstack()
                 if self.report_verbose:
                     vars_pbar.update(1)
                     vars_pbar.close()

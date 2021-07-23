@@ -96,7 +96,7 @@ def section_df(
 
 
 # TSVARS core functions
-def cov_section(pair_cols: pd.DataFrame, mu_star: pd.DataFrame) -> pd.DataFrame:
+def cov_section(pair_cols: pd.DataFrame, mu_star: pd.DataFrame) -> pd.Series:
     """Returns the sectional covariogram of the pairs of function evaluations
     that resulted from each star point. This function is specific for the time-series
     varying/aggregate of the VARS sensitivity analysis.
@@ -131,7 +131,7 @@ def cov_section(pair_cols: pd.DataFrame, mu_star: pd.DataFrame) -> pd.DataFrame:
     return cov_section_values
 
 
-def variogram(pair_cols: pd.DataFrame) -> pd.DataFrame:
+def variogram(pair_cols: pd.DataFrame) -> pd.Series:
     """Returns the variogram calculated from the pairs of function evaluations
     that each resulted from each star point. This function is specific for the time-series
     varying/aggregate of the VARS sensitivity analysis.
@@ -168,7 +168,7 @@ def variogram(pair_cols: pd.DataFrame) -> pd.DataFrame:
 
 def morris_eq(
     pair_cols: pd.DataFrame
-) -> pd.DataFrame:
+) -> Tuple[pd.Series, ...]:
     """Return the Morris Equivalent values derived from the pairs of 
     function evaluations that each resulted from each star point. This function
     is specific for the time-series varying/aggregate of the VARS sensitivity analysis.
@@ -204,7 +204,7 @@ def morris_eq(
 def covariogram(
     pair_cols: pd.DataFrame,
     mu_overall: pd.Series
-) -> pd.DataFrame:
+) -> pd.Series:
     """Return the covariogram values derived from the pairs of 
     function evaluations that each resulted from each star point. This function
     is specific for the time-series varying/aggregate of the VARS sensitivity analysis.
@@ -240,7 +240,7 @@ def covariogram(
     return covariogram_values
 
 
-def e_covariogram(cov_section_all: pd.DataFrame) -> pd.DataFrame:
+def e_covariogram(cov_section_all: pd.DataFrame) -> pd.Series:
     """Returns the Expected value of covariogram values derived from the pairs of 
     function evaluations that each resulted from each star point. This function
     is specific for the time-series varying/aggregate of the VARS sensitivity analysis.
@@ -278,7 +278,7 @@ def sobol_eq(
     ecov: pd.DataFrame,
     variance: pd.Series,
     delta_h: float
-) -> pd.DataFrame:
+) -> pd.Series:
     """Returns the Sobol Equivalent values derived from the variogram (`gamma`),
     expected values of sectional covariograms (`ecov`), and overall variance (`variance`).
     This function is specific for the time-series varying/aggregate of the VARS sensitivity
@@ -372,4 +372,4 @@ def ivars(
         ivars_values += 0.5 * \
             (y_int[i + 1] + y_int[i]) * (x_int[i + 1] - x_int[i])
 
-    return ivars_values.unstack()
+    return ivars_values
