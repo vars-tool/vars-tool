@@ -1415,7 +1415,7 @@ class TSVARS(VARS):
                     self.ecov = pd.concat([self.ecov, temp_e_covariogram])
 
                     #sobol
-                    temp_sobol_values = tsvars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
+                    temp_sobol_values = tsvars_funcs.sobol_eq(temp_gamma, temp_e_covariogram, temp_var_overall, self.delta_h)
                     if self.report_verbose:
                         vars_pbar.update(1)
                     self.st = pd.concat([self.st, temp_sobol_values])
