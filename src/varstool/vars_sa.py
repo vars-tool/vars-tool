@@ -1206,8 +1206,9 @@ class TSVARS(VARS):
                         temp_pair_df = df_temp.groupby(level=0, axis=1).progress_apply(ts_pair)
                     else:
                         temp_pair_df = df_temp.groupby(level=0, axis=1).apply(ts_pair)
-                    print(temp_pair_df)
-                    temp_pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
+                    temp_pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
+                    temp_pair_df.columns.names = ['ts', None]
+                    temp_pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
                     self.pair_df = pd.concat([self.pair_df, temp_pair_df])
 
                     if self.report_verbose:
