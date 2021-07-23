@@ -1206,7 +1206,11 @@ class TSVARS(VARS):
                         temp_pair_df = df_temp.groupby(level=0, axis=1).progress_apply(ts_pair)
                     else:
                         temp_pair_df = df_temp.groupby(level=0, axis=1).apply(ts_pair)
-                    print(temp_pair_df)
+                    
+                    # there is a bug that is solved with the following line - needs to be fixed better
+                    if temp_pair_df.empty:
+                        break
+
                     temp_pair_df.columns.names = ['ts', None]
                     temp_pair_df = temp_pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
                     temp_pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
