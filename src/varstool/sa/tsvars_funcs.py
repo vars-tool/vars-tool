@@ -318,6 +318,7 @@ def sobol_eq(
 
     return sobol_eq_values
 
+
 def ivars(
         variogram_array: pd.DataFrame,
         scale: float,
@@ -371,4 +372,4 @@ def ivars(
         ivars_values += 0.5 * \
             (y_int[i + 1] + y_int[i]) * (x_int[i + 1] - x_int[i])
 
-    return ivars_values
+    return ivars_values.unstack()
