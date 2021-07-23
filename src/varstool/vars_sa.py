@@ -1180,70 +1180,105 @@ class TSVARS(VARS):
 
                 self.pair_df = pd.DataFrame()
                 self.sec_covariogram = pd.DataFrame()
-                self.variogram = pd.DataFrame()
-                self.mu_star = pd.DataFrame()
+                self.gamma = pd.DataFrame()
+                self.mu_star_df = pd.DataFrame()
                 self.mu_overall = pd.DataFrame()
                 self.var_overall = pd.DataFrame()
-                self.sec_covariogram = pd.DataFrame()
-                self.morris = pd.DataFrame()
-                self.covariogram = pd.DataFrame()
-                self.e_covariogram = pd.DataFrame()
-                self.sobol = pd.DataFrame()
+                self.maee = pd.DataFrame()
+                self.mee  = pd.DataFrame()
+                self.cov = pd.DataFrame()
+                self.ecov = pd.DataFrame()
+                self.st = pd.DataFrame()
                 self.ivars = pd.DataFrame()
 
-                for chunk in range(int(df.shape[1]//self.vars_chunk_size)+1): # total number of chunks
+                for chunk in trange(
+                    int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1,
+                    desc='chunks', 
+                    dynamic_ncols=True,
+                ): # total number of chunks
 
                     # make a chunk of the main df (result of func eval)
-                    df_temp = df.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, df.shape[1]-1)]
+                    df_temp = self.star_points_eval.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, self.star_points_eval.shape[1]-1)]
 
                     # make pairs for each chunk
-                    temp_pair_df = df_temp.groupby(level=0, axis=1).apply(ts_pair)
-                    temp_pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
-                    temp_pair_df.columns.names = ['ts', None]
-                    temp_pair_df.stack(level='ts').reorder_levels(['ts','centre','param','h','pair_ind']).sort_index()
+                    if self.report_verbose: # making a progress bar
+                        tqdm.pandas(desc='building pairs', dynamic_ncols=True)
+                        temp_pair_df = df_temp.groupby(level=0, axis=1).progress_apply(ts_pair)
+                    else:
+                        self.pair_df = df_temp.groupby(level=0, axis=1).apply(ts_pair)
+                    temp_pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
                     self.pair_df = pd.concat([self.pair_df, temp_pair_df])
+
+                    if self.report_verbose:
+                        vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)
 
                     # mu star
                     temp_mu_star = df_temp.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
                     temp_mu_star.index.names = ['ts', 'centre', 'param']
-                    self.mu_star = pd.concat([self.mu_star, temp_mu_star])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.mu_star_df = pd.concat([self.mu_star_df, temp_mu_star.to_frame()])
 
                     # mu overall
                     temp_mu_overall = df_temp.apply(lambda x: np.mean(list(np.unique(x))))
-                    self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall.to_frame()])
 
                     #var overall
                     temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
-                    self.var_overall = pd.concat([self.var_overall, temp_var_overall])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.var_overall = pd.concat([self.var_overall, temp_var_overall.to_frame()])
 
                     #variogram
-                    temp_variogram = tsvars_funcs.variogram(temp_pair_df)
-                    self.variogram = pd.concat([self.variogram, temp_variogram])
+                    temp_gamma = tsvars_funcs.variogram(temp_pair_df)
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.gamma = pd.concat([self.gamma, temp_gamma.to_frame()])
 
                     #sectional variogram
                     temp_sec_covariogram = tsvars_funcs.cov_section(temp_pair_df, temp_mu_star)
-                    self.sec_covariogram = pd.concat([self.sec_covariogram, temp_sec_covariogram])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.sec_covariogram = pd.concat([self.sec_covariogram, temp_sec_covariogram.to_frame()])
 
                     #morris
                     temp_morris_values = tsvars_funcs.morris_eq(temp_pair_df)
-                    self.morris = pd.concat([self.morris, temp_morris_values])
+                    temp_maee = temp_morris_values[0]
+                    temp_mee  = temp_morris_values[1]
+                    self.maee = pd.concat([self.maee, temp_maee.to_frame()])
+                    self.mee = pd.concat([self.mee, temp_mee.to_frame()])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
 
                     #covariogram
                     temp_covariogram = tsvars_funcs.covariogram(temp_pair_df, temp_mu_overall)
-                    self.covariogram = pd.concat([self.covariogram, temp_covariogram])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.cov = pd.concat([self.cov, temp_covariogram.to_frame()])
 
                     #e_covariogram
                     temp_e_covariogram = tsvars_funcs.e_covariogram(temp_sec_covariogram)
-                    self.e_covariogram = pd.concat([self.e_covariogram, temp_e_covariogram])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.ecov = pd.concat([self.ecov, temp_e_covariogram.to_frame()])
 
                     #sobol
-                    temp_sobol_values = tsvars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
-                    self.sobol = pd.concat([self.sobol, temp_sobol_values])
+                    temp_sobol_values = tsvars_funcs.sobol_eq(temp_gamma, temp_e_covariogram, temp_var_overall, self.delta_h)
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.st = pd.concat([self.st, temp_sobol_values.to_frame()])
 
                     #ivars
-                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_variogram_values.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
-                      for scale in self.ivars_scales}, 'index')
-                    self.ivars = pd.concat([self.ivars_values, temp_ivars_values])
+                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                      for scale in self.ivars_scales}, 'index').unstack()
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    temp_ivars_values.index.names = ['ts', 'param', 'h']
+                    self.ivars = pd.concat([self.ivars, temp_ivars_values.to_frame()])
+
+                    vars_pbar.close()
 
                     self.run_status = True
 
@@ -1306,29 +1341,6 @@ class TSVARS(VARS):
                     vars_pbar.close()
 
                 self.run_status = True
-
-                # output dictionary
-                self.output = {
-                    'Gamma':self.gamma,
-                    'MAEE':self.maee,
-                    'MEE':self.mee,
-                    'COV':self.cov,
-                    'ECOV':self.ecov,
-                    'IVARS':self.ivars,
-                    'IVARSid':self.ivars_scales,
-                    # 'rnkST':self.st_factor_ranking,
-                    # 'rnkIVARS':self.ivars_factor_ranking,
-                    # 'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
-                    # 'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
-                    # 'STlb':self.stlb if self.bootstrap_flag is True else None,
-                    # 'STub':self.stub if self.bootstrap_flag is True else None,
-                    # 'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
-                    # 'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
-                    # 'relST':self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
-                    # 'relIVARS':self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
-                    # 'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
-                    # 'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
-                }
 
 
         elif self.vars_eval_method == 'parallel':
@@ -1492,28 +1504,28 @@ class TSVARS(VARS):
 
                 self.run_status = True
 
-                # output dictionary
-                self.output = {
-                    'Gamma':self.gamma,
-                    'MAEE':self.maee,
-                    'MEE':self.mee,
-                    'COV':self.cov,
-                    'ECOV':self.ecov,
-                    'IVARS':self.ivars,
-                    'IVARSid':self.ivars_scales,
-                    # 'rnkST':self.st_factor_ranking,
-                    # 'rnkIVARS':self.ivars_factor_ranking,
-                    # 'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
-                    # 'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
-                    # 'STlb':self.stlb if self.bootstrap_flag is True else None,
-                    # 'STub':self.stub if self.bootstrap_flag is True else None,
-                    # 'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
-                    # 'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
-                    # 'relST':self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
-                    # 'relIVARS':self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
-                    # 'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
-                    # 'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
-                }
+        # output dictionary
+        self.output = {
+            'Gamma':self.gamma,
+            'MAEE':self.maee,
+            'MEE':self.mee,
+            'COV':self.cov,
+            'ECOV':self.ecov,
+            'IVARS':self.ivars,
+            'IVARSid':self.ivars_scales,
+            # 'rnkST':self.st_factor_ranking,
+            # 'rnkIVARS':self.ivars_factor_ranking,
+            # 'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
+            # 'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
+            # 'STlb':self.stlb if self.bootstrap_flag is True else None,
+            # 'STub':self.stub if self.bootstrap_flag is True else None,
+            # 'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
+            # 'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
+            # 'relST':self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
+            # 'relIVARS':self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
+            # 'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
+            # 'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
+        }
 
         # defining aggregated values
         self.gamma.aggregate = self.gamma.groupby(level=['param', 'h']).mean()
