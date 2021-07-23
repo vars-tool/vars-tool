@@ -1024,7 +1024,9 @@ class GVARS(VARS):
 
 
 class TSVARS(VARS):
-    __doc__ = "TSVARS Documentation"
+    """ Time-series version of VARS
+
+    """
 
     def __init__(
         self, #itself
