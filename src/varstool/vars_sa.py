@@ -1480,7 +1480,7 @@ class TSVARS(VARS):
                 }
 
         # defining aggregated values
-        self.gamme.aggregate = self.gamma.groupby(level=-1).mean()
+        self.gamma.aggregate = self.gamma.groupby(level=-1).mean()
         self.maee.aggregate  = self.maee.groupby(level=-1).mean()
         self.mee.aggregate   = self.mee.groupby(level=-1).mean()
         self.cov.aggregate   = self.cov.groupby(level=-1).mean()
