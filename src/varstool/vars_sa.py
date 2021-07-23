@@ -1300,6 +1300,7 @@ class TSVARS(VARS):
 
                 self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
+                self.ivars.index.names = ['ts', 'param', 'h']
                 if self.report_verbose:
                     vars_pbar.update(1)
                     vars_pbar.close()
@@ -1450,6 +1451,7 @@ class TSVARS(VARS):
 
                 self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
+                self.ivars.index.names = ['ts', 'param', 'h']
                 if self.report_verbose:
                     vars_pbar.update(1)
                     vars_pbar.close()
@@ -1480,12 +1482,12 @@ class TSVARS(VARS):
                 }
 
         # defining aggregated values
-        self.gamma.aggregate = self.gamma.groupby(level=-1).mean()
-        self.maee.aggregate  = self.maee.groupby(level=-1).mean()
-        self.mee.aggregate   = self.mee.groupby(level=-1).mean()
-        self.cov.aggregate   = self.cov.groupby(level=-1).mean()
-        self.ecov.aggregate  = self.ecov.groupby(level=-1).mean()
-        self.ivars.aggregate = self.ivars.groupby(level=-1).mean()
+        self.gamma.aggregate = self.gamma.groupby(level=['param', 'h']).mean()
+        self.maee.aggregate  = self.maee.groupby(level=['param', 'h']).mean()
+        self.mee.aggregate   = self.mee.groupby(level=['param', 'h']).mean()
+        self.cov.aggregate   = self.cov.groupby(level=['param', 'h']).mean()
+        self.ecov.aggregate  = self.ecov.groupby(level=['param', 'h']).mean()
+        self.ivars.aggregate = self.ivars.groupby(level=['param', 'h']).mean()
 
     @staticmethod
     def _applyParallel(
