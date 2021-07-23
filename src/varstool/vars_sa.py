@@ -1429,6 +1429,7 @@ class TSVARS(VARS):
                       for scale in self.ivars_scales}, 'index').unstack()
                     if self.report_verbose:
                         vars_pbar.update(1)
+                    temp_ivars_values.index.names = ['ts', 'param', 'h']
                     self.ivars = pd.concat([self.ivars, temp_ivars_values.to_frame()])
 
                     vars_pbar.close()
