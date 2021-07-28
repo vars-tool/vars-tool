@@ -491,9 +491,32 @@ class VARS(object):
                 width = 0.1  # the width of the bars
 
                 barfig, barax = plt.subplots()
-                rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)')
-                rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50')
-                rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)')
+
+                # if there are bootstrap results include them in bar chart
+                if self.bootstrap_flag:
+                    # normalize confidence interval limits
+                    ivars50_err_upp = self.ivarsub.loc[0.5] / df3.sum()
+                    ivars50_err_low = self.ivarslb.loc[0.5] / df3.sum()
+                    sobol_err_upp = (self.stub / df2.to_numpy().sum()).to_numpy().flatten()
+                    sobol_err_low = (self.stlb / df2.to_numpy().sum()).to_numpy().flatten()
+
+                    # subtract from normalized values so that error bars work properly
+                    ivars50_err_upp = np.abs(ivars50_err_upp - normalized_ivars50)
+                    ivars50_err_low = np.abs(ivars50_err_low - normalized_ivars50)
+                    sobol_err_upp = np.abs(sobol_err_upp - normalized_sobol)
+                    sobol_err_low = np.abs(sobol_err_low - normalized_sobol)
+
+                    # create error array for bar charts
+                    ivars50_err = np.array([ivars50_err_low, ivars50_err_upp])
+                    sobol_err = np.array([sobol_err_low, sobol_err_upp])
+
+                    rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)')
+                    rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50', yerr=ivars50_err)
+                    rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)', yerr=sobol_err)
+                else:
+                    rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)')
+                    rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50')
+                    rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)')
 
                 # Add some text for labels, and custom x-axis tick labels, etc.
                 barax.set_ylabel('Ratio of Factor Importance')
