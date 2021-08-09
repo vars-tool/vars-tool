@@ -17,8 +17,6 @@ import contextlib
 
 import pandas as pd
 import numpy  as np
-import scipy.stats as stat
-import scipy.cluster.hierarchy as hchy
 import matplotlib.pyplot as plt
 
 from tqdm.auto import tqdm, trange
@@ -29,7 +27,9 @@ from itertools import compress
 
 
 from .sampling import starvars
+from .sampling import g_starvars
 from .sa import vars_funcs
+from .sa import gvars_funcs
 from .sa import tsvars_funcs
 
 from typing import (
@@ -863,6 +863,8 @@ class VARS(object):
         return
 
 
+
+
 class GVARS(VARS):
     __doc__ = """GVARS object"""
 
@@ -870,185 +872,308 @@ class GVARS(VARS):
     # Constructors
 
     def __init__(self,
-                 param_dist_types,  # distribution types of the model parameters
                  corr_mat,  # correlation matrix
-                 num_direct_samples: int = 50, # number of directional samples
+                 num_dir_samples: int = 50, # number of directional samples
                  num_stars: int = 2000, # number of star samples
                  ):
 
         # initialize values
         super().__init__() # initialize all values from VARS super method
-        self.num_direct_samples = num_direct_samples
+        self.num_dir_samples = num_dir_samples
         self.num_stars = num_stars
-        self.param_dist_types = param_dist_types
         self.corr_mat = corr_mat
+        # number of parameters in users model
+        self.num_factors = len(self.parameters)
+
 
         ## default value for the number of directional samples
         if not self.num_direct_samples:
             warnings.warn(
-                "Number of directional samples are not valid, default value of 50 "
+                "Number of directional samples are not valid, default value of 10 "
                 "will be considered.",
                 UserWarning,
                 stacklevel=1
             )
-        self.num_direct_samples = 50
+        self.num_direct_samples = 10
 
 
         ## default value for the number of star samples
         if not self.num_stars:
             warnings.warn(
-                "Number of star samples are not valid, default value of 2000 "
+                "Number of star samples are not valid, default value of 100 "
                 "will be considered.",
                 UserWarning,
                 stacklevel=1
             )
-        self.num_stars = 2000
+        self.num_stars = 100
 
-        # number of parameters in users model
-        self.num_factors = len(self.parameters)
+        if not self.corr_mat:
+            warnings.warn(
+                "Correlation matrix was not valid, default value is a zero matrix.",
+                UserWarning,
+                stacklevel=1
+            )
+        self.corr_mat = np.zeros([self.num_factors, self.num_factors])
 
-
-    #-------------------------------------------
+    # -------------------------------------------
     # Representators
-    def __repr__(self, ) -> str:
 
-        pass
+    def __repr__(self) -> str:
+        """shows the status of GVARS analysis"""
 
+        status_star_centres = "Star Centres: " + (
+            str(self.star_centres.shape[0]) + " Centers Loaded" if len(self.star_centres) != 0 else "Not Loaded")
+        status_star_points = "Star Points: " + ("Loaded" if len(self.star_points) != 0 else "Not Loaded")
+        status_parameters = "Parameters: " + (
+            str(len(self.parameters)) + " paremeters set" if self.parameters else "None")
+        status_delta_h = "Delta h: " + (str(self.delta_h) + "" if self.delta_h else "None")
+        status_model = "Model: " + (str(self.model) + "" if self.model else "None")
+        status_seed = "Seed Number: " + (str(self.seed) + "" if self.seed else "None")
+        status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
+        status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size) + "" if self.bootstrap_flag else "N/A")
+        status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci) + "" if self.bootstrap_flag else "N/A")
+        status_grouping = "Grouping: " + ("On" if self.grouping_flag else "Off")
+        status_num_grps = "Number of Groups: " + (str(self.num_grps) + "" if self.num_grps else "None")
+        status_verbose = "Verbose: " + ("On" if self.report_verbose else "Off")
+        status_analysis = "GVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
-    def _repr_html(self, ):
+        status_report_list = [status_star_centres, status_star_points, status_parameters, \
+                              status_delta_h, status_model, status_seed, status_bstrap, \
+                              status_bstrap_size, status_bstrap_ci, status_grouping, \
+                              status_num_grps, status_verbose, status_analysis]
 
-        pass
+        return "\n".join(status_report_list)
 
+    def __str__(self) -> str:
+        """shows the instance name of the GVARS analysis experiment"""
 
-    def __str__(self, ) -> str:
+        return self.__class__.__name__
 
-        pass
-
-    #-------------------------------------------
+    # -------------------------------------------
     # Core properties
+
+    @property
+    def star_centres(self):
+        return self._star_centres
+
+    @star_centres.setter
+    def star_centres(self, new_centres):
+        if not isinstance(new_centres,
+                          (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
+            raise TypeError(
+                "new_centres must be an array-like object: "
+                "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
+            )
+        self._star_centres = new_centres
+
+    @property
+    def star_points(self):
+        return self._star_points
+
+    @star_points.setter
+    def star_points(self, new_points):
+        if not isinstance(new_points,
+                          (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
+            raise TypeError(
+                "new_points must be an array-like object: "
+                "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
+            )
+        self._star_points = new_points
+
 
     #-------------------------------------------
     # Core functions
 
-    def run(self):
+    def run_online(self):
 
-        n_var = self.corr_mat.shape[1]
-        cov_mat = np.array([[1, 0.6], [0.6, 1]])  # make funcion for this for now just using matlab results
+        # generate g_star points
 
-        # Generate independent standard normal samples
-        # the amount of samples is the same as the amount of stars
-        U = np.random.multivariate_normal(np.zeros(n_var), np.eye(n_var), self.num_stars)
+        self.star_points = g_starvars.star(
+            self.parameters,
+            self.num_stars,
+            self.corr_mat,
+            self.num_dir_samples,
+            self.num_factors
+        )
 
-        # Generate correlated standard normal samples
-        # the amount of samples is the same as the amount of stars
-        cholU = np.linalg.cholesky(cov_mat)
-        cholU = cholU.transpose()  # to get in correct format for matrix multiplication
-        Z = np.matmul(U, cholU)  # transform samples to standard normal distribution
+        # scale star points here, not sure if this is needed yet
 
-        # Generate Nstar actual multivariate samples X (not done yet)
-        X = 0
+        # apply model to the generated star points
+        df = vars_funcs.apply_unique(func=self.model.func,
+                                     df=self.star_points,
+                                     axis=1,
+                                     progress=self.report_verbose,
+                                     )
+        df.index.names = ['centre', 'param', 'points']
 
-        # define index matrix of complement subset
-        compsub = np.empty([n_var, n_var - 1])
-        for i in range(0, n_var):
-            temp = np.arange(n_var)
-            compsub[i] = np.delete(temp, i)
-        compsub = compsub.astype(int)
+        # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
+        if self.report_verbose:
+            tqdm.pandas(desc='building pairs', dynamic_ncols=True)
+            self.pair_df = df[str(self.model)].groupby(level=[0, 1]).progress_apply(vars_funcs.section_df,
+                                                                                    delta_h=self.delta_h)
+        else:
+            self.pair_df = df[str(self.model)].groupby(level=[0, 1]).apply(vars_funcs.section_df,
+                                                                           delta_h=self.delta_h)
+        self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
-        # computer coditional variance and conditional expectation for each star center
-        chol_cond_std = []
-        std_cond_norm = []
-        mui_on_noti = np.zeros((len(Z), n_var))
-        for i in range(0, n_var):
-            noti = compsub[i]
-            # 2 dimensional or greater matrix case
-            if (cov_mat[noti, noti].ndim >= 2):
-                cond_std = cov_mat[i][i] - cov_mat[i, noti] * np.linalg.inv(cov_mat[noti, noti]) * cov_mat[noti, i]
-                chol_cond_std.append(np.linalg.cholesky(cond_std))
-                std_cond_norm.append(cond_std)
-                for j in range(0, len(Z)):
-                    mui_on_noti[j][i] = cov_mat[i, noti] * np.linalg.inv(cov_mat[noti, noti]) * Z[j, noti]
-            # less then 2 dimenional matrix case
-            else:
-                cond_std = cov_mat[i][i] - cov_mat[i, noti] * cov_mat[noti, noti] * cov_mat[noti, i]
-                chol_cond_std.append(np.linalg.cholesky([[cond_std]]).flatten())
-                std_cond_norm.append(cond_std)
-                for j in range(0, len(Z)):
-                    mui_on_noti[j][i] = cov_mat[i, noti] * cov_mat[noti, noti] * Z[j, noti]
+        # bin and reorder pairs according to actual 'h' values
+        self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, df, self.delta_h, self.report_verbose)
 
-        # Generate directional sample:
-        # Create samples in correlated standard normal space
-        all_section_condZ = []
-        condZ = []
-        for j in range(0, self.num_direct_samples):
-            stnrm_base = np.random.multivariate_normal(np.zeros(n_var), np.eye(n_var), self.num_stars)
-            for i in range(0, n_var):
-                condZ.append(stnrm_base[:, i] * chol_cond_std[i] + mui_on_noti[:, i])
-            all_section_condZ.append(condZ.copy())
-            condZ.clear()
-
-        # define the Xmax,Xmin along directional sample of all stars
-
-        # collect directional samples (for distance in variogram)
-        # sectionXi contains all section samples. each sell corresponds to
-        # each input factor: row= dirStar, column=nStar
-
-        # calculate variogram
-
-        # calculate ivars
-
-        # calculate sobol results
-
-        # bootstrapping
-
-        # calculate confidence intervals
-
-        # collect IVARS 50 ??
-
-        pass
+        # do, finish this, add missing details from copied vars analysis
 
 
-    def __map_to_cor_norm(self, corr_mat, dist_types, factors):
-        """
-        ***(doc string will probably need to be cleaned up)
+        # progress bar for vars analysis
+        if self.report_verbose:
+            vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)  # 10 steps for different components
 
-        This function is based on Kucherenko et al. 2012:
-        Kucherenko S., Tarantola S. and Annoni p. 2012 "Estimation of
-        global sensitivity indices for models with dependent variables" Computer
-        Physics Communications, doi:10.1016/j.cpc.2011.12.020
+        # get mu_star value
+        self.mu_star_df = df[str(self.model)].groupby(level=[0, 1]).mean()
+        self.mu_star_df.index.names = ['centre', 'param']
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
 
-        The code is modified from GSA_CORRELATED_MIXED_DISTRIBUTIONs code
-        (S. Kucherenko,  A. Klimenko, S. Tarantola), obtained from SAMO2018
+        # overall mean of the unique evaluated function value over all star points
+        self.mu_overall = df[str(self.model)].unique().mean()
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
-        1st update 20/10/2018
-        2nd update 20/12/2018
+        # overall variance of the unique evaluated function over all star points
+        self.var_overall = df[str(self.model)].unique().var(ddof=1)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
 
-        The code has been further modified to run in python on 18/06/2021:
-        Contributors:
-        Kasra Keshavarz
-        Cordell Blanchard
+        # sectional covariogram calculation
+        self.cov_section_all = vars_funcs.cov_section(self.pair_df, self.mu_star_df)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Sectional covariogram `cov_section_all` calculated - access via .cov_section_all')
 
-        Parameters
-        factors: user model parameters (add more detail)
+        # variogram calculation
+        # MATLAB: Gamma
+        self.gamma = vars_funcs.variogram(self.pair_df)
+        # replace missing values with 0
+        self.gamma = self.gamma.unstack(0).fillna(0).unstack(0)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Variogram (`gamma`) calculated - access via .gamma')
 
-        Returns
-        A fictive correlation matrix based on inputted parameters
-        """
+        # morris calculation
+        morris_value = vars_funcs.morris_eq(self.pair_df)
+        self.maee = morris_value[0]  # MATLAB: MAEE
+        self.mee = morris_value[1]  # MATLAB: MEE
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Morris MAEE and MEE (`maee` and `mee`) calculated - access via .maee and .mee')
 
-        pass
+        # overall covariogram calculation
+        # MATLAB: COV
+        self.cov = vars_funcs.covariogram(self.pair_df, self.mu_overall)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Covariogram (`cov`) calculated - access via .cov')
 
-    def __NtoX_transform(self, norm_vectors, dist_types, parameters):
-        """Transform variables from standard normal to original distributions"""
+        # expected value of the overall covariogram calculation
+        # MATLAB: ECOV
+        self.ecov = vars_funcs.e_covariogram(self.cov_section_all)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Expected value of covariogram (`ecov`) calculated - access via .ecov')
 
-        # can have the parameters in a data frame with the indices
-        # being their distribution type and use pd.loc to gather
-        # the parameters with a specific distribution type
-        # then preform the transformation on them to avoid for loop
+        # sobol calculation
+        # MATLAB: ST
+        self.st = vars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
+        if self.report_verbose:
+            vars_pbar.update(1)
+            # vars_pbar.write('Sobol ST (`st`) calculated - access via .st')
 
-        # will have to inform use that only unif, norm, triangle, lognorm, expo, and gev
-        # are the only ones that can be transformed
+        # IVARS calculation
+        self.ivars = pd.DataFrame.from_dict(
+            {scale: self.gamma.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+             for scale in self.ivars_scales}, 'index')
+        if self.report_verbose:
+            vars_pbar.update(1)
+            vars_pbar.close()
 
-        pass
+        # progress bar for factor ranking
+        if self.report_verbose:
+            factor_rank_pbar = tqdm(desc='factor ranking', total=2, dynamic_ncols=True)  # only two components
+
+        # do factor ranking on sobol results
+        sobol_factor_ranking_array = vars_funcs.factor_ranking(self.st)
+        # turn results into data frame
+        self.st_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(),
+                                              index=[''])
+        if self.report_verbose:
+            factor_rank_pbar.update(1)
+
+        # do factor ranking on IVARS results
+        ivars_factor_ranking_list = []
+        for scale in self.ivars_scales:
+            ivars_factor_ranking_list.append(vars_funcs.factor_ranking(self.ivars.loc[scale]))
+        # turn results into data frame
+        self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_list, columns=self.parameters.keys(),
+                                                 index=self.ivars_scales)
+        if self.report_verbose:
+            factor_rank_pbar.update(1)
+            factor_rank_pbar.close()
+
+        if self.bootstrap_flag and self.grouping_flag:
+            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
+                                                                               self.bootstrap_size, self.bootstrap_ci,
+                                                                               self.model.func, self.delta_h,
+                                                                               self.ivars_scales,
+                                                                               self.parameters, self.st_factor_ranking,
+                                                                               self.ivars_factor_ranking,
+                                                                               self.grouping_flag,
+                                                                               self.num_grps, self.report_verbose)
+        else:
+            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, df,
+                                                                                                 self.cov_section_all,
+                                                                                                 self.bootstrap_size,
+                                                                                                 self.bootstrap_ci,
+                                                                                                 self.model.func,
+                                                                                                 self.delta_h,
+                                                                                                 self.ivars_scales,
+                                                                                                 self.parameters,
+                                                                                                 self.st_factor_ranking,
+                                                                                                 self.ivars_factor_ranking,
+                                                                                                 self.grouping_flag,
+                                                                                                 self.num_grps,
+                                                                                                 self.report_verbose)
+
+        # for status update
+        self.run_status = True
+
+        # output dictionary
+        self.output = {
+            'Gamma': self.gamma,
+            'MAEE': self.maee,
+            'MEE': self.mee,
+            'COV': self.cov,
+            'ECOV': self.ecov,
+            'IVARS': self.ivars,
+            'IVARSid': self.ivars_scales,
+            'rnkST': self.st_factor_ranking,
+            'rnkIVARS': self.ivars_factor_ranking,
+            'Gammalb': self.gammalb if self.bootstrap_flag is True else None,
+            'Gammaub': self.gammaub if self.bootstrap_flag is True else None,
+            'STlb': self.stlb if self.bootstrap_flag is True else None,
+            'STub': self.stub if self.bootstrap_flag is True else None,
+            'IVARSlb': self.ivarslb if self.bootstrap_flag is True else None,
+            'IVARSub': self.ivarsub if self.bootstrap_flag is True else None,
+            'relST': self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
+            'relIVARS': self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
+            'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
+            'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
+        }
+
+        return
 
 
 class TSVARS(VARS):

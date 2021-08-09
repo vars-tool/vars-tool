@@ -32,3 +32,9 @@ def ishigami(
             '`x` must have three arguments passed in an array-like object')
 
     return np.sin(x[0]) + a * (np.sin(x[1])**2) + b * (x[2]**4) * np.sin(x[0])
+
+# document this later
+def linear_additive(x):
+    term1 = 2*x[0]
+    term2 = 3*x[1]
+    return term1 + term2

@@ -685,6 +685,8 @@ def bootstrapping(
 
         # calculating variogram, ecovariogram, variance, mean, Sobol, and IVARS values
         bootstrapped_variogram = variogram(bootstrapped_pairdf)
+        # replace missing values with 0
+        bootstrapped_variogram = bootstrapped_variogram.unstack(0).fillna(0).unstack(0)
 
         bootstrapped_ecovariogram = e_covariogram(bootstrapped_cov_section_all)
 
