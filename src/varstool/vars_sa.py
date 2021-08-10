@@ -877,7 +877,6 @@ class GVARS(VARS):
                  delta_h: Optional[float] = 0.1,  # delta_h for star sampling
                  ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5),  # ivars scales
                  model: Model = None,  # model (function) to run for each star point
-                 seed: Optional[int] = np.random.randint(1, 123456789),  # randomization state
                  bootstrap_flag: Optional[bool] = False,  # bootstrapping flag
                  bootstrap_size: Optional[int] = 1000,  # bootstrapping size
                  bootstrap_ci: Optional[float] = 0.9,  # bootstrap confidence interval
@@ -894,7 +893,6 @@ class GVARS(VARS):
                          delta_h=delta_h,
                          ivars_scales=ivars_scales,
                          model=model,
-                         seed=seed,
                          bootstrap_flag=bootstrap_flag,
                          bootstrap_size=bootstrap_size,
                          bootstrap_ci=bootstrap_ci,
@@ -978,6 +976,20 @@ class GVARS(VARS):
 
     #-------------------------------------------
     # Core functions
+
+    def generate_star(self) -> pd.DataFrame:
+
+        # generate g_star points
+        self.star_points = g_starvars.star(
+            self.parameters,  # parameters
+            self.num_stars,  # number of stars
+            self.corr_mat,  # correlation matrix of parameters
+            self.num_dir_samples,  # number of directional samples in star points
+            self.num_factors,  # number of parameters
+            self.report_verbose  # loading bar boolean value
+        )
+
+        return self.star_points
 
     def plot(self, logy : bool=False):
 
