@@ -1056,11 +1056,12 @@ class GVARS(VARS):
 
         # generate g_star points
         self.star_points = g_starvars.star(
-            self.parameters, # parameters
-            self.num_stars, # number of stars
-            self.corr_mat, # correlation matrix of parameters
-            self.num_dir_samples, # number of directional samples in star points
-            self.num_factors # number of parameters
+            self.parameters,  # parameters
+            self.num_stars,  # number of stars
+            self.corr_mat,  # correlation matrix of parameters
+            self.num_dir_samples,  # number of directional samples in star points
+            self.num_factors,  # number of parameters
+            self.report_verbose  # loading bar boolean value
         )
 
         # apply model to the generated star points
