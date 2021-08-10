@@ -931,7 +931,6 @@ class GVARS(VARS):
     def __repr__(self) -> str:
         """shows the status of GVARS analysis"""
         status_star_points = "Star Points: " + ("Loaded" if len(self.star_points) != 0 else "Not Loaded")
-        status_corr_mat = "Correlation Matrix: " + (str(self.corr_mat) + "" if self.corr_mat else "None")
         status_parameters = "Parameters: " + (
             str(len(self.parameters)) + " paremeters set" if self.parameters else "None")
         status_delta_h = "Delta h: " + (str(self.delta_h) + "" if self.delta_h else "None")
@@ -945,7 +944,7 @@ class GVARS(VARS):
         status_verbose = "Verbose: " + ("On" if self.report_verbose else "Off")
         status_analysis = "GVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
-        status_report_list = [status_star_points, status_corr_mat, status_parameters, \
+        status_report_list = [status_star_points, status_parameters, \
                               status_delta_h, status_model, status_seed, status_bstrap, \
                               status_bstrap_size, status_bstrap_ci, status_grouping, \
                               status_num_grps, status_verbose, status_analysis]
