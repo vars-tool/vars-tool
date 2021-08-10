@@ -908,14 +908,14 @@ class GVARS(VARS):
 
 
         ## default value for the number of directional samples
-        if not self.num_direct_samples:
+        if not self.num_dir_samples:
             warnings.warn(
                 "Number of directional samples are not valid, default value of 10 "
                 "will be considered.",
                 UserWarning,
                 stacklevel=1
             )
-        self.num_direct_samples = 10
+        self.num_dir_samples = 10
 
         if not self.corr_mat:
             warnings.warn(
