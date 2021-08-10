@@ -872,15 +872,36 @@ class GVARS(VARS):
     # Constructors
 
     def __init__(self,
-                 corr_mat,  # correlation matrix
-                 num_dir_samples: int = 50, # number of directional samples
-                 num_stars: int = 2000, # number of star samples
+                 num_stars: Optional[int] = 100,  # number of stars
+                 parameters: Dict[Union[str, int], Tuple[float, float]] = {},  # name and bounds
+                 delta_h: Optional[float] = 0.1,  # delta_h for star sampling
+                 ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5),  # ivars scales
+                 model: Model = None,  # model (function) to run for each star point
+                 seed: Optional[int] = np.random.randint(1, 123456789),  # randomization state
+                 bootstrap_flag: Optional[bool] = False,  # bootstrapping flag
+                 bootstrap_size: Optional[int] = 1000,  # bootstrapping size
+                 bootstrap_ci: Optional[float] = 0.9,  # bootstrap confidence interval
+                 grouping_flag: Optional[bool] = False,  # grouping flag
+                 num_grps: Optional[int] = None,  # number of groups
+                 report_verbose: Optional[bool] = False,  # reporting verbose
+                 corr_mat: np.ndarray = np.array([]),  # correlation matrix
+                 num_dir_samples: int = 50,  # number of directional samples
                  ):
 
         # initialize values
-        super().__init__() # initialize all values from VARS super method
+        super().__init__(num_stars=num_stars,
+                         parameters=parameters,
+                         delta_h=delta_h,
+                         ivars_scales=ivars_scales,
+                         model=model,
+                         seed=seed,
+                         bootstrap_flag=bootstrap_flag,
+                         bootstrap_size=bootstrap_size,
+                         bootstrap_ci=bootstrap_ci,
+                         grouping_flag=grouping_flag,
+                         num_grps=num_grps,
+                         report_verbose=report_verbose) # initialize all values from VARS super method
         self.num_dir_samples = num_dir_samples
-        self.num_stars = num_stars
         self.corr_mat = corr_mat
         # number of parameters in users model
         self.num_factors = len(self.parameters)
@@ -896,17 +917,6 @@ class GVARS(VARS):
             )
         self.num_direct_samples = 10
 
-
-        ## default value for the number of star samples
-        if not self.num_stars:
-            warnings.warn(
-                "Number of star samples are not valid, default value of 100 "
-                "will be considered.",
-                UserWarning,
-                stacklevel=1
-            )
-        self.num_stars = 100
-
         if not self.corr_mat:
             warnings.warn(
                 "Correlation matrix was not valid, default value is a zero matrix.",
@@ -920,9 +930,6 @@ class GVARS(VARS):
 
     def __repr__(self) -> str:
         """shows the status of GVARS analysis"""
-
-        status_star_centres = "Star Centres: " + (
-            str(self.star_centres.shape[0]) + " Centers Loaded" if len(self.star_centres) != 0 else "Not Loaded")
         status_star_points = "Star Points: " + ("Loaded" if len(self.star_points) != 0 else "Not Loaded")
         status_parameters = "Parameters: " + (
             str(len(self.parameters)) + " paremeters set" if self.parameters else "None")
@@ -937,7 +944,7 @@ class GVARS(VARS):
         status_verbose = "Verbose: " + ("On" if self.report_verbose else "Off")
         status_analysis = "GVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
-        status_report_list = [status_star_centres, status_star_points, status_parameters, \
+        status_report_list = [status_star_points, status_parameters, \
                               status_delta_h, status_model, status_seed, status_bstrap, \
                               status_bstrap_size, status_bstrap_ci, status_grouping, \
                               status_num_grps, status_verbose, status_analysis]
@@ -951,20 +958,6 @@ class GVARS(VARS):
 
     # -------------------------------------------
     # Core properties
-
-    @property
-    def star_centres(self):
-        return self._star_centres
-
-    @star_centres.setter
-    def star_centres(self, new_centres):
-        if not isinstance(new_centres,
-                          (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
-            raise TypeError(
-                "new_centres must be an array-like object: "
-                "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
-            )
-        self._star_centres = new_centres
 
     @property
     def star_points(self):
@@ -1067,8 +1060,6 @@ class GVARS(VARS):
             self.num_dir_samples, # number of directional samples in star points
             self.num_factors # number of parameters
         )
-
-        # scale star points here, not sure if this is needed yet
 
         # apply model to the generated star points
         df = vars_funcs.apply_unique(func=self.model.func,
