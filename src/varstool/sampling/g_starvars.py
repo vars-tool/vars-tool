@@ -135,6 +135,7 @@ def star(parameters,
     if report_verbose:
         sleep(0.1)
         stars_pbar.update(1)
+        stars_pbar.close()
 
 
     return star_points_df

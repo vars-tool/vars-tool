@@ -295,5 +295,6 @@ def reorder_pairs(pair_df, num_stars, parameters, df, delta_h, report_verbose):
     if report_verbose:
         sleep(0.1)
         pairs_pbar.update(1)
+        pairs_pbar.close()
 
     return pair_df
