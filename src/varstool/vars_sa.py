@@ -1095,7 +1095,7 @@ class GVARS(VARS):
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # bin and reorder pairs according to actual 'h' values
-        self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, df, self.delta_h, self.report_verbose)
+        self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, df, self.delta_h, self.report_verbose, False)
 
         # progress bar for vars analysis
         if self.report_verbose:
@@ -1264,7 +1264,7 @@ class GVARS(VARS):
 
         # bin and reorder pairs according to actual 'h' values
         self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, df, self.delta_h,
-                                                 self.report_verbose)
+                                                 self.report_verbose, True)
 
         # progress bar for vars analysis
         if self.report_verbose:

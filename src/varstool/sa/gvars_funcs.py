@@ -222,7 +222,7 @@ def pairs_h(
     return pairs
 
 
-def reorder_pairs(pair_df, num_stars, parameters, df, delta_h, report_verbose):
+def reorder_pairs(pair_df, num_stars, parameters, df, delta_h, report_verbose, offline_mode):
 
     # for loading bar when calculating differences in values 'h'
     if report_verbose:
@@ -236,12 +236,21 @@ def reorder_pairs(pair_df, num_stars, parameters, df, delta_h, report_verbose):
     for star_centre in star_centres:
         param_num = 0
         for param in parameters.keys():
-            pairs = pairs_h(df.loc[star_centre, param][param_num].index.get_level_values(-1))
+            # check for offline on online mode as index changes for df
+            if offline_mode:
+                pairs = pairs_h(df.loc[star_centre, param][str(param_num)].index.get_level_values(-1))
+            else:
+                pairs = pairs_h(df.loc[star_centre, param][param_num].index.get_level_values(-1))
             for ignore, idx in pairs.items():
                 for idx_tup in idx:
-                    dist_list.append(np.abs(
-                        df.loc[star_centre, param][param_num][idx_tup[0]] - df.loc[star_centre, param][param_num][
-                            idx_tup[1]]))
+                    if offline_mode:
+                        dist_list.append(np.abs(
+                            df.loc[star_centre, param][str(param_num)][idx_tup[0]] - df.loc[star_centre, param][str(param_num)][
+                                idx_tup[1]]))
+                    else:
+                        dist_list.append(np.abs(
+                            df.loc[star_centre, param][param_num][idx_tup[0]] - df.loc[star_centre, param][param_num][
+                                idx_tup[1]]))
 
             param_num += 1
 
