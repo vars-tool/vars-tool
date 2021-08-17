@@ -6,15 +6,57 @@ from time import sleep
 
 from ..sa import gvars_funcs
 
+from typing import (
+    Dict,
+    Tuple,
+    Union,
+)
 
-# document this file
-def star(parameters,
-         num_stars,
-         corr_mat,
-         num_dir_samples,
-         num_factors,
-         report_verbose
-         ):
+
+def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
+         num_stars: int,
+         corr_mat: np.ndarray,
+         num_dir_samples: int,
+         num_factors: int,
+         report_verbose: bool
+         ) -> pd.DataFrame:
+
+    """
+    This function generates a Pandas Dataframe containing ''star_points'' based on [3]
+
+    Parameters
+    ----------
+    parameters : dictionary
+        dictionary containing parameter names, and their attributes
+    num_stars : int
+        number of star samples
+    corr_mat : np.array
+        correlation matrix
+    num_dir_samples : int
+        number of directional samples per star point
+    num_factors : int
+        number of factors/parameters in model
+    report_verbose : boolean
+        if True will use a loading bar when generating stars, does nothing if False
+
+    Returns
+    -------
+    star_points_df : array_like
+        Pandas DataFrame containing the GVARS star points
+
+
+    References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
+    .. [3] Razavi, S., & Do, C. N. (2020). Correlation Effects? A Major but Often
+           Neglected Component in Sensitivity and Uncertainty Analysis. Water Resources
+           Research, 56(3). doi: /10.1029/2019WR025436
+    """
 
     # load bar if report_verbose is true
     if report_verbose:

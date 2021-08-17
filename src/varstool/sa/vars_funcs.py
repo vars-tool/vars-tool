@@ -14,8 +14,8 @@ from typing import (
     List,
     Tuple,
     Callable,
-    Optional,
-    Any, Dict, Union
+    Dict,
+    Union
 )
 
 from tqdm.auto import tqdm
@@ -440,7 +440,8 @@ def ivars(
     return ivars_values
 
 
-def factor_ranking(factors):
+def factor_ranking(factors : np.ndarray
+                   ) -> np.ndarray:
     """Ranks factors based on their influence (how large or small results are)
     The lowest rank corresponds to the most influential (larger) factor
 
@@ -619,7 +620,8 @@ def grouping(
     parameters: Dict[Union[str, int], Tuple[float, float]],
     bootstrap_size: int
 ) -> Tuple:
-    """Groups parameters based on how close in 'distance' they are. This is done using clustering in a hierarchical
+    """
+    Groups parameters based on how close in 'distance' they are. This is done using clustering in a hierarchical
     fashion. The user can specify the number of groups or have the optimal number chosen using the elbow method by not
     inputting any group number. Usually done with high parameter models. Also calculates the reliability estimates
     of the group when bootstrapping.

@@ -16,14 +16,13 @@ import joblib
 import contextlib
 
 import pandas as pd
-import numpy  as np
+import numpy as np
 import matplotlib.pyplot as plt
 
 from tqdm.auto import tqdm, trange
 
 
 from joblib import Parallel, delayed
-from itertools import compress
 
 
 from .sampling import starvars
@@ -850,7 +849,7 @@ class VARS(object):
 
 
 class GVARS(VARS):
-    __doc__ = """Generalized representation of VARS, that can handle correlated factors"""
+    __doc__ = """Generalized representation of VARS that can handle correlated factors"""
 
     #-------------------------------------------
     # Constructors

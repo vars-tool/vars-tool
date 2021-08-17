@@ -15,21 +15,55 @@ from collections.abc import (
 from typing import (
     List,
     Tuple,
-    Callable,
-    Optional,
-    Any, Dict, Union
+    Dict,
+    Union
 )
 
 from tqdm.auto import tqdm
 from time import sleep
 
 '''
-Common functions used in VARS analysis
+Common functions used in GVARS analysis
 '''
 
+def rx2rn(distpair_type: List,
+          param1: List,
+          param2: List,
+          rxpair: float
+          ) -> float:
+    """
+    transforms value rx in a correlation matrix to value rn
 
-# Document all of these functions
-def rx2rn(distpair_type, param1, param2, rxpair):
+    Parameters
+    ----------
+    distpair_type : List
+        a list containing parameter 1 and parameter 2's distribution types
+    param1 : List
+        a list containing statistical information about parameter 1
+    param2 : List
+        a list containing statistical information about parameter 2
+    rxpair : float
+        value containing rx from the correlation matrix
+
+    Returns
+    -------
+    rn : float
+        the transformed rx value
+
+
+    References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
+    .. [3] Razavi, S., & Do, C. N. (2020). Correlation Effects? A Major but Often
+           Neglected Component in Sensitivity and Uncertainty Analysis. Water Resources
+           Research, 56(3). doi: /10.1029/2019WR025436
+    """
+
     # getting the inverse cdf of distribution 1
     if (distpair_type[0] == 'unif'):
         mu1 = (param1[1] + param1[0]) / 2
@@ -122,7 +156,44 @@ def rx2rn(distpair_type, param1, param2, rxpair):
     return rn
 
 
-def rn2rx(distpair_type, param1, param2, rnpair):
+def rn2rx(distpair_type: List,
+          param1: List,
+          param2: List,
+          rnpair: float
+          ) -> float:
+    """
+    transforms value rn in a correlation matrix to values rx
+
+    Parameters
+    ----------
+    distpair_type : List
+        a list containing parameter 1 and parameter 2's distribution type
+    param1 : List
+        a list containing statistical information about parameter 1
+    param2 : List
+        a list containing statistical information about parameter 2
+    rnpair : float
+        value containing rn from the correlation matrix
+
+    Returns
+    -------
+    rx : float
+        the transformed rn value
+
+
+    References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
+    .. [3] Razavi, S., & Do, C. N. (2020). Correlation Effects? A Major but Often
+           Neglected Component in Sensitivity and Uncertainty Analysis. Water Resources
+           Research, 56(3). doi: /10.1029/2019WR025436
+    """
+
     fun = lambda r: (rnpair - rx2rn(distpair_type, param1, param2, r))
     # try to find point x where fun(x) = 0
     try:
@@ -133,14 +204,46 @@ def rn2rx(distpair_type, param1, param2, rnpair):
     return rx
 
 
-def map_2_cornorm(parameters, corr_mat):
+def map_2_cornorm(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
+                  corr_mat: np.ndarray
+                  ) -> np.ndarray:
+    """
+    Computes the fictive correlation matrix given a correlation matrix and its
+    corresponding parameters
+
+    Parameters
+    ----------
+    parameters : dictionary
+        a dictionary containing parameter names and their attributes
+    corr_mat : np.ndarray
+        correlation matrix
+
+    Returns
+    -------
+    corr_n : np.ndarray
+        the fictive correlation matrix
+
+
+    References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
+    .. [3] Razavi, S., & Do, C. N. (2020). Correlation Effects? A Major but Often
+           Neglected Component in Sensitivity and Uncertainty Analysis. Water Resources
+           Research, 56(3). doi: /10.1029/2019WR025436
+    """
+
     # store parameter info in a list
     param_info = list(parameters.values())
 
     corr_n = np.eye(corr_mat.shape[0], corr_mat.shape[1])
     for i in range(0, corr_mat.shape[0] - 1):
         for j in range(i + 1, corr_mat.shape[0]):
-            # input paramter info (lb, ub, ?, dist type)
+            # input paramter info and computer fictive correlation matrix
             corr_n[i][j] = rn2rx([param_info[i][3], param_info[j][3]],
                                  [param_info[i][0], param_info[i][1], param_info[i][2]],
                                  [param_info[j][0], param_info[j][1], param_info[j][2]], corr_mat[i][j])
@@ -149,7 +252,38 @@ def map_2_cornorm(parameters, corr_mat):
     return corr_n
 
 
-def n2x_transform(norm_vectors, parameters):
+def n2x_transform(norm_vectors: np.ndarray,
+                  parameters: Dict[Union[str, int], Tuple[Union[float, str]]]
+                  ) -> np.ndarray:
+    """
+    transforms multivariate normal samples into parameters original distributions
+
+    Parameters
+    ----------
+    norm_vectors : np.ndarray
+        multivariate normal samples
+    parameters : dictionary
+        a dictionary containing parameter names and their attributes
+
+    Returns
+    -------
+    x : np.ndarray
+        the transformed vectors
+
+
+    References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
+    .. [3] Razavi, S., & Do, C. N. (2020). Correlation Effects? A Major but Often
+           Neglected Component in Sensitivity and Uncertainty Analysis. Water Resources
+           Research, 56(3). doi: /10.1029/2019WR025436
+    """
+
     # Transform from correlated standard normal to original distributions
     param_info = list(parameters.values())
 
@@ -222,7 +356,41 @@ def pairs_h(
     return pairs
 
 
-def reorder_pairs(pair_df, num_stars, parameters, df, delta_h, report_verbose, offline_mode):
+def reorder_pairs(pair_df: pd.DataFrame,
+                  num_stars: int,
+                  parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
+                  df: pd.DataFrame,
+                  delta_h: float,
+                  report_verbose: bool,
+                  offline_mode: bool
+                  ) -> pd.DataFrame:
+
+    """
+    Calculates the differences('h') between the pairings of the star points, and
+    bins and reorders the pair dataframe according to the calculated 'h' values
+
+    Parameters
+    ----------
+    pair_df : pd.DataFrame
+        Pandas DataFrame containing the paired star points values with the model outputs
+    num_stars : int
+        number of star samples
+    parameters : dictionary
+        dictionary containing parameter names and their attributes
+    df : pd.DataFrame
+        Pandas DataFrame containing the star points, and model outputs
+    delta_h : float
+        resolution of star samples
+    report_verbose : boolean
+        if True will use a loading bar when generating stars, does nothing if False
+    offline_mode : boolean
+        if True GVARS analysis is in offline mode, if False it is in online mode
+
+    Returns
+    -------
+    pair_df : array_like
+        the returned dataframe of paired values
+    """
 
     # for loading bar when calculating differences in values 'h'
     if report_verbose:
