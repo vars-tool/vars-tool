@@ -455,6 +455,16 @@ def factor_ranking(factors):
     ranks : array_like
         a numpy array containing the ranks of each factor in their corresponding index
 
+    References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
+
     """
 
     # check the factors is array like
@@ -479,10 +489,35 @@ def factor_grouping(
         sens_idx: pd.DataFrame,
         num_grp: int=None
 ) -> pd.DataFrame:
-    """
+    """Groups parameters based on how close in 'distance' they are. This is done using clustering in a hierarchical
+    fashion. The user can specify the number of groups or have the optimal number chosen using the elbow method by not
+    inputting any group number. Usually done with high parameter models.
 
-    KK: DOCSTRING IS MISSING - PLEASE FILL & REMOVE THIS LINE THEREAFTER
+    Parameters
+    ----------
+    sens_idx : array_like
+        the Pandas DataFrame containing the parameters to be grouped along with their values
+    num_grp : int
+        the number of groups the parameters are to be clustered into, None if group is to be chosen using elbow method
 
+    Returns
+    -------
+    optm_num_grp : int
+        the optimal group number, (either user inputted group number, or calculated group number)
+    rank_grp : array_like
+        the group number each parameter belongs to in their corresponding index.
+    clusters : array_like
+        list of different cluster configurations used for reliability estimates
+
+    References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
     """
     [m, n] = sens_idx.shape
 
@@ -531,9 +566,30 @@ def factor_grouping(
     return optm_num_grp, rank_grp, clusters
 
 
-def elbow_method(z):
+def elbow_method(z: np.array
+                 ) -> int:
     """
-    KK: DOCSTRING IS MISSING - FILL & REMOVE THIS LINE THEREAFTER
+    a method used to determine the number of clusters in the data being grouped
+
+    Parameters
+    ----------
+    z : array_like
+        the results from linking the factors together using statpy's linkage function
+
+    Returns
+    -------
+    cutoff : int
+        the optimal number to use as a cutoff when clustering factors
+
+    References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
     """
     # creating Q1 and Q2 for elbow method calculations
     q1 = np.array([1, z[0][2]])
@@ -563,9 +619,52 @@ def grouping(
     parameters: Dict[Union[str, int], Tuple[float, float]],
     bootstrap_size: int
 ) -> Tuple:
-    """
-    KK: DOCSTRING IS MISSING - PLEASE FILL & REMOVE THIS LINE THEREAFTER
+    """Groups parameters based on how close in 'distance' they are. This is done using clustering in a hierarchical
+    fashion. The user can specify the number of groups or have the optimal number chosen using the elbow method by not
+    inputting any group number. Usually done with high parameter models. Also calculates the reliability estimates
+    of the group when bootstrapping.
 
+    Parameters
+    ----------
+    result_bs_sobol_ranking : array_like
+        Pandas DataFrame with the bootstrapping results of the Sobol factor rankings
+    result_bs_sobol : array_like
+        Pandas DataFrame with the bootstrapping results of the Sobol results
+    result_bs_ivars_ranking : array_like
+        Pandas DataFrame with the bootstrapping results of the IVARS factor rankings
+    result_bs_ivars_df : array_like
+        Pandas DataFrame with the bootstrapping results of the IVARS results
+    num_grps : int
+        the number of groups the parameters are to be clustered into, None if group is to be chosen using elbow method
+    st_factor_ranking : array_like
+        Pandas DataFrame holding the original Sobol factor rankings
+    ivars_factor_ranking : array_like
+        Pandas DataFrame holding the original IVARS factor rankings
+    parameters : dictionary
+        dictionary holding the parameter names and their attributes
+    bootstrap_size : int
+        the number of bootstrap samples that were taken
+
+    Returns
+    -------
+    ivars50_grp : array_like
+        ivars50 grouping results
+    sobol_grp: array_like
+        sobol grouping results.
+    reli_sobol_grp : array_like
+        reliability estimates of sobol groups using bootstrapping results
+    reli_ivars50_grp : array_like
+        relibaility estimates of ivars50 groups using bootstrapping results
+
+     References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
     """
     # group the parameters
     num_grp_ivars50, ivars50_grp_array, clusters_ivars50 = factor_grouping(result_bs_ivars_df.loc[0.5],
@@ -657,10 +756,82 @@ def bootstrapping(
     ivars_factor_ranking: pd.DataFrame,
     grouping_flag: bool,
     num_grps: int,
-    progress: bool=False
+    progress: bool = False
 ) -> Tuple:
     """
-    KK: DOCSTRING MISSING - FILL & REMOVE THIS LINE THEREAFTER 
+    performs bootstrapping procedure to gather confidence interval limits on the variogram, Sobol, and IVARS results,
+    and the reliability estimates of the variogram, Sobol, and IVARS resuls. Also groups the Sobol and IVARS50 results
+    using clustering analysis in a hierarchical order
+
+    Parameters
+    ----------
+    pair_df : array_like
+        Pandas DataFrame that contains the pairing results of the VARS analysis
+    df : array_like
+        Pandas DataFrame containing the star_points and model results
+    cov_section_all : array_like
+        Pandas DataFrame containing the sectional covariogram results
+    bootstrap_size : int
+        the number of bootstrap samples that were taken
+    bootstrap_ci : float
+        the confidence interval of the bootstrapping results (ex. 0.90)
+    func : callable
+        the function that performs the models calculations
+    delta_h : float
+        resolution of star samples
+    ivars_scales : tuple
+        tuple containing the scales used in IVARS calculation
+    parameters : dictionary
+        dictionary containing parameter names and their attributes
+    st_factor_ranking : array_like
+        Pandas DataFrame containing the Sobol factor ranking results
+    ivars_factor_ranking : array_like
+        Pandas DataFrame containing the IVARS factor ranking results
+    grouping_flag : boolean
+        true if grouping is being done, false otherwise
+    num_grps : int
+        the number of groups the parameters are to be clustered into, None if group is to be chosen using elbow method
+    progress : boolean
+        true if loading bar is to be shown, false otherwise
+
+
+    Returns
+    -------
+    gammalb : array_like
+        variogram upper bound bootstrapping results
+    gammaub : array_like
+        variogram lower bound bootstrapping results
+    stlb : array_like
+        Sobol lower bound bootstrapping results
+    stub : array_like
+        Sobol upper bound bootstrapping results
+    ivarslb : array_like
+        IVARS lower bound bootstrapping results
+    ivarsub : array_like
+        IVARS upper bound bootstrapping results
+    rel_sobol_factor_ranking : array_like
+        reliability estimates of Sobol results based on bootstrapping
+    rel_ivars_factor_ranking : array_like
+        reliability estimates of IVARS results based on bootstrapping
+    ivars50_grp : array_like
+        IVARS50 grouping results
+    sobol_grp : array_like
+        Sobol grouping results
+    reli_sobol_grp : array_like
+        reliability estimates of groups based on bootstrapping
+    reli_ivars50_grp : array_like
+        reliability estimates of groups based on bootstrapping
+
+
+     References
+    ----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
     """
     # create result dataframes if bootstrapping is chosen to be done
     result_bs_variogram = pd.DataFrame()

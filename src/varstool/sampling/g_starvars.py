@@ -28,7 +28,7 @@ def star(parameters,
 
     # Generate independent standard normal samples
     # the amount of samples is the same as the amount of stars
-    u = np.random.multivariate_normal(np.zeros(num_factors), np.eye(num_factors), num_stars)
+    u = np.random.default_rng().multivariate_normal(np.zeros(num_factors), np.eye(num_factors), size=num_stars)
     if report_verbose:
         stars_pbar.update(1)
 
@@ -86,7 +86,7 @@ def star(parameters,
     all_section_cond_z = []
     cond_z = []
     for j in range(0, num_dir_samples):
-        stnrm_base = np.random.multivariate_normal(np.zeros(num_factors), np.eye(num_factors), num_stars)
+        stnrm_base = np.random.default_rng().multivariate_normal(np.zeros(num_factors), np.eye(num_factors), size=num_stars)
         for i in range(0, num_factors):
             cond_z.append(stnrm_base[:, i] * chol_cond_std[i] + mui_on_noti[:, i])
         all_section_cond_z.append(cond_z.copy())

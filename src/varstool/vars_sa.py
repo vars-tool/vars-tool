@@ -64,17 +64,6 @@ class Model(object):
                             parameters and values of parameter
                             values.
     :type unknown_options: dict
-
-
-    Attributes:
-    -----------
-
-
-    Methods:
-    --------
-
-
-
     """
     def __init__(
         self,
@@ -155,14 +144,6 @@ class VARS(object):
     :type num_grps: int, defaults to None
     :param report_verbose: flag to show the sensitvity analysis progress
     :type report_verbose: bool, False
-
-
-    Attributes:
-    -----------
-
-
-    Methods:
-    --------
 
 
     References:
@@ -381,7 +362,6 @@ class VARS(object):
         status_parameters = "Parameters: " + (str(len(self.parameters))+" paremeters set" if self.parameters else "None")
         status_delta_h = "Delta h: " + (str(self.delta_h)+"" if self.delta_h else "None")
         status_model = "Model: " + (str(self.model)+"" if self.model else "None")
-        status_seed = "Seed Number: " + (str(self.seed)+"" if self.seed else "None")
         status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
         status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size)+"" if self.bootstrap_flag else "N/A")
         status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"" if self.bootstrap_flag else "N/A")
@@ -391,7 +371,7 @@ class VARS(object):
         status_analysis = "VARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [status_star_centres, status_star_points, status_parameters, \
-                              status_delta_h, status_model, status_seed, status_bstrap, \
+                              status_delta_h, status_model, status_bstrap, \
                               status_bstrap_size, status_bstrap_ci, status_grouping, \
                               status_num_grps, status_verbose, status_analysis]
 
@@ -411,10 +391,12 @@ class VARS(object):
 
     @property
     def star_centres(self):
+        """returns the star centre samples"""
         return self._star_centres
 
     @star_centres.setter
     def star_centres(self, new_centres):
+        """sets the star centre samples"""
         if not isinstance(new_centres,
               (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
             raise TypeError(
@@ -425,10 +407,12 @@ class VARS(object):
 
     @property
     def star_points(self):
+        """returns the star point samples"""
         return self._star_points
 
     @star_points.setter
     def star_points(self, new_points):
+        """sets the star point samples"""
         if not isinstance(new_points,
               (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
             raise TypeError(
@@ -866,7 +850,7 @@ class VARS(object):
 
 
 class GVARS(VARS):
-    __doc__ = """GVARS object"""
+    __doc__ = """Generalized representation of VARS, that can handle correlated factors"""
 
     #-------------------------------------------
     # Constructors
@@ -904,8 +888,7 @@ class GVARS(VARS):
         # number of parameters in users model
         self.num_factors = len(self.parameters)
 
-
-        ## default value for the number of directional samples
+        # default value for the number of directional samples
         if not self.num_dir_samples:
             warnings.warn(
                 "Number of directional samples are not valid, default value of 10 "
@@ -917,11 +900,11 @@ class GVARS(VARS):
 
         if not self.corr_mat:
             warnings.warn(
-                "Correlation matrix was not valid, default value is a zero matrix.",
+                "Correlation matrix was not valid, default value is a identity matrix.",
                 UserWarning,
                 stacklevel=1
             )
-        self.corr_mat = np.zeros([self.num_factors, self.num_factors])
+        self.corr_mat = np.eye(self.num_factors)
 
     # -------------------------------------------
     # Representators
@@ -961,10 +944,12 @@ class GVARS(VARS):
 
     @property
     def star_points(self):
+        """returns the star point samples."""
         return self._star_points
 
     @star_points.setter
     def star_points(self, new_points):
+        """sets the star point samples"""
         if not isinstance(new_points,
                           (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
             raise TypeError(
