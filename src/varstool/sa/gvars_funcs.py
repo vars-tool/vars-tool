@@ -209,7 +209,7 @@ def map_2_cornorm(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
                   ) -> np.ndarray:
     """
     Computes the fictive correlation matrix given a correlation matrix and its
-    corresponding parameters
+    corresponding parameters using nataf transformation
 
     Parameters
     ----------
