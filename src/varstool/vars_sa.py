@@ -94,6 +94,7 @@ class Model(object):
         params,
         options: Dict = None,
     ) -> Union[Iterable, float, int]:
+        """calls the function model is wrapping"""
 
         # check if params is an array-like object
         assert isinstance(params,
@@ -170,19 +171,19 @@ class VARS(object):
     def __init__(
         self,
         star_centres: np.ndarray = np.array([]),  # sampled star centres (random numbers) used to create star points
-        num_stars: Optional[int] = 100, #  number of stars
-        parameters: Dict[Union[str, int], Tuple[float, float]] = {}, # name and bounds
-        delta_h: Optional[float] = 0.1, # delta_h for star sampling
-        ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5), # ivars scales
-        model: Model = None, # model (function) to run for each star point
-        seed: Optional[int] = np.random.randint(1, 123456789), # randomization state
-        sampler: Optional[str] = None, # one of the default random samplers of varstool
-        bootstrap_flag: Optional[bool] = False, # bootstrapping flag
-        bootstrap_size: Optional[int]  = 1000, # bootstrapping size
-        bootstrap_ci: Optional[float] = 0.9, # bootstrap confidence interval
-        grouping_flag: Optional[bool] = False, # grouping flag
-        num_grps: Optional[int] = None, # number of groups
-        report_verbose: Optional[bool] = False, # reporting verbose
+        num_stars: Optional[int] = 100,  # number of stars
+        parameters: Dict[Union[str, int], Tuple[float, float]] = {},  # name and bounds
+        delta_h: Optional[float] = 0.1,  # delta_h for star sampling
+        ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5),  # ivars scales
+        model: Model = None,  # model (function) to run for each star point
+        seed: Optional[int] = np.random.randint(1, 123456789),  # randomization state
+        sampler: Optional[str] = None,  # one of the default random samplers of varstool
+        bootstrap_flag: Optional[bool] = False,  # bootstrapping flag
+        bootstrap_size: Optional[int] = 1000,  # bootstrapping size
+        bootstrap_ci: Optional[float] = 0.9,  # bootstrap confidence interval
+        grouping_flag: Optional[bool] = False,  # grouping flag
+        num_grps: Optional[int] = None,  # number of groups
+        report_verbose: Optional[bool] = False,  # reporting verbose
     ) -> None:
 
         # initialize values
@@ -191,15 +192,15 @@ class VARS(object):
         self.delta_h = delta_h
         self.ivars_scales = ivars_scales
         self.star_centres = star_centres
-        self.star_points  = pd.DataFrame([]) # an empty list works for now - but needs to be changed - really?
-        self.seed = seed # seed number
+        self.star_points = pd.DataFrame([])  # an empty list works for now - but needs to be changed - really?
+        self.seed = seed  # seed number
         self.bootstrap_flag = bootstrap_flag
         self.bootstrap_size = bootstrap_size
         self.bootstrap_ci = bootstrap_ci
         self.grouping_flag = grouping_flag
         self.num_grps = num_grps
         self.report_verbose = report_verbose
-        self.sampler = sampler # one of the default sampling algorithms or None
+        self.sampler = sampler  # one of the default sampling algorithms or None
         # analysis stage is set to False before running anything
         self.run_status = False
 
@@ -226,7 +227,7 @@ class VARS(object):
                 stacklevel=1
             )
 
-        ## default value for the IVARS scales are 0.1, 0.3, and 0.5
+        # default value for the IVARS scales are 0.1, 0.3, and 0.5
         if not self.ivars_scales:
             warnings.warn(
                 "IVARS scales are not valid, default values of (0.1, 0.3, 0.5) "
@@ -236,7 +237,7 @@ class VARS(object):
             )
             self.ivars_scales = (0.1, 0.3, 0.5)
 
-        ## if there is any value in IVARS scales that is greater than 0.5
+        # if there is any value in IVARS scales that is greater than 0.5
         if any(i for i in self.ivars_scales if i > 0.5):
             warnings.warn(
                 "IVARS scales greater than 0.5 are not recommended.",
@@ -244,7 +245,7 @@ class VARS(object):
                 stacklevel=1
             )
 
-        ## if delta_h is not a factor of 1, NaNs or ZeroDivison might happen
+        # if delta_h is not a factor of 1, NaNs or ZeroDivison might happen
         if (decimal.Decimal(str(1)) % decimal.Decimal(str(self.delta_h))) != 0:
             warnings.warn(
                 "If delta_h is not a factor of 1, NaNs and ZeroDivisionError are probable. "
@@ -253,31 +254,31 @@ class VARS(object):
                 stacklevel=1
             )
 
-        ## if delta_h is not between 0 and 1
-        if ((delta_h <= 0) or (delta_h >=1 )):
+        # if delta_h is not between 0 and 1
+        if (delta_h <= 0) or (delta_h >= 1):
             raise ValueError(
                 "`delta_h` must be greater than 0 and less than 1."
             )
 
-        ## check seed dtype and sign
-        if ((not isinstance(seed, int)) or (seed < 0)):
+        # check seed dtype and sign
+        if (not isinstance(seed, int)) or (seed < 0):
             warnings.warn(
                 "`seed` must be an integer greater than zero."
                 " value is set to default, i.e., randomized integer between 1 and 123456789"
             )
             self.seed = np.random.randint(1, 123456790)
 
-        ## check bootstrap dtype and sign
-        if ((not isinstance(bootstrap_size, int)) or (bootstrap_size < 1)):
+        # check bootstrap dtype and sign
+        if (not isinstance(bootstrap_size, int)) or (bootstrap_size < 1):
             raise ValueError(
                 "`bootstrap_size` must be an integer greater than one."
                 " value is set to default, i.e., 1000"
             )
 
-        ## check bootstrap ci dtype, value and sign
-        if ((not isinstance(bootstrap_ci, float)) or \
-            (bootstrap_ci <= 0) or \
-            (bootstrap_ci >= 1)):
+        # check bootstrap ci dtype, value and sign
+        if ((not isinstance(bootstrap_ci, float)) or
+                (bootstrap_ci <= 0) or
+                (bootstrap_ci >= 1)):
             warnings.warn(
                 "bootstrap condifence interval (CI) must be a float"
                 " within (0, 1) interval. Setting `boostrap_ci` value"
@@ -285,8 +286,8 @@ class VARS(object):
             )
             self.bootstrap_ci = 0.9
 
-        ## check the dtypes and instances
-        ### `parameters`
+        # check the dtypes and instances
+        # `parameters`
         if not isinstance(self.parameters, dict):
             raise ValueError(
                 "`parameters` must be of type `dict`; the keys must be"
@@ -300,7 +301,7 @@ class VARS(object):
                 "must be greater than 1"
             )
 
-        ### `model`
+        # `model`
         if model:
             if not isinstance(model, Model):
                 raise TypeError(
@@ -315,32 +316,32 @@ class VARS(object):
         elif self.sampler == 'lhs':
             from .sampling import lhs
             self.star_centres = lhs(sp=self.num_stars,
-                                      params=len(self.parameters),
-                                      seed=self.seed,
-                                )
+                                    params=len(self.parameters),
+                                    seed=self.seed,
+                                    )
         elif self.sampler == 'plhs':
             from .sampling import plhs
             self.star_centres = plhs(sp=self.num_stars,
-                                       params=len(self.parameters),
-                                       seed=self.seed,
-                                )[0]
+                                    params=len(self.parameters),
+                                    seed=self.seed,
+                                     )[0]
         elif self.sampler == 'sobol_seq':
             from .sampling import sobol_sequence
             self.star_centres = sobol_sequence(sp=self.num_stars,
-                                                 params=len(self.parameters),
-                                                 seed=self.seed,
-                                )
+                                               params=len(self.parameters),
+                                               seed=self.seed,
+                                               )
         elif self.sampler == 'halton_seq':
             from .sampling import halton
             self.star_centres = halton(sp=self.num_stars,
-                                         params=len(self.parameters),
-                                         seed=self.seed,
-                                )
+                                       params=len(self.parameters),
+                                       seed=self.seed,
+                                       )
         elif self.sampler == 'symlhs':
             from .sampling import symlhs
             self.star_centres = symlhs(sp=self.num_stars,
-                                         params=len(self.parameters),
-                                         seed=self.seed,
+                                       params=len(self.parameters),
+                                       seed=self.seed,
                                 )
         elif self.sampler == None:
             pass
@@ -351,14 +352,16 @@ class VARS(object):
             )
 
 
-    #-------------------------------------------
+    # -------------------------------------------
     # Representators
     def __repr__(self) -> str:
         """shows the status of VARS analysis"""
 
-        status_star_centres = "Star Centres: " + (str(self.star_centres.shape[0])+ " Centers Loaded" if len(self.star_centres) != 0 else "Not Loaded")
+        status_star_centres = "Star Centres: " + (str(self.star_centres.shape[0])+ " Centers Loaded" if
+                                                  len(self.star_centres) != 0 else "Not Loaded")
         status_star_points = "Star Points: " + ("Loaded" if len(self.star_points) != 0 else "Not Loaded")
-        status_parameters = "Parameters: " + (str(len(self.parameters))+" paremeters set" if self.parameters else "None")
+        status_parameters = "Parameters: " + (str(len(self.parameters))+" paremeters set" if
+                                              self.parameters else "None")
         status_delta_h = "Delta h: " + (str(self.delta_h)+"" if self.delta_h else "None")
         status_model = "Model: " + (str(self.model)+"" if self.model else "None")
         status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
@@ -369,9 +372,9 @@ class VARS(object):
         status_verbose  = "Verbose: " + ("On" if self.report_verbose else "Off")
         status_analysis = "VARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
-        status_report_list = [status_star_centres, status_star_points, status_parameters, \
-                              status_delta_h, status_model, status_bstrap, \
-                              status_bstrap_size, status_bstrap_ci, status_grouping, \
+        status_report_list = [status_star_centres, status_star_points, status_parameters,
+                              status_delta_h, status_model, status_bstrap,
+                              status_bstrap_size, status_bstrap_ci, status_grouping,
                               status_num_grps, status_verbose, status_analysis]
 
         return "\n".join(status_report_list)
@@ -381,12 +384,10 @@ class VARS(object):
 
         return self.__class__.__name__
 
-
-    #-------------------------------------------
+    # -------------------------------------------
     # Core properties
 
-    ## using dunder variables for avoiding confusion with
-    ## D-/GVARS sublcasses.
+    # using dunder variables for avoiding confusion with D-/GVARS sublcasses.
 
     @property
     def star_centres(self):
@@ -421,41 +422,68 @@ class VARS(object):
         self._star_points = new_points
 
 
-    #-------------------------------------------
+    # -------------------------------------------
     # Core functions
+
     def generate_star(self) -> pd.DataFrame:
+        """
+        Generate VARS star points
+
+        Returns
+        -------
+        star_points : pd.DataFrame
+            dataframe containing star points
+        """
 
         # generate star points
-        star_points = starvars.star(self.star_centres, # star centres
-                                           delta_h=self.delta_h, # delta_h
-                                           parameters=[*self.parameters], # parameters dictionary keys
-                                           rettype='DataFrame',
-                                       ) # return type is a dataframe
+        star_points = starvars.star(self.star_centres,  # star centres
+                                    delta_h=self.delta_h,  # delta_h
+                                    parameters=[*self.parameters],  # parameters dictionary keys
+                                    rettype='DataFrame',
+                                    )  # return type is a dataframe
 
-        star_points = vars_funcs.scale(df=star_points, # star points must be scaled
-                                             bounds={ # bounds are created while scaling
-                                             'lb':[val[0] for _, val in self.parameters.items()],
-                                             'ub':[val[1] for _, val in self.parameters.items()],
-                                             }
+        star_points = vars_funcs.scale(df=star_points,  # star points must be scaled
+                                       bounds={  # bounds are created while scaling
+                                       'lb': [val[0] for _, val in self.parameters.items()],
+                                       'ub': [val[1] for _, val in self.parameters.items()],
+                                        }
                                         )
 
         star_points.index.names = ['centre', 'param', 'points']
 
         return star_points
 
-    def plot(self, logy : bool=False):
+    def plot(self, logy: bool = False):
+        """
+        plots the variogram results up to h=0.5, and plots the ratio of factor importance for IVARS50, VARS-TO,
+        and VARS-ABE
+
+        Parameters
+        ----------
+        logy : boolean
+            True if variogram plot is to have a logscale y-axis
+
+        Returns
+        -------
+        varax : matplotlib.axes.Axes
+            the axes of the variogram plot
+        barfig : matplotlib.Figure
+            the figure of the bar chart
+        barax : matplotlib.axes.Axes
+            the axes of the bar chart
+        """
 
         if self.run_status:
 
             # variogram plot
             # option to make y axis log scale so to see results more clearly
             if logy:
-                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)', xlim=(0, 0.5),
-                                                logy=True, marker='o')
+                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)',
+                                                   xlim=(0, 0.5), logy=True, marker='o')
             else:
                 ymax = self.gamma.unstack(0).loc[0:0.6].max().max()
-                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)', xlim=(0, 0.5),
-                                                ylim=(0, ymax), marker='o')
+                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)',
+                                                   xlim=(0, 0.5), ylim=(0, ymax), marker='o')
 
             # factor importance bar chart for vars-abe, ivars50, and vars-to
             if 0.5 in self.ivars.index:
@@ -467,7 +495,6 @@ class VARS(object):
                 normalized_maee = df1 / df1.sum()
                 normalized_sobol = df2 / df2.sum()
                 normalized_ivars50 = df3 / df3.sum()
-
 
                 # plot bar chart
                 x = np.arange(len(self.parameters.keys()))  # the label locations
@@ -517,31 +544,31 @@ class VARS(object):
                 return varax
 
 
-
-
-
     def run_online(self):
+        """
+        runs the online version of the VARS program
+        """
 
         # generate star points
-        self.star_points = starvars.star(self.star_centres, # star centres
-                                           delta_h=self.delta_h, # delta_h
-                                           parameters=[*self.parameters], # parameters dictionary keys
-                                           rettype='DataFrame',
-                                       ) # return type is a dataframe
+        self.star_points = starvars.star(self.star_centres,  # star centres
+                                         delta_h=self.delta_h,  # delta_h
+                                         parameters=[*self.parameters],  # parameters dictionary keys
+                                         rettype='DataFrame',
+                                         )  # return type is a dataframe
 
-        self.star_points = vars_funcs.scale(df=self.star_points, # star points must be scaled
-                                             bounds={ # bounds are created while scaling
-                                             'lb':[val[0] for _, val in self.parameters.items()],
-                                             'ub':[val[1] for _, val in self.parameters.items()],
+        self.star_points = vars_funcs.scale(df=self.star_points,  # star points must be scaled
+                                            bounds={  # bounds are created while scaling
+                                            'lb': [val[0] for _, val in self.parameters.items()],
+                                            'ub': [val[1] for _, val in self.parameters.items()],
                                              }
-                                        )
+                                            )
 
         # apply model to the generated star points
         df = vars_funcs.apply_unique(func=self.model.func,
                                      df=self.star_points,
                                      axis=1,
                                      progress=self.report_verbose,
-                            )
+                                     )
         df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
@@ -695,6 +722,9 @@ class VARS(object):
 
 
     def run_offline(self, df):
+        """
+        runs the offline version of VARS program
+        """
 
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
@@ -846,12 +876,70 @@ class VARS(object):
         return
 
 
-
-
 class GVARS(VARS):
-    __doc__ = """Generalized representation of VARS that can handle correlated factors"""
+    """
+    Description:
+    ------------
+    The Python implementation of the General Variogram Analysis of Response
+    Surfaces (GVARS), this version can handle correlated factors
 
-    #-------------------------------------------
+
+    Parameters:
+    -----------
+    :param num_stars: number of stars to generate
+    :type num_stars: int, numpy.int32, numpy.int64, defaults to 100
+    :param parameters: the parameters of the model including lower and
+                       upper bounds
+    :type parameters: dict
+    :param delta_h: the resolution of star samples
+    :type delta_h: float, defaults to 0.1
+    :param ivars_scales: the IVARS scales
+    :type ivars_scales: tuple, defaults to (0.1, 0.3, 0.5)
+    :param model: the model used in the sensitivity analysis
+    :type model: varstool.Model
+    :param bootstrap_flag: flag to bootstrap the sensitivity analysis results
+    :type bootstrap_flag: bool, defaults to False
+    :param bootstrap_size: the size of bootstrapping experiment
+    :type bootstrap_size: int, defaults to 1000
+    :param bootstrap_ci: the condifence interval of boostrapping
+    :type bootstrap_ci: float, defaults to 0.9
+    :param grouping_flag: flag to conduct grouping of sensitive parameters
+    :type grouping_flag: bool, defaults to False
+    :param num_grps: the number of groups to categorize parameters
+    :type num_grps: int, defaults to None
+    :param report_verbose: flag to show the sensitvity analysis progress
+    :type report_verbose: bool, False
+    :param corr_mat: correlation matrix
+    :type corr_mat: np.ndarray, np.array([])
+    :param num_dir_samples: number of directional samples in each star sample
+    :type num_dir_samples: int, 50
+    
+
+
+    References:
+    -----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
+    .. [3] Razavi, S., & Do, C. N. (2020). Correlation Effects? A Major but Often
+           Neglected Component in Sensitivity and Uncertainty Analysis. Water Resources
+           Research, 56(3). doi: /10.1029/2019WR025436
+
+
+    Contributors:
+    -------------
+    Razavi, Saman, (2015): algorithm, code in MATALB (c)
+    Gupta, Hoshin, (2015): algorithm, code in MATLAB (c)
+    Mattot, Shawn, (2019): code in C/++
+    Do, Nhu, (2020): algorithm, code in MATLAB (c)
+    Keshavarz, Kasra, (2021): code in Python 3
+    Blanchard, Cordell, (2021): code in Python 3
+    """
+
+    # -------------------------------------------
     # Constructors
 
     def __init__(self,
@@ -917,7 +1005,6 @@ class GVARS(VARS):
             str(len(self.parameters)) + " paremeters set" if self.parameters else "None")
         status_delta_h = "Delta h: " + (str(self.delta_h) + "" if self.delta_h else "None")
         status_model = "Model: " + (str(self.model) + "" if self.model else "None")
-        status_seed = "Seed Number: " + (str(self.seed) + "" if self.seed else "None")
         status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
         status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size) + "" if self.bootstrap_flag else "N/A")
         status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci) + "" if self.bootstrap_flag else "N/A")
@@ -927,7 +1014,7 @@ class GVARS(VARS):
         status_analysis = "GVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [status_star_points, status_parameters, \
-                              status_delta_h, status_model, status_seed, status_bstrap, \
+                              status_delta_h, status_model, status_bstrap, \
                               status_bstrap_size, status_bstrap_ci, status_grouping, \
                               status_num_grps, status_verbose, status_analysis]
 
@@ -958,10 +1045,18 @@ class GVARS(VARS):
         self._star_points = new_points
 
 
-    #-------------------------------------------
+    # -------------------------------------------
     # Core functions
 
     def generate_star(self) -> pd.DataFrame:
+        """
+        Generate GVARS star points
+
+        Returns
+        -------
+        star_points : pd.DataFrame
+            dataframe containing star points
+        """
 
         # generate g_star points
         self.star_points = g_starvars.star(
@@ -976,6 +1071,24 @@ class GVARS(VARS):
         return self.star_points
 
     def plot(self, logy : bool=False):
+        """
+        plots the variogram results up to h=0.5, and plots the ratio of factor importance for IVARS50, VARS-TO,
+        and VARS-ABE
+
+        Parameters
+        ----------
+        logy : boolean
+            True if variogram plot is to have a logscale y-axis
+
+        Returns
+        -------
+        varax : matplotlib.axes.Axes
+            the axes of the variogram plot
+        barfig : matplotlib.Figure
+            the figure of the bar chart
+        barax : matplotlib.axes.Axes
+            the axes of the bar chart
+        """
 
         if self.run_status:
 
@@ -1049,6 +1162,9 @@ class GVARS(VARS):
                 return varax
 
     def run_online(self):
+        """
+        runs online version of GVARS program
+        """
 
         # generate g_star points
         self.star_points = g_starvars.star(
@@ -1235,6 +1351,9 @@ class GVARS(VARS):
         return
 
     def run_offline(self, df):
+        """
+        runs offline version of GVARS program
+        """
 
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
@@ -1507,6 +1626,9 @@ class TSVARS(VARS):
     # Core functions
 
     def run_online(self):
+        """
+        runs online version of TS-VARS
+        """
 
         self.star_points = starvars.star(self.star_centres, # star centres
                                            delta_h=self.delta_h, # delta_h

@@ -434,8 +434,7 @@ def reorder_pairs(pair_df: pd.DataFrame,
 
     # create bin ranges
     num_bins = int(1 / delta_h)  # the number of bins created by delta h
-    bins = np.zeros(num_bins)  # create the array to hold the bin ranges
-    bins[1:] = np.arange(start=delta_h / 2 + delta_h, step=delta_h, stop=1)  # create middle bin ranges
+    bins = np.arange(start=delta_h/2, step=delta_h, stop=1)  # create bin ranges
 
     # create labels for the bin ranges which will be the actual delta h values
     labels = np.arange(start=delta_h, step=delta_h, stop=1)
