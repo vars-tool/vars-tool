@@ -56,7 +56,8 @@ The documentation of the project is located on [readthedocs](https://vars-tool.r
 
 * 4.2. **Real-world Example Using HBV-SASK (using TSVARS)**: Sensitivity analysis of a real-world hydrological model producing time-series results. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=%2Ftutorial%2FTSVARS-Tutorial.ipynb)
 	
-* 4.3. **Handling Correlated Factors Using Generalized VARS (GVARS)**: under progress...
+* 4.3. **Handling Correlated Factors Using Generalized VARS (GVARS)**: Sensitivity analysis using correlated factors that belong to specific distributions. [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool.git/master?filepath=tutorial%2FGVARS-Tutorial.ipynb)
+
 	
 * 4.4. **Data-driven Sensitivity Analysis (DVARS)**: under progress...
 
