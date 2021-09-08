@@ -420,8 +420,7 @@ def ivars(
 
     """
 
-    num_h = len(variogram_array.index.levels[-1].to_list())
-    x_bench = np.arange(start=0, stop=delta_h * (num_h + 1), step=delta_h)
+    x_bench = [0] + variogram_array.index.dropna().get_level_values(1).to_list()
     x_int = np.arange(start=0, stop=(scale * 10 + 1) / 10, step=delta_h)
 
     # calculate interpolated values for both x (h) and y (variogram)
@@ -434,8 +433,7 @@ def ivars(
     # for loop for each step size to caluclate the area
     ivars_values = 0
     for i in range(len(x_int) - 1):
-        ivars_values += 0.5 * \
-            (y_int[i + 1] + y_int[i]) * (x_int[i + 1] - x_int[i])
+        ivars_values += 0.5 * (y_int[i + 1] + y_int[i]) * (x_int[i + 1] - x_int[i])
 
     return ivars_values
 
@@ -858,8 +856,6 @@ def bootstrapping(
 
         # calculating variogram, ecovariogram, variance, mean, Sobol, and IVARS values
         bootstrapped_variogram = variogram(bootstrapped_pairdf)
-        # replace missing values with 0
-        bootstrapped_variogram = bootstrapped_variogram.unstack(0).fillna(0).unstack(0)
 
         bootstrapped_ecovariogram = e_covariogram(bootstrapped_cov_section_all)
 

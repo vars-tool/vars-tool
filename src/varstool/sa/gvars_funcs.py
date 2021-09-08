@@ -20,7 +20,6 @@ from typing import (
 )
 
 from tqdm.auto import tqdm
-from time import sleep
 
 '''
 Common functions used in GVARS analysis
@@ -78,12 +77,10 @@ def rx2rn(distpair_type: List,
         std1 = (np.sqrt(
             param1[0] ** 2 + param1[1] ** 2 + param1[2] ** 2 - param1[0] * param1[1] - param1[0] * param1[2] - param1[
                 1] * param1[2])) / np.sqrt(18)
-        mid1 = (param1[2] - param1[0]) / (param1[1] - param1[0])
-        term11 = (param1[1] - param1[0]) * (param1[2] - param1[0])
-        term21 = (param1[1] - param1[0]) * (param1[1] - param1[2])
-        inv_cdf1 = lambda x: ((param1[0] + np.sqrt(term11) * np.sqrt(x / 1)) * ((x >= 0).astype(int)) * (
-            (x < mid1).astype(int)) + (param1[1] - np.sqrt(term21) * np.sqrt(1 - x)) * ((x >= mid1).astype(int)) * (
-                                  (x < 1).astype(int)))
+        loc1 = param1[0]
+        scale1 = param1[1] - param1[0]
+        c1 = (param1[2] - param1[0]) / (param1[1] - param1[0])
+        inv_cdf1 = lambda x: stat.triang.ppf(q=x, c=c1, loc=loc1, scale=scale1)
     elif (distpair_type[0] == 'lognorm'):
         mu1 = param1[0]
         std1 = param1[1]
@@ -100,9 +97,9 @@ def rx2rn(distpair_type: List,
     elif (distpair_type[0] == 'gev'):
         mu = param1[0]  # location
         sigma = param1[1]  # scale
-        k1 = param1[2]  # shape
-        inv_cdf1 = lambda x: stat.genextreme.ppf(x, c=k1, scale=sigma, loc=mu)
-        [mu1, std1] = stat.genextreme.stats(k1, scale=sigma, loc=mu)
+        k1 = -1 * param1[2]  # shape
+        inv_cdf1 = lambda x: stat.genextreme.ppf(x, c=k1, scale=sigma, loc=mu);
+        [mu1, std1] = stat.genextreme.stats(k1, scale=sigma, loc=mu);
 
     # getting the inverse cdf of distribution 2
     if (distpair_type[1] == 'unif'):
@@ -118,12 +115,10 @@ def rx2rn(distpair_type: List,
         std2 = (np.sqrt(
             param2[0] ** 2 + param2[1] ** 2 + param2[2] ** 2 - param2[0] * param2[1] - param2[0] * param2[2] - param2[
                 1] * param2[2])) / np.sqrt(18)
-        mid2 = (param2[2] - param2[0]) / (param2[1] - param2[0])
-        term12 = (param2[1] - param2[0]) * (param2[2] - param2[0])
-        term22 = (param2[1] - param2[0]) * (param2[1] - param2[2])
-        inv_cdf2 = lambda x: ((param2[0] + np.sqrt(term12) * np.sqrt(x / 1)) * ((x >= 0).astype(int)) * (
-            (x < mid2).astype(int)) + (param2[1] - np.sqrt(term22) * np.sqrt(1 - x)) * ((x >= mid1).astype(int)) * (
-                                  (x < 1).astype(int)))
+        loc2 = param2[0]
+        scale2 = param2[1] - param2[0]
+        c2 = (param2[2] - param2[0]) / (param2[1] - param2[0])
+        inv_cdf2 = lambda x: stat.triang.ppf(q=x, c=c2, loc=loc2, scale=scale2)
     elif (distpair_type[1] == 'lognorm'):
         mu2 = param2[0]
         std2 = param2[1]
@@ -140,7 +135,7 @@ def rx2rn(distpair_type: List,
     elif (distpair_type[1] == 'gev'):
         mu = param2[0]  # location
         sigma = param2[1]  # scale
-        k2 = param2[2]  # shape
+        k2 = -1 * param2[2]  # shape
         inv_cdf2 = lambda x: stat.genextreme.ppf(x, c=k2, scale=sigma, loc=mu)
         [mu2, std2] = stat.genextreme.stats(k2, scale=sigma, loc=mu)
 
@@ -151,7 +146,8 @@ def rx2rn(distpair_type: List,
     integrand = lambda x1, x2: inv_cdf1(stat.norm.cdf(x1 * np.sqrt(1 - rxpair ** 2) + rxpair * x2, 0, 1)) * inv_cdf2(
         stat.norm.cdf(x2, 0, 1)) * stdnorm2_pdf(x1, x2)
     # compute double integral of integrand with x1 ranging from -5.0 to 5.0 and x2 ranging from -5.0 to 5.0
-    rn = (dblquad(integrand, -5.0, 5.0, lambda x: -5.0, lambda x: 5.0) - mu1 * mu2) / (std1 * std2)
+    integral_val = dblquad(integrand, -5, 5, lambda x: -5, lambda x: 5, epsabs=1.49e-06, epsrel=1.49e-06)[0]
+    rn = (integral_val - mu1 * mu2) / (std1 * std2)
 
     return rn
 
@@ -197,8 +193,9 @@ def rn2rx(distpair_type: List,
     fun = lambda r: (rnpair - rx2rn(distpair_type, param1, param2, r))
     # try to find point x where fun(x) = 0
     try:
-        rx = newton_krylov(fun, rnpair, x_tol=1e-5)
+        rx = newton_krylov(F=fun, xin=rnpair, x_tol=1e-5)
     except:
+        print("Function could not converge, fictive matrix was not computed")
         rx = rnpair
 
     return rx
@@ -243,7 +240,7 @@ def map_2_cornorm(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     corr_n = np.eye(corr_mat.shape[0], corr_mat.shape[1])
     for i in range(0, corr_mat.shape[0] - 1):
         for j in range(i + 1, corr_mat.shape[0]):
-            # input paramter info and computer fictive correlation matrix
+            # input paramter info
             corr_n[i][j] = rn2rx([param_info[i][3], param_info[j][3]],
                                  [param_info[i][0], param_info[i][1], param_info[i][2]],
                                  [param_info[j][0], param_info[j][1], param_info[j][2]], corr_mat[i][j])
@@ -253,7 +250,7 @@ def map_2_cornorm(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
 
 
 def n2x_transform(norm_vectors: np.ndarray,
-                  parameters: Dict[Union[str, int], Tuple[Union[float, str]]]
+                  param_info: List
                   ) -> np.ndarray:
     """
     transforms multivariate normal samples into parameters original distributions
@@ -262,8 +259,8 @@ def n2x_transform(norm_vectors: np.ndarray,
     ----------
     norm_vectors : np.ndarray
         multivariate normal samples
-    parameters : dictionary
-        a dictionary containing parameter names and their attributes
+    param_info : list
+        a list containing parameter information (bounds, distributions, etc.)
 
     Returns
     -------
@@ -285,9 +282,7 @@ def n2x_transform(norm_vectors: np.ndarray,
     """
 
     # Transform from correlated standard normal to original distributions
-    param_info = list(parameters.values())
 
-    #
     k = norm_vectors.shape[1]
     x = np.zeros(norm_vectors.shape)
 
@@ -326,7 +321,7 @@ def n2x_transform(norm_vectors: np.ndarray,
         elif param_info[i][3] == 'gev':
             mu = param_info[i][0]  # location
             sigma = param_info[i][1]  # scale
-            k = param_info[i][2]  # shape
+            k = -1 * param_info[i][2]  # shape
             x[:, i] = stat.genextreme.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), c=k, scale=sigma, loc=mu)
 
     return x
@@ -362,6 +357,8 @@ def reorder_pairs(pair_df: pd.DataFrame,
                   df: pd.DataFrame,
                   delta_h: float,
                   report_verbose: bool,
+                  xmax: np.ndarray,
+                  xmin: np.ndarray,
                   offline_mode: bool
                   ) -> pd.DataFrame:
 
@@ -383,6 +380,10 @@ def reorder_pairs(pair_df: pd.DataFrame,
         resolution of star samples
     report_verbose : boolean
         if True will use a loading bar when generating stars, does nothing if False
+    xmax : arraylike
+        array containing max boundary of each parameter
+    xmin : arraylike
+        array containing min boundary of each parameter
     offline_mode : boolean
         if True GVARS analysis is in offline mode, if False it is in online mode
 
@@ -412,13 +413,13 @@ def reorder_pairs(pair_df: pd.DataFrame,
             for ignore, idx in pairs.items():
                 for idx_tup in idx:
                     if offline_mode:
-                        dist_list.append(np.abs(
-                            df.loc[star_centre, param][str(param_num)][idx_tup[0]] - df.loc[star_centre, param][str(param_num)][
-                                idx_tup[1]]))
+                        dist_list.append(np.abs((df.loc[star_centre, param][str(param_num)][idx_tup[0]] -
+                                                 df.loc[star_centre, param][str(param_num)][idx_tup[1]]) / (
+                                                            xmax[param_num] - xmin[param_num])))
                     else:
-                        dist_list.append(np.abs(
-                            df.loc[star_centre, param][param_num][idx_tup[0]] - df.loc[star_centre, param][param_num][
-                                idx_tup[1]]))
+                        dist_list.append(np.abs((df.loc[star_centre, param][param_num][idx_tup[0]] -
+                                                 df.loc[star_centre, param][param_num][idx_tup[1]]) / (
+                                                            xmax[param_num] - xmin[param_num])))
 
             param_num += 1
 
@@ -426,24 +427,25 @@ def reorder_pairs(pair_df: pd.DataFrame,
     if report_verbose:
         pairs_pbar = tqdm(desc='binning and reording pairs based on \'h\' values', total=2, dynamic_ncols=True)
 
-    # drop old distance values
-    pair_df = pair_df.droplevel('h')
-
     # add new distances to dataframe
-    pair_df['h'] = dist_list
+    pair_df['actual h'] = dist_list
 
     # create bin ranges
     num_bins = int(1 / delta_h)  # the number of bins created by delta h
-    bins = np.arange(start=delta_h/2, step=delta_h, stop=1)  # create bin ranges
+    bins = np.zeros(num_bins + 1)
+    bins[1:] = np.arange(start=delta_h / 2, step=delta_h, stop=1)  # create middle bin ranges
 
     # create labels for the bin ranges which will be the actual delta h values
-    labels = np.arange(start=delta_h, step=delta_h, stop=1)
+    labels = np.zeros(num_bins)
+    labels[0] = delta_h / 4
+    labels[1:] = np.arange(start=delta_h, step=delta_h, stop=1)
 
     # bin pair values according to their distances 'h' for each paramter at each star centre
     binned_pairs = []
     for star_centre in range(0, num_stars):
         for param in parameters.keys():
-            binned_pairs.append(pd.cut(pair_df.loc[star_centre, param, :]['h'], bins=bins, labels=labels).sort_values())
+            binned_pairs.append(
+                pd.cut(pair_df.loc[star_centre, param, :]['actual h'], bins=bins, labels=labels).sort_values())
 
     # put binned pairs into a panda series
     binned_pairs = pd.concat(binned_pairs, ignore_index=False)
@@ -457,20 +459,61 @@ def reorder_pairs(pair_df: pd.DataFrame,
     # add in new index h, according to bin ranges
     # ex.) h = 0.1 = [0-0.15], h = 0.2 = [0.15-0.25]
     h = list(binned_pairs.values)
-
-    # drop actual h values for new rounded ones
-    pair_df.drop(columns='h')
-
     pair_df['h'] = h
 
     # format data frame so that it works properly with variogram analsysis functions
     pair_df.set_index('h', append=True, inplace=True)
+    pair_df.set_index('actual h', append=True, inplace=True)
 
-    pair_df = pair_df.reorder_levels(['centre', 'param', 'h', 'pair_ind'])
+    pair_df = pair_df.reorder_levels(['centre', 'param', 'h', 'actual h', 'pair_ind'])
 
     if report_verbose:
-        sleep(0.1)
         pairs_pbar.update(1)
         pairs_pbar.close()
 
     return pair_df
+
+
+def find_boundaries(parameters):
+    """
+    finds maximum and minimum boundary of each parameter.
+
+    Parameters
+    ----------
+    parameters : Dictionary
+        dictionary containing parameters names and attributes
+
+    Returns
+    -------
+    xmin : array_like
+        the lower boundaries of each parameter
+    xmax : array_like
+        the upper boundaries of each parameter
+    """
+    # store parameter info in a list
+    param_info = list(parameters.values())
+
+    # store the max and min values of each paramter in arrays
+    xmin = np.zeros(len(parameters))
+    xmax = np.zeros(len(parameters))
+    for i in range(0, len(parameters)):
+        if param_info[i][3] == 'unif':
+            xmin[i] = param_info[i][0]  # lower bound
+            xmax[i] = param_info[i][1]  # upper bound
+        elif param_info[i][3] == 'triangle':
+            xmin[i] = param_info[i][0]  # lower bound
+            xmax[i] = param_info[i][1]  # upper bound
+        elif param_info[i][3] == 'norm':
+            xmin[i] = param_info[i][0] - 3 * param_info[i][1]
+            xmax[i] = param_info[i][0] + 3 * param_info[i][1]
+        elif param_info[i][3] == 'lognorm':
+            xmin[i] = 1
+            xmax[i] = 1.25
+        elif param_info[i][3] == 'expo':
+            xmin[i] = 0  # change this
+            xmax[i] = 0  # change this
+        elif param_info[i][3] == 'gev':
+            xmin[i] = 0  # change this
+            xmax[i] = 0  # change this
+
+    return xmin, xmax

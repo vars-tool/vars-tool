@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 
 from tqdm.auto import tqdm
-from time import sleep
 
 from ..sa import gvars_funcs
 
@@ -14,12 +13,13 @@ from typing import (
 
 
 def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
+         seed : int,
          num_stars: int,
          corr_mat: np.ndarray,
          num_dir_samples: int,
          num_factors: int,
          report_verbose: bool
-         ) -> pd.DataFrame:
+         ) -> Tuple[Union[pd.DataFrame, pd.Series], Union[np.ndarray, np.ndarray], Union[np.ndarray, np.ndarray]]:
 
     """
     This function generates a Pandas Dataframe containing ''star_points'' based on [3]
@@ -28,6 +28,8 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     ----------
     parameters : dictionary
         dictionary containing parameter names, and their attributes
+    seed : int
+        the seed number used in generating star points
     num_stars : int
         number of star samples
     corr_mat : np.array
@@ -43,6 +45,10 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     -------
     star_points_df : array_like
         Pandas DataFrame containing the GVARS star points
+    x : array_like
+        numpy array containing correlated star centres
+    cov_mat : array_like
+        numpy array containing fictive correlation matrix
 
 
     References
@@ -68,22 +74,16 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     if report_verbose:
         stars_pbar.update(1)
 
-    # Generate independent standard normal samples
-    # the amount of samples is the same as the amount of stars
-    u = np.random.default_rng().multivariate_normal(np.zeros(num_factors), np.eye(num_factors), size=num_stars)
-    if report_verbose:
-        stars_pbar.update(1)
-
     # Generate correlated standard normal samples
     # the amount of samples is the same as the amount of stars
-    chol_u = np.linalg.cholesky(cov_mat)
-    chol_u = chol_u.transpose()  # to get in correct format for matrix multiplication
-    z = np.matmul(u, chol_u)  # transform samples to standard normal distribution
+    z = np.random.default_rng(seed=seed).multivariate_normal(np.zeros(num_factors), cov=cov_mat, size=num_stars)
+
     if report_verbose:
         stars_pbar.update(1)
 
     # Generate Nstar actual multivariate samples x
-    x = gvars_funcs.n2x_transform(z, parameters)
+    param_info = list(parameters.values())  # store dictionary values in a list
+    x = gvars_funcs.n2x_transform(z, param_info)
     if report_verbose:
         stars_pbar.update(1)
 
@@ -96,7 +96,7 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     if report_verbose:
         stars_pbar.update(1)
 
-    # computer conditional variance and conditional expectation for each star center
+    # computer coditional variance and conditional expectation for each star center
     chol_cond_std = []
     std_cond_norm = []
     mui_on_noti = np.zeros((len(z), num_factors))
@@ -105,14 +105,13 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
         # 2 dimensional or greater matrix case
         if (cov_mat[noti, :][:, noti].ndim >= 2):
             cond_std = cov_mat[i][i] - np.matmul(cov_mat[i, noti],
-                                                 np.matmul(np.linalg.inv(cov_mat[noti, :][:, noti]),
-                                                           cov_mat[noti, i]))
+                                                 np.matmul(np.linalg.inv(cov_mat[noti, :][:, noti]), cov_mat[noti, i]))
             chol_cond_std.append(np.linalg.cholesky([[cond_std]]).flatten())
             std_cond_norm.append(cond_std)
             for j in range(0, len(z)):
                 mui_on_noti[j][i] = np.matmul(cov_mat[i, noti],
                                               np.matmul(np.linalg.inv(cov_mat[noti, :][:, noti]), z[j, noti]))
-        # less then 2 dimensional matrix case
+        # less then 2 dimenional matrix case
         else:
             cond_std = cov_mat[i][i] - np.matmul(cov_mat[i, noti],
                                                  np.matmul(cov_mat[noti, :][:, noti], cov_mat[noti, i]))
@@ -127,8 +126,12 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     # Create samples in correlated standard normal space
     all_section_cond_z = []
     cond_z = []
+    # create num_dir_samples child_seeds for reproducibility in cross sectional samples
+    ss = np.random.SeedSequence(seed)
+    child_seeds = ss.spawn(num_dir_samples)
     for j in range(0, num_dir_samples):
-        stnrm_base = np.random.default_rng().multivariate_normal(np.zeros(num_factors), np.eye(num_factors), size=num_stars)
+        stnrm_base = np.random.default_rng(seed=child_seeds[j]).multivariate_normal(np.zeros(num_factors), np.eye(num_factors),
+                                                                                    size=num_stars)
         for i in range(0, num_factors):
             cond_z.append(stnrm_base[:, i] * chol_cond_std[i] + mui_on_noti[:, i])
         all_section_cond_z.append(cond_z.copy())
@@ -137,34 +140,33 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
         stars_pbar.update(1)
 
     # transform to original distribution and compute response surface
-    Xi_on_Xnoti = []
+    xi_on_xnoti = []
     tmp1 = []
-    Xi_on_Xnoti_and_Xnoti_temp = []
-    Xi_on_Xnoti_and_Xnoti = []
+    xi_on_xnoti_and_xnoti_temp = []
+    xi_on_xnoti_and_xnoti = []
     for j in range(0, num_dir_samples):
-        for i in range(0, num_factors):
-            tmp1.append(
-                gvars_funcs.n2x_transform(np.array([all_section_cond_z[j][i]]).transpose(), parameters).flatten())
+        for i in range(0, len(parameters)):
+            tmp1.append(gvars_funcs.n2x_transform(np.array([all_section_cond_z[j][i]]).transpose(), [param_info[i]]).flatten())
             tmp2 = x.copy()
             tmp2[:, i] = tmp1[i]
-            Xi_on_Xnoti_and_Xnoti_temp.append(tmp2.copy())
+            xi_on_xnoti_and_xnoti_temp.append(tmp2.copy())
             # attatch results from tmp1 onto Xi_on_Xnoti and Xi_on_Xnoti_and_Xnoti
-        Xi_on_Xnoti.append(tmp1.copy())
+        xi_on_xnoti.append(tmp1.copy())
         tmp1.clear()  # clear for next iteration
-        Xi_on_Xnoti_and_Xnoti.append(Xi_on_Xnoti_and_Xnoti_temp.copy())
-        Xi_on_Xnoti_and_Xnoti_temp.clear()  # clear for next iteration
+        xi_on_xnoti_and_xnoti.append(xi_on_xnoti_and_xnoti_temp.copy())
+        xi_on_xnoti_and_xnoti_temp.clear()  # clear for next iteration
     if report_verbose:
         stars_pbar.update(1)
 
-    # Get star points into readable format
-    params = [*(parameters)]
+    # Put Star points into a dataframe
+    params = [*parameters]
     star_points = {}
     points = {}
-    temp = np.zeros([num_dir_samples, len(parameters)])
+    temp = np.zeros([num_dir_samples, num_factors])
     for i in range(0, num_stars):
         for j in range(0, num_factors):
             for k in range(0, num_dir_samples):
-                temp[k, :] = Xi_on_Xnoti_and_Xnoti[k][j][i]
+                temp[k, :] = xi_on_xnoti_and_xnoti[k][j][i]
             points[params[j]] = np.copy(temp)
         star_points[i] = points.copy()
     if report_verbose:
@@ -175,9 +177,7 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
         {key: pd.concat({k: pd.DataFrame(d) for k, d in value.items()}) for key, value in star_points.items()})
     star_points_df.index.names = ['centre', 'param', 'points']
     if report_verbose:
-        sleep(0.1)
         stars_pbar.update(1)
         stars_pbar.close()
 
-
-    return star_points_df
+    return star_points_df, x, cov_mat

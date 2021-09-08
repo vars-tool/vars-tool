@@ -364,6 +364,7 @@ class VARS(object):
                                               self.parameters else "None")
         status_delta_h = "Delta h: " + (str(self.delta_h)+"" if self.delta_h else "None")
         status_model = "Model: " + (str(self.model)+"" if self.model else "None")
+        status_seed = "Seed Number: " + (str(self.seed)+"" if self.seed else "None")
         status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
         status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size)+"" if self.bootstrap_flag else "N/A")
         status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci)+"" if self.bootstrap_flag else "N/A")
@@ -373,7 +374,7 @@ class VARS(object):
         status_analysis = "VARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [status_star_centres, status_star_points, status_parameters,
-                              status_delta_h, status_model, status_bstrap,
+                              status_delta_h, status_model, status_seed, status_bstrap,
                               status_bstrap_size, status_bstrap_ci, status_grouping,
                               status_num_grps, status_verbose, status_analysis]
 
@@ -436,22 +437,22 @@ class VARS(object):
         """
 
         # generate star points
-        star_points = starvars.star(self.star_centres,  # star centres
+        self.star_points = starvars.star(self.star_centres,  # star centres
                                     delta_h=self.delta_h,  # delta_h
                                     parameters=[*self.parameters],  # parameters dictionary keys
                                     rettype='DataFrame',
                                     )  # return type is a dataframe
 
-        star_points = vars_funcs.scale(df=star_points,  # star points must be scaled
+        self.star_points = vars_funcs.scale(df=self.star_points,  # star points must be scaled
                                        bounds={  # bounds are created while scaling
                                        'lb': [val[0] for _, val in self.parameters.items()],
                                        'ub': [val[1] for _, val in self.parameters.items()],
                                         }
                                         )
 
-        star_points.index.names = ['centre', 'param', 'points']
+        self.star_points.index.names = ['centre', 'param', 'points']
 
-        return star_points
+        return self.star_points
 
     def plot(self, logy: bool = False):
         """
@@ -564,20 +565,20 @@ class VARS(object):
                                             )
 
         # apply model to the generated star points
-        df = vars_funcs.apply_unique(func=self.model.func,
+        self.model_df = vars_funcs.apply_unique(func=self.model.func,
                                      df=self.star_points,
                                      axis=1,
                                      progress=self.report_verbose,
                                      )
-        df.index.names = ['centre', 'param', 'points']
+        self.model_df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
             tqdm.pandas(desc='building pairs', dynamic_ncols=True)
-            self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df,
+            self.pair_df = self.model_df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df,
                                                                                    delta_h=self.delta_h)
         else:
-            self.pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df,
+            self.pair_df = self.model_df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df,
                                                                           delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
@@ -586,20 +587,20 @@ class VARS(object):
             vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True) # 10 steps for different components
 
         # get mu_star value
-        self.mu_star_df = df[str(self.model)].groupby(level=[0,1]).mean()
+        self.mu_star_df = self.model_df[str(self.model)].groupby(level=[0,1]).mean()
         self.mu_star_df.index.names = ['centre', 'param']
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
 
         # overall mean of the unique evaluated function value over all star points
-        self.mu_overall = df[str(self.model)].unique().mean()
+        self.mu_overall = self.model_df[str(self.model)].unique().mean()
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = df[str(self.model)].unique().var(ddof=1)
+        self.var_overall = self.model_df[str(self.model)].unique().var(ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
@@ -677,7 +678,7 @@ class VARS(object):
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
-            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
@@ -685,7 +686,7 @@ class VARS(object):
                                                                                self.num_grps, self.report_verbose)
         else:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
@@ -721,18 +722,21 @@ class VARS(object):
         return
 
 
-    def run_offline(self, df):
+    def run_offline(self, model_df):
         """
         runs the offline version of VARS program
         """
 
+        # assign model_df to a class attribute
+        self.model_df = model_df
+
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
             tqdm.pandas(desc='building pairs', dynamic_ncols=True)
-            self.pair_df = df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df,
+            self.pair_df = self.model_df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df,
                                                                                    delta_h=self.delta_h)
         else:
-            self.pair_df = df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df,
+            self.pair_df = self.model_df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df,
                                                                           delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
@@ -741,20 +745,20 @@ class VARS(object):
             vars_pbar = tqdm(desc='VARS Analysis', total=10, dynamic_ncols=True) # 10 steps for different components
 
         # get mu_star value
-        self.mu_star_df = df[str(self.model)].groupby(level=[0,1]).mean()
+        self.mu_star_df = self.model_df[str(self.model)].groupby(level=[0,1]).mean()
         self.mu_star_df.index.names = ['centre', 'param']
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
 
         # overall mean of the unique evaluated function value over all star points
-        self.mu_overall = df[str(self.model)].unique().mean()
+        self.mu_overall = self.model_df[str(self.model)].unique().mean()
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = df[str(self.model)].unique().var(ddof=1)
+        self.var_overall = self.model_df[str(self.model)].unique().var(ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
@@ -832,7 +836,7 @@ class VARS(object):
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
-            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
@@ -840,7 +844,7 @@ class VARS(object):
                                                                                self.num_grps, self.report_verbose)
         else:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
@@ -948,6 +952,7 @@ class GVARS(VARS):
                  delta_h: Optional[float] = 0.1,  # delta_h for star sampling
                  ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5),  # ivars scales
                  model: Model = None,  # model (function) to run for each star point
+                 seed: Optional[int] = np.random.randint(1, 123456789),  # randomization state
                  bootstrap_flag: Optional[bool] = False,  # bootstrapping flag
                  bootstrap_size: Optional[int] = 1000,  # bootstrapping size
                  bootstrap_ci: Optional[float] = 0.9,  # bootstrap confidence interval
@@ -964,6 +969,7 @@ class GVARS(VARS):
                          delta_h=delta_h,
                          ivars_scales=ivars_scales,
                          model=model,
+                         seed=seed,
                          bootstrap_flag=bootstrap_flag,
                          bootstrap_size=bootstrap_size,
                          bootstrap_ci=bootstrap_ci,
@@ -1005,6 +1011,7 @@ class GVARS(VARS):
             str(len(self.parameters)) + " paremeters set" if self.parameters else "None")
         status_delta_h = "Delta h: " + (str(self.delta_h) + "" if self.delta_h else "None")
         status_model = "Model: " + (str(self.model) + "" if self.model else "None")
+        status_seed = "Seed Number: " + (str(self.seed)+"" if self.seed else "None")
         status_bstrap = "Bootstrap: " + ("On" if self.bootstrap_flag else "Off")
         status_bstrap_size = "Bootstrap Size: " + (str(self.bootstrap_size) + "" if self.bootstrap_flag else "N/A")
         status_bstrap_ci = "Bootstrap CI: " + (str(self.bootstrap_ci) + "" if self.bootstrap_flag else "N/A")
@@ -1014,7 +1021,7 @@ class GVARS(VARS):
         status_analysis = "GVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [status_star_points, status_parameters, \
-                              status_delta_h, status_model, status_bstrap, \
+                              status_delta_h, status_model, status_seed, status_bstrap, \
                               status_bstrap_size, status_bstrap_ci, status_grouping, \
                               status_num_grps, status_verbose, status_analysis]
 
@@ -1027,6 +1034,21 @@ class GVARS(VARS):
 
     # -------------------------------------------
     # Core properties
+    @property
+    def star_centres(self):
+        """returns the star centre samples"""
+        return self._star_centres
+
+    @star_centres.setter
+    def star_centres(self, new_centres):
+        """sets the star centre samples"""
+        if not isinstance(new_centres,
+              (pd.DataFrame, pd.Series, np.ndarray, List, Tuple)):
+            raise TypeError(
+                "new_centres must be an array-like object: "
+                "pandas.Dataframe, pandas.Series, numpy.array, List, Tuple"
+            )
+        self._star_centres = new_centres
 
     @property
     def star_points(self):
@@ -1059,8 +1081,9 @@ class GVARS(VARS):
         """
 
         # generate g_star points
-        self.star_points = g_starvars.star(
+        self.star_points, self.star_centres, self.cov_mat = g_starvars.star(
             self.parameters,  # parameters
+            self.seed,  # seed
             self.num_stars,  # number of stars
             self.corr_mat,  # correlation matrix of parameters
             self.num_dir_samples,  # number of directional samples in star points
@@ -1161,14 +1184,46 @@ class GVARS(VARS):
             else:
                 return varax
 
+    def correlation_plot(self,
+                         param_names_pair: np.ndarray,
+                         param_names_pair_index: np.ndarray,):
+        """
+        plots the correlation between a pair of parameters, displaying
+        the star points and star centres.
+
+        Parameters
+        ----------
+        param_names_pair : arraylike
+            array containing the names of the parameters you would like plotted
+        param_names_pair_index : arraylike
+            array containing the corresponding indices in inputted parameter list to GVARS for the pair of parameters
+            being plotted
+
+        Returns
+        -------
+        ax : matplotlib.axes.Axes
+            the axes of the plot
+        """
+        if self.run_status:
+            # plot star centres and cross sections of a pair of parameters
+            ax = self.star_points.unstack(0).loc[param_names_pair[0]].stack(-1).plot.scatter(param_names_pair_index[0], param_names_pair_index[1], title='Star Points', color='grey',
+                                                                                             marker='*')
+            self.star_points.unstack(0).loc[param_names_pair[1]].stack(-1).plot.scatter(param_names_pair_index[0], param_names_pair_index[1], ax=ax, color='green', marker="+", xlabel='x1',
+                                                                                        ylabel='x2', figsize=(12, 8))
+            plt.scatter(self.star_points[:, param_names_pair_index[0]], self.star_points[:, param_names_pair_index[1]], color='orange')
+            plt.legend([param_names_pair[0], param_names_pair[1], 'star centers'])
+
+            return ax
+
     def run_online(self):
         """
         runs online version of GVARS program
         """
 
         # generate g_star points
-        self.star_points = g_starvars.star(
+        self.star_points, self.star_centres, self.cov_mat = g_starvars.star(
             self.parameters,  # parameters
+            self.seed,  # seed
             self.num_stars,  # number of stars
             self.corr_mat,  # correlation matrix of parameters
             self.num_dir_samples,  # number of directional samples in star points
@@ -1177,45 +1232,48 @@ class GVARS(VARS):
         )
 
         # apply model to the generated star points
-        df = vars_funcs.apply_unique(func=self.model.func,
+        self.model_df = vars_funcs.apply_unique(func=self.model.func,
                                      df=self.star_points,
                                      axis=1,
                                      progress=self.report_verbose,
                                      )
-        df.index.names = ['centre', 'param', 'points']
+        self.model_df.index.names = ['centre', 'param', 'points']
 
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
             tqdm.pandas(desc='building pairs', dynamic_ncols=True)
-            self.pair_df = df[str(self.model)].groupby(level=[0, 1]).progress_apply(vars_funcs.section_df,
+            self.pair_df = self.model_df[str(self.model)].groupby(level=[0, 1]).progress_apply(vars_funcs.section_df,
                                                                                     delta_h=self.delta_h)
         else:
-            self.pair_df = df[str(self.model)].groupby(level=[0, 1]).apply(vars_funcs.section_df,
+            self.pair_df = self.model_df[str(self.model)].groupby(level=[0, 1]).apply(vars_funcs.section_df,
                                                                            delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # bin and reorder pairs according to actual 'h' values
-        self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, df, self.delta_h, self.report_verbose, False)
+        xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+        self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, self.model_df, self.delta_h, self.report_verbose, xmax, xmin, False)
+        # include a column containing the dissimilarity between pairs
+        self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
 
         # progress bar for vars analysis
         if self.report_verbose:
             vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)  # 10 steps for different components
 
         # get mu_star value
-        self.mu_star_df = df[str(self.model)].groupby(level=[0, 1]).mean()
+        self.mu_star_df = self.model_df[str(self.model)].groupby(level=[0, 1]).mean()
         self.mu_star_df.index.names = ['centre', 'param']
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
 
         # overall mean of the unique evaluated function value over all star points
-        self.mu_overall = df[str(self.model)].unique().mean()
+        self.mu_overall = self.model_df[str(self.model)].unique().mean()
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = df[str(self.model)].unique().var(ddof=1)
+        self.var_overall = self.model_df[str(self.model)].unique().var(ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
@@ -1229,8 +1287,6 @@ class GVARS(VARS):
         # variogram calculation
         # MATLAB: Gamma
         self.gamma = vars_funcs.variogram(self.pair_df)
-        # replace missing values with 0
-        self.gamma = self.gamma.unstack(0).fillna(0).unstack(0)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Variogram (`gamma`) calculated - access via .gamma')
@@ -1298,7 +1354,7 @@ class GVARS(VARS):
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
-            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h,
                                                                                self.ivars_scales,
@@ -1308,7 +1364,7 @@ class GVARS(VARS):
                                                                                self.num_grps, self.report_verbose)
         else:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, df,
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, self.model_df,
                                                                                                  self.cov_section_all,
                                                                                                  self.bootstrap_size,
                                                                                                  self.bootstrap_ci,
@@ -1350,44 +1406,50 @@ class GVARS(VARS):
 
         return
 
-    def run_offline(self, df):
+    def run_offline(self, model_df):
         """
         runs offline version of GVARS program
         """
 
+        # assign dataframe with model ran on it to class attribute
+        self.model_df = model_df
+
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
             tqdm.pandas(desc='building pairs', dynamic_ncols=True)
-            self.pair_df = df[str(self.model)].groupby(level=[0, 1]).progress_apply(vars_funcs.section_df,
-                                                                                    delta_h=self.delta_h)
+            self.pair_df = self.model_df[str(self.model)].groupby(level=[0, 1]).progress_apply(vars_funcs.section_df,
+                                                                                               delta_h=self.delta_h)
         else:
-            self.pair_df = df[str(self.model)].groupby(level=[0, 1]).apply(vars_funcs.section_df,
-                                                                           delta_h=self.delta_h)
+            self.pair_df = self.model_df[str(self.model)].groupby(level=[0, 1]).apply(vars_funcs.section_df,
+                                                                                      delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
         # bin and reorder pairs according to actual 'h' values
-        self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, df, self.delta_h,
-                                                 self.report_verbose, True)
+        xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+        self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, self.model_df,
+                                                 self.delta_h, self.report_verbose, xmax, xmin, False)
+        # include a column containing the dissimilarity between pairs
+        self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
 
         # progress bar for vars analysis
         if self.report_verbose:
             vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)  # 10 steps for different components
 
         # get mu_star value
-        self.mu_star_df = df[str(self.model)].groupby(level=[0, 1]).mean()
+        self.mu_star_df = self.model_df[str(self.model)].groupby(level=[0, 1]).mean()
         self.mu_star_df.index.names = ['centre', 'param']
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
 
         # overall mean of the unique evaluated function value over all star points
-        self.mu_overall = df[str(self.model)].unique().mean()
+        self.mu_overall = self.model_df[str(self.model)].unique().mean()
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = df[str(self.model)].unique().var(ddof=1)
+        self.var_overall = self.model_df[str(self.model)].unique().var(ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
@@ -1401,8 +1463,6 @@ class GVARS(VARS):
         # variogram calculation
         # MATLAB: Gamma
         self.gamma = vars_funcs.variogram(self.pair_df)
-        # replace missing values with 0
-        self.gamma = self.gamma.unstack(0).fillna(0).unstack(0)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Variogram (`gamma`) calculated - access via .gamma')
@@ -1470,7 +1530,8 @@ class GVARS(VARS):
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
-            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, df, self.cov_section_all,
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, self.model_df,
+                                                                               self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h,
                                                                                self.ivars_scales,
@@ -1480,7 +1541,8 @@ class GVARS(VARS):
                                                                                self.num_grps, self.report_verbose)
         else:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, df,
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df,
+                                                                                                 self.model_df,
                                                                                                  self.cov_section_all,
                                                                                                  self.bootstrap_size,
                                                                                                  self.bootstrap_ci,
