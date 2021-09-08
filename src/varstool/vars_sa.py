@@ -1212,7 +1212,7 @@ class GVARS(VARS):
                                                                                              marker='*')
             self.star_points.unstack(0).loc[param_names_pair[1]].stack(-1).plot.scatter(param_names_pair_index[0], param_names_pair_index[1], ax=ax, color='green', marker="+", xlabel='x1',
                                                                                         ylabel='x2', figsize=(12, 8))
-            plt.scatter(self.star_points[:, param_names_pair_index[0]], self.star_points[:, param_names_pair_index[1]], color='orange')
+            plt.scatter(self.star_centres[:, param_names_pair_index[0]], self.star_centres[:, param_names_pair_index[1]], color='orange')
             plt.legend([param_names_pair[0], param_names_pair[1], 'star centers'])
 
             return ax
