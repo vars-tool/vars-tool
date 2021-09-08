@@ -66,7 +66,7 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
 
     # load bar if report_verbose is true
     if report_verbose:
-        stars_pbar = tqdm(desc='generating star points', total=10, dynamic_ncols=True)
+        stars_pbar = tqdm(desc='generating star points', total=9, dynamic_ncols=True)
 
     # Computing fictive correlation matrix
     # Note: that corr_mat and cov_mat are the same in terms of magnitude
@@ -172,13 +172,13 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     if report_verbose:
         stars_pbar.update(1)
 
-    if report_verbose:
-        stars_pbar.update(1)
-        stars_pbar.close()
-
     # put star points in a dataframe
     star_points_df = pd.concat(
         {key: pd.concat({k: pd.DataFrame(d) for k, d in value.items()}) for key, value in star_points.items()})
     star_points_df.index.names = ['centre', 'param', 'points']
+
+    if report_verbose:
+        stars_pbar.update(1)
+        stars_pbar.close()
 
     return star_points_df, x, cov_mat
