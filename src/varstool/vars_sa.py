@@ -1004,6 +1004,8 @@ class GVARS(VARS):
 
     def __repr__(self) -> str:
         """shows the status of GVARS analysis"""
+        status_star_centres = "Star Centres: " + (str(self.star_centres.shape[0]) + " Centers Loaded" if
+                                                  len(self.star_centres) != 0 else "Not Loaded")
         status_star_points = "Star Points: " + ("Loaded " + str(self.num_stars) + " stars with " + \
                                                 str(self.num_dir_samples) + " directional samples" \
                                                     if len(self.star_points) != 0 else "Not Loaded")
@@ -1020,7 +1022,7 @@ class GVARS(VARS):
         status_verbose = "Verbose: " + ("On" if self.report_verbose else "Off")
         status_analysis = "GVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
-        status_report_list = [status_star_points, status_parameters, \
+        status_report_list = [status_star_centres, status_star_points, status_parameters, \
                               status_delta_h, status_model, status_seed, status_bstrap, \
                               status_bstrap_size, status_bstrap_ci, status_grouping, \
                               status_num_grps, status_verbose, status_analysis]
@@ -1249,6 +1251,9 @@ class GVARS(VARS):
                                                                            delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
+        # get rid of irrelevant h values
+        self.pair_df = self.pair_df.droplevel('h')
+
         # bin and reorder pairs according to actual 'h' values
         xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
         self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, self.model_df, self.delta_h, self.report_verbose, xmax, xmin, False)
@@ -1423,6 +1428,9 @@ class GVARS(VARS):
             self.pair_df = self.model_df[str(self.model)].groupby(level=[0, 1]).apply(vars_funcs.section_df,
                                                                                       delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
+
+        # get rid of irrelevant h values
+        self.pair_df = self.pair_df.droplevel('h')
 
         # bin and reorder pairs according to actual 'h' values
         xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
