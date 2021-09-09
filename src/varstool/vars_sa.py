@@ -1187,8 +1187,7 @@ class GVARS(VARS):
                 return varax
 
     def correlation_plot(self,
-                         param_names: np.ndarray,
-                         params_index: np.ndarray,):
+                         param_names: np.ndarray):
         """
         plots the correlation between a pair of parameters, displaying
         the star points and star centres.
@@ -1197,8 +1196,6 @@ class GVARS(VARS):
         ----------
         param_names : arraylike
             array containing the names of the two parameters you would like plotted
-        params_index : arraylike
-            array containing the corresponding indices of the parameters desired in inputted dictionary to GVARS (ex. first parameter in parameter dictionary index would be 0)
 
         Returns
         -------
@@ -1206,12 +1203,15 @@ class GVARS(VARS):
             the axes of the plot
         """
         if self.run_status:
+            # get list of parameter names
+            params = list(self.parameters.keys())
+
             # plot star centres and cross sections of a pair of parameters
-            ax = self.star_points.unstack(0).loc[param_names[0]].stack(-1).plot.scatter(params_index[0], params_index[1], title='Star Points', color='grey',
+            ax = self.star_points.unstack(0).loc[param_names[0]].stack(-1).plot.scatter(params.index(param_names[0]), params.index(param_names[1]), title='Star Points', color='grey',
                                                                                              marker='*')
-            self.star_points.unstack(0).loc[param_names[1]].stack(-1).plot.scatter(params_index[0], params_index[1], ax=ax, color='green', marker="+", xlabel='x1',
+            self.star_points.unstack(0).loc[param_names[1]].stack(-1).plot.scatter(params.index(param_names[0]), params.index(param_names[1]), ax=ax, color='green', marker="+", xlabel='x1',
                                                                                         ylabel='x2', figsize=(12, 8))
-            plt.scatter(self.star_centres[:, params_index[0]], self.star_centres[:, params_index[1]], color='orange')
+            plt.scatter(self.star_centres[:, params.index(param_names[0])], self.star_centres[:, params.index(param_names[1])], color='orange')
             plt.legend([param_names[0], param_names[1], 'star centers'])
 
             return ax
