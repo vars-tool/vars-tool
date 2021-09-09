@@ -991,11 +991,10 @@ class GVARS(VARS):
             )
         self.num_dir_samples = 10
 
-        if not self.corr_mat:
-            warnings.warn(
-                "Correlation matrix was not valid, default value is a identity matrix.",
-                UserWarning,
-                stacklevel=1
+        if not isinstance(corr_mat, np.ndarray):
+            raise TypeError(
+                "correlation matrix must be a numpy array, "
+                "will default to a identity matrix"
             )
         self.corr_mat = np.eye(self.num_factors)
 
