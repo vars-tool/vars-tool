@@ -66,7 +66,7 @@ def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
 
     # load bar if report_verbose is true
     if report_verbose:
-        stars_pbar = tqdm(desc='generating star points', total=9, dynamic_ncols=True)
+        stars_pbar = tqdm(desc='generating star points\n (note: first step will take awhile as the fictive matrix is being calculated)', total=9, dynamic_ncols=True)
 
     # Computing fictive correlation matrix
     # Note: that corr_mat and cov_mat are the same in terms of magnitude

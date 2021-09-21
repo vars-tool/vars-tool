@@ -1435,7 +1435,7 @@ class GVARS(VARS):
         # bin and reorder pairs according to actual 'h' values
         xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
         self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, self.model_df,
-                                                 self.delta_h, self.report_verbose, xmax, xmin, False)
+                                                 self.delta_h, self.report_verbose, xmax, xmin, True)
         # include a column containing the dissimilarity between pairs
         self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
 
