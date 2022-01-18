@@ -206,8 +206,6 @@ class VARS(object):
 
         # Check input arguments
         # default value for bootstrap_flag
-        if not bootstrap_flag:
-            self.bootstrap_flag = False
         if not isinstance(bootstrap_flag, bool):
             warnings.warn(
                 "`bootstrap_flag` must be either `True` or `False`."
@@ -215,10 +213,9 @@ class VARS(object):
                 UserWarning,
                 stacklevel=1
             )
+            self.bootstrap_flag = False
 
         # default value for grouping flag
-        if not grouping_flag:
-            self.grouping_flag = False
         if not isinstance(grouping_flag, bool):
             warnings.warn(
                 "`grouping_flag` must be either `True` or `False`."
@@ -226,6 +223,7 @@ class VARS(object):
                 UserWarning,
                 stacklevel=1
             )
+            self.grouping_flag = False;
 
         # default value for the IVARS scales are 0.1, 0.3, and 0.5
         if not self.ivars_scales:
@@ -538,6 +536,9 @@ class VARS(object):
 
                 barfig.tight_layout()
 
+                if logy is True:
+                    barax.set_yscale('log')
+
                 plt.show()
 
                 return varax, barfig, barax
@@ -684,7 +685,7 @@ class VARS(object):
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
-        else:
+        elif self.bootstrap_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
@@ -699,6 +700,7 @@ class VARS(object):
         # output dictionary
         self.output = {
             'Gamma':self.gamma,
+            'ST':self.st,
             'MAEE':self.maee,
             'MEE':self.mee,
             'COV':self.cov,
@@ -842,7 +844,7 @@ class VARS(object):
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
-        else:
+        elif self.bootstrap_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
@@ -857,6 +859,7 @@ class VARS(object):
         # output dictionary
         self.output = {
             'Gamma':self.gamma,
+            'ST': self.st,
             'MAEE':self.maee,
             'MEE':self.mee,
             'COV':self.cov,
