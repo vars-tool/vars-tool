@@ -314,7 +314,7 @@ def n2x_transform(norm_vectors: np.ndarray,
             term1 = std / mu ** 2
             m = np.log(mu / (np.sqrt(1 + term1)))
             v = np.sqrt(np.log(1 + term1))
-            x[:, i] = np.lognorm.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), scale=np.exp(mu), s=std, loc=0)
+            x[:, i] = stat.lognorm.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), scale=np.exp(mu), s=std, loc=0)
         elif param_info[i][3] == 'expo':
             mu = param_info[i][0]
             x[:, i] = np.expon.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), scale=mu)

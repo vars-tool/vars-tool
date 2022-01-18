@@ -876,8 +876,8 @@ class VARS(object):
             'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
             'relST':self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
             'relIVARS':self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
-            'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
-            'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
+            'Groups': [self.ivars50_grp, self.st_grp] if ((self.grouping_flag is True) and (self.bootstrap_flag is True)) else None,
+            'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if ((self.grouping_flag is True) and (self.bootstrap_flag is True)) else None,
         }
 
         return
@@ -1183,6 +1183,9 @@ class GVARS(VARS):
                 barax.legend()
 
                 barfig.tight_layout()
+
+                if logy:
+                    barax.set_yscale('log')
 
                 plt.show()
 
