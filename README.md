@@ -78,7 +78,7 @@ Once the packages are installed to contribute do the following:
 
 ## 6. Citations
 
-Under progress...
+Under progress. Check back again.
 
 
 ## 7. License
