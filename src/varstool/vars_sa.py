@@ -450,6 +450,8 @@ class VARS(object):
 
         self.star_points.index.names = ['centre', 'param', 'points']
 
+        self.star_points.columns = self.parameters.keys()
+
         return self.star_points
 
     def plot(self, logy: bool = False):
@@ -1099,6 +1101,8 @@ class GVARS(VARS):
             self.report_verbose  # loading bar boolean value
         )
 
+        self.star_points.columns = self.parameters.keys()
+
         return self.star_points
 
     def plot(self, logy : bool=False):
@@ -1240,6 +1244,8 @@ class GVARS(VARS):
             self.num_factors,  # number of parameters
             self.report_verbose  # loading bar boolean value
         )
+
+        self.star_points.columns = self.parameters.keys()
 
         # apply model to the generated star points
         self.model_df = vars_funcs.apply_unique(func=self.model.func,
@@ -1397,6 +1403,7 @@ class GVARS(VARS):
         # output dictionary
         self.output = {
             'Gamma': self.gamma,
+            'ST': self.st,
             'MAEE': self.maee,
             'MEE': self.mee,
             'COV': self.cov,
@@ -1578,6 +1585,7 @@ class GVARS(VARS):
         # output dictionary
         self.output = {
             'Gamma': self.gamma,
+            'ST': self.st,
             'MAEE': self.maee,
             'MEE': self.mee,
             'COV': self.cov,
