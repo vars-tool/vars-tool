@@ -215,16 +215,6 @@ class VARS(object):
             )
             self.bootstrap_flag = False
 
-        # default value for grouping flag
-        if not isinstance(grouping_flag, bool):
-            warnings.warn(
-                "`grouping_flag` must be either `True` or `False`."
-                "default value of `False` will be considered.",
-                UserWarning,
-                stacklevel=1
-            )
-            self.grouping_flag = False;
-
         # default value for the IVARS scales are 0.1, 0.3, and 0.5
         if not self.ivars_scales:
             warnings.warn(
@@ -1381,7 +1371,7 @@ class GVARS(VARS):
                                                                                self.ivars_factor_ranking,
                                                                                self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
-        else:
+        elif self.bootstrap_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, self.model_df,
                                                                                                  self.cov_section_all,
@@ -1562,7 +1552,7 @@ class GVARS(VARS):
                                                                                self.ivars_factor_ranking,
                                                                                self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
-        else:
+        elif self.bootstrap_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df,
                                                                                                  self.model_df,

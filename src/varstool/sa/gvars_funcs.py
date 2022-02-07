@@ -402,26 +402,17 @@ def reorder_pairs(pair_df: pd.DataFrame,
     # gather the actual 'h' differences between each star point value for every pair
     # possibly find a faster way to do this later
     dist_list = []
+    param_names = list(parameters.keys())
     for star_centre in star_centres:
-        param_num = 0
+        param_num=0
         for param in parameters.keys():
-            # check for offline on online mode as index changes for df
-            if offline_mode:
-                pairs = pairs_h(df.loc[star_centre, param][str(param_num)].index.get_level_values(-1))
-            else:
-                pairs = pairs_h(df.loc[star_centre, param][param_num].index.get_level_values(-1))
+            pairs = pairs_h(df.loc[star_centre, param][param_names[param_num]].index.get_level_values(-1))
             for ignore, idx in pairs.items():
                 for idx_tup in idx:
-                    if offline_mode:
-                        dist_list.append(np.abs((df.loc[star_centre, param][str(param_num)][idx_tup[0]] -
-                                                 df.loc[star_centre, param][str(param_num)][idx_tup[1]]) / (
-                                                            xmax[param_num] - xmin[param_num])))
-                    else:
-                        dist_list.append(np.abs((df.loc[star_centre, param][param_num][idx_tup[0]] -
-                                                 df.loc[star_centre, param][param_num][idx_tup[1]]) / (
-                                                            xmax[param_num] - xmin[param_num])))
-
-            param_num += 1
+                    dist_list.append(np.abs((df.loc[star_centre, param][param_names[param_num]][idx_tup[0]] -
+                                             df.loc[star_centre, param][param_names[param_num]][idx_tup[1]]) / (
+                                                xmax[param_num]-xmin[param_num])))
+            param_num = param_num + 1
 
     # loading bar for binning and reording pairs based on new 'h' values
     if report_verbose:
