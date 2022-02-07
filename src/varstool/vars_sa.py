@@ -565,6 +565,8 @@ class VARS(object):
                                              }
                                             )
 
+        self.star_points.columns = self.parameters.keys()
+
         # apply model to the generated star points
         self.model_df = vars_funcs.apply_unique(func=self.model.func,
                                      df=self.star_points,
