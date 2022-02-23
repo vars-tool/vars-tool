@@ -537,6 +537,36 @@ class VARS(object):
             else:
                 return varax
 
+    def correlation_plot(self,
+                         param_names: np.ndarray):
+        """
+        plots the correlation between a pair of parameters, displaying
+        the star points and star centres.
+
+        Parameters
+        ----------
+        param_names : arraylike
+            array containing the names of the two parameters you would like plotted
+
+        Returns
+        -------
+        ax : matplotlib.axes.Axes
+            the axes of the plot
+        """
+        if self.run_status:
+            # get list of parameter names
+            params = list(self.parameters.keys())
+
+            # plot star centres and cross sections of a pair of parameters
+            ax = self.star_points.unstack(0).loc[param_names[0]].stack(-1).plot.scatter(params.index(param_names[0]), params.index(param_names[1]), title='Star Points', color='grey',
+                                                                                             marker='*')
+            self.star_points.unstack(0).loc[param_names[1]].stack(-1).plot.scatter(params.index(param_names[0]), params.index(param_names[1]), ax=ax, color='green', marker="+", xlabel='x1',
+                                                                                        ylabel='x2', figsize=(12, 8))
+            plt.scatter(self.star_centres[:, params.index(param_names[0])], self.star_centres[:, params.index(param_names[1])], color='orange')
+            plt.legend([param_names[0], param_names[1], 'star centers'])
+
+            return ax
+
 
     def run_online(self):
         """
