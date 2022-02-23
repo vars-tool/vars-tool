@@ -577,6 +577,10 @@ class VARS(object):
                                                                           delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
+        # include a column containing the dissimilarity between pairs
+        self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
+
+
         # progress bar for vars analysis
         if self.report_verbose:
             vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True) # 10 steps for different components
@@ -735,6 +739,9 @@ class VARS(object):
             self.pair_df = self.model_df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df,
                                                                           delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
+
+        # include a column containing the dissimilarity between pairs
+        self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
 
         # progress bar for vars analysis
         if self.report_verbose:
