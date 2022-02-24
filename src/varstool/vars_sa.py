@@ -442,6 +442,14 @@ class VARS(object):
 
         self.star_points.columns = self.parameters.keys()
 
+        # scale star centres to correspond to newly scaled star_points
+        self.star_centres = vars_funcs.scale(self.star_centres,
+                                             bounds={  # bounds are created while scaling
+                                                 'lb': [val[0] for _, val in self.parameters.items()],
+                                                 'ub': [val[1] for _, val in self.parameters.items()],
+                                             }
+                                             )
+
         return self.star_points
 
     def plot(self, logy: bool = False):
@@ -560,8 +568,8 @@ class VARS(object):
             # plot star centres and cross sections of a pair of parameters
             ax = self.star_points.unstack(0).loc[param_names[0]].stack(-1).plot.scatter(params.index(param_names[0]), params.index(param_names[1]), title='Star Points', color='grey',
                                                                                              marker='*')
-            self.star_points.unstack(0).loc[param_names[1]].stack(-1).plot.scatter(params.index(param_names[0]), params.index(param_names[1]), ax=ax, color='green', marker="+", xlabel='x1',
-                                                                                        ylabel='x2', figsize=(12, 8))
+            self.star_points.unstack(0).loc[param_names[1]].stack(-1).plot.scatter(params.index(param_names[0]), params.index(param_names[1]), ax=ax, color='green', marker="+",
+                                                                                   figsize=(12, 8))
             plt.scatter(self.star_centres[:, params.index(param_names[0])], self.star_centres[:, params.index(param_names[1])], color='orange')
             plt.legend([param_names[0], param_names[1], 'star centers'])
 
@@ -588,6 +596,14 @@ class VARS(object):
                                             )
 
         self.star_points.columns = self.parameters.keys()
+
+        # scale star centres to correspond to newly scaled star_points
+        self.star_centres = vars_funcs.scale(self.star_centres,
+                                             bounds={  # bounds are created while scaling
+                                                 'lb': [val[0] for _, val in self.parameters.items()],
+                                                 'ub': [val[1] for _, val in self.parameters.items()],
+                                             }
+                                             )
 
         # apply model to the generated star points
         self.model_df = vars_funcs.apply_unique(func=self.model.func,
