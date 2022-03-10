@@ -316,13 +316,20 @@ class VARS(object):
                                     seed=self.seed,
                                     )
         elif self.sampler == 'plhs':
-            from .sampling import plhs
+            from .sampling import plhs, lhs
             num_slices = ceil(self.num_stars/self.slice_size)
-            self.star_centres = plhs(sp=self.num_stars,
-                                    params=len(self.parameters),
-                                    seed=self.seed,
-                                    slices=num_slices,
-                                     )[0]
+            if num_slices > 1:
+                self.star_centres = plhs(sp=self.num_stars,
+                                        params=len(self.parameters),
+                                        seed=self.seed,
+                                        slices=num_slices,
+                                         )[0]
+            else:
+                self.star_centres = lhs(sp=self.num_stars,
+                                        params=len(self.parameters),
+                                        seed=self.seed,
+                                        )
+
         elif self.sampler == 'sobol_seq':
             from .sampling import sobol_sequence
             self.star_centres = sobol_sequence(sp=self.num_stars,
