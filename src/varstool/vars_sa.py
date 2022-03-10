@@ -12,6 +12,8 @@ to  Earth and Environmental System models.
 import warnings
 import decimal
 import multiprocessing
+from math import ceil
+
 import joblib
 import contextlib
 
@@ -132,6 +134,10 @@ class VARS(object):
     :type model: varstool.Model
     :param seed: the seed number used in generating star centres
     :type seed: int, numpy.int32, numpy.int64
+    :param sampler: the type of sampler used to generate star centres
+    :type sampler: str
+    :param slice_size: slice size for "plhs" sampler
+    :type slice_size: int, numpy.int32, numpy.int64
     :param bootstrap_flag: flag to bootstrap the sensitivity analysis results
     :type bootstrap_flag: bool, defaults to False
     :param bootstrap_size: the size of bootstrapping experiment
@@ -178,6 +184,7 @@ class VARS(object):
         model: Model = None,  # model (function) to run for each star point
         seed: Optional[int] = np.random.randint(1, 123456789),  # randomization state
         sampler: Optional[str] = None,  # one of the default random samplers of varstool
+        slice_size: Optional[int] = None, # slice size for when using "plhs" sampling
         bootstrap_flag: Optional[bool] = False,  # bootstrapping flag
         bootstrap_size: Optional[int] = 1000,  # bootstrapping size
         bootstrap_ci: Optional[float] = 0.9,  # bootstrap confidence interval
@@ -202,6 +209,7 @@ class VARS(object):
         self.report_verbose = report_verbose
         self.sampler = sampler  # one of the default sampling algorithms or None
         # analysis stage is set to False before running anything
+        self.slice_size = slice_size
         self.run_status = False
 
         # Check input arguments
@@ -309,9 +317,11 @@ class VARS(object):
                                     )
         elif self.sampler == 'plhs':
             from .sampling import plhs
+            num_slices = ceil(self.num_stars/self.slice_size)
             self.star_centres = plhs(sp=self.num_stars,
                                     params=len(self.parameters),
                                     seed=self.seed,
+                                    slices=num_slices,
                                      )[0]
         elif self.sampler == 'sobol_seq':
             from .sampling import sobol_sequence
