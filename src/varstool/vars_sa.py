@@ -1684,6 +1684,7 @@ class TSVARS(VARS):
         model: Model = None, # model (function) to run for each star point
         seed: Optional[int] = np.random.randint(1, 123456789), # randomization state
         sampler: Optional[str] = None, # one of the default random samplers of varstool
+        slice_size: Optional[int] = None,  # slice size for when using "plhs" sampling
         bootstrap_flag: Optional[bool] = False, # bootstrapping flag
         bootstrap_size: Optional[int]  = 1000, # bootstrapping size
         bootstrap_ci: Optional[int] = 0.9, # bootstrap confidence interval
@@ -1696,20 +1697,21 @@ class TSVARS(VARS):
     ) -> None:
 
         super().__init__(
-            star_centres,
-            num_stars,
-            parameters,
-            delta_h,
-            ivars_scales,
-            model,
-            seed,
-            sampler,
-            bootstrap_flag,
-            bootstrap_size,
-            bootstrap_ci,
-            grouping_flag,
-            num_grps,
-            report_verbose,
+            star_centres=star_centres,
+            num_stars=num_stars,
+            parameters=parameters,
+            delta_h=delta_h,
+            ivars_scales=ivars_scales,
+            model=model,
+            seed=seed,
+            sampler=sampler,
+            slice_size=slice_size,
+            bootstrap_flag=bootstrap_flag,
+            bootstrap_size=bootstrap_size,
+            bootstrap_ci=bootstrap_ci,
+            grouping_flag=grouping_flag,
+            num_grps=num_grps,
+            report_verbose=report_verbose,
         ) # main instance variables are just the same as VARS
 
         # defining the TSVARS specific instance variables
