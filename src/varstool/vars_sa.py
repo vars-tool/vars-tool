@@ -2086,7 +2086,7 @@ class TSVARS(VARS):
 
         # defining aggregated values
         self.gamma.aggregate = self.gamma.groupby(level=['param', 'h']).mean()
-        self.st.aggregate = self.st.groupby(level=['param', 'h']).mean()
+        self.st.aggregate = self.st.groupby(level=['param']).mean()
         self.maee.aggregate  = self.maee.groupby(level=['param', 'h']).mean()
         self.mee.aggregate   = self.mee.groupby(level=['param', 'h']).mean()
         self.cov.aggregate   = self.cov.groupby(level=['param', 'h']).mean()
