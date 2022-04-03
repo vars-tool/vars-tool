@@ -743,6 +743,7 @@ def grouping(
 
 
 def bootstrapping(
+    num_stars: int,
     pair_df: pd.DataFrame,
     df: pd.DataFrame,
     cov_section_all: pd.DataFrame,
@@ -765,6 +766,8 @@ def bootstrapping(
 
     Parameters
     ----------
+    num_stars : int
+        number of star points
     pair_df : array_like
         Pandas DataFrame that contains the pairing results of the VARS analysis
     df : array_like
@@ -844,7 +847,7 @@ def bootstrapping(
         # bootstrapping to get CIs
         # specify random sequence by sampling with replacement
         bootstrap_rand = np.random.choice(
-            list(range(0, 10)), size=len(range(0, 10)), replace=True).tolist()
+            list(range(0, num_stars)), size=len(range(0, num_stars)), replace=True).tolist()
         bootstrapped_pairdf = pd.concat(
             [pair_df.loc[pd.IndexSlice[i, :, :, :], :] for i in bootstrap_rand])
         bootstrapped_df = pd.concat(

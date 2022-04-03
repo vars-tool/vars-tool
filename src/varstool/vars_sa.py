@@ -646,8 +646,6 @@ class VARS(object):
         # include a column containing the dissimilarity between pairs
         self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
 
-        display(self.pair_df)
-
         # progress bar for vars analysis
         if self.report_verbose:
             vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True) # 10 steps for different components
@@ -744,7 +742,7 @@ class VARS(object):
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
-            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
@@ -752,7 +750,7 @@ class VARS(object):
                                                                                self.num_grps, self.report_verbose)
         elif self.bootstrap_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_starts, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
@@ -906,7 +904,7 @@ class VARS(object):
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
-            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
@@ -914,7 +912,7 @@ class VARS(object):
                                                                                self.num_grps, self.report_verbose)
         elif self.bootstrap_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
@@ -1438,7 +1436,7 @@ class GVARS(VARS):
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
-            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, self.model_df, self.cov_section_all,
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h,
                                                                                self.ivars_scales,
@@ -1448,7 +1446,7 @@ class GVARS(VARS):
                                                                                self.num_grps, self.report_verbose)
         elif self.bootstrap_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df, self.model_df,
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df,
                                                                                                  self.cov_section_all,
                                                                                                  self.bootstrap_size,
                                                                                                  self.bootstrap_ci,
@@ -1618,7 +1616,7 @@ class GVARS(VARS):
         if self.bootstrap_flag and self.grouping_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
-            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.pair_df, self.model_df,
+            self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df,
                                                                                self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h,
@@ -1629,7 +1627,7 @@ class GVARS(VARS):
                                                                                self.num_grps, self.report_verbose)
         elif self.bootstrap_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.pair_df,
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df,
                                                                                                  self.model_df,
                                                                                                  self.cov_section_all,
                                                                                                  self.bootstrap_size,
