@@ -589,6 +589,8 @@ class VARS(object):
                                                                                    figsize=(12, 8))
             plt.scatter(self.star_centres[:, params.index(param_names[0])], self.star_centres[:, params.index(param_names[1])], color='orange')
             plt.legend([param_names[0], param_names[1], 'star centers'])
+            ax.set_ylabel(param_names[1])
+            ax.set_xlabel(param_names[0])
 
             return ax
 
@@ -1283,10 +1285,11 @@ class GVARS(VARS):
             ax = self.star_points.unstack(0).loc[param_names[0]].stack(-1).plot.scatter(params.index(param_names[0]), params.index(param_names[1]), title='Star Points', color='grey',
                                                                                              marker='*')
             self.star_points.unstack(0).loc[param_names[1]].stack(-1).plot.scatter(params.index(param_names[0]), params.index(param_names[1]), ax=ax, color='green', marker="+", xlabel='x1',
-                                                                                        ylabel='x2', figsize=(12, 8))
+                                                                                    ylabel='x2', figsize=(12, 8))
             plt.scatter(self.star_centres[:, params.index(param_names[0])], self.star_centres[:, params.index(param_names[1])], color='orange')
             plt.legend([param_names[0], param_names[1], 'star centers'])
-
+            ax.set_ylabel(param_names[1])
+            ax.set_xlabel(param_names[0])
             return ax
 
     def run_online(self):
@@ -2060,6 +2063,7 @@ class TSVARS(VARS):
         # output dictionary
         self.output = {
             'Gamma':self.gamma,
+            'ST': self.st,
             'MAEE':self.maee,
             'MEE':self.mee,
             'COV':self.cov,
@@ -2082,6 +2086,7 @@ class TSVARS(VARS):
 
         # defining aggregated values
         self.gamma.aggregate = self.gamma.groupby(level=['param', 'h']).mean()
+        self.st.aggregate = self.st.groupby(level=['param', 'h']).mean()
         self.maee.aggregate  = self.maee.groupby(level=['param', 'h']).mean()
         self.mee.aggregate   = self.mee.groupby(level=['param', 'h']).mean()
         self.cov.aggregate   = self.cov.groupby(level=['param', 'h']).mean()
