@@ -840,9 +840,6 @@ def bootstrapping(
     result_bs_sobol_ranking = pd.DataFrame()
     result_bs_ivars_ranking = pd.DataFrame()
 
-    # remove dissimilarity column to fix bootstrapping bug
-    pair_df.drop(['dissimilarity'], axis=1)
-
     for i in tqdm(range(0, bootstrap_size), desc='bootstrapping', disable=not progress, dynamic_ncols=True):
         # bootstrapping to get CIs
         # specify random sequence by sampling with replacement
@@ -975,9 +972,6 @@ def bootstrapping(
                                             index=parameters.keys())
     # transpose to get data frame in correct format
     rel_ivars_factor_ranking = rel_ivars_factor_ranking.transpose()
-
-    # put dissimilarity column back
-    pair_df['dissimilarity'] = 0.5 * (pair_df[0] - pair_df[1]).pow(2)
 
     # grouping can only be done if bootstrapping has been done and 0.5 ivars was chosen as a scale
     if grouping_flag and (0.5 in result_bs_ivars_df.index):

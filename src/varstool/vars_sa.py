@@ -20,6 +20,7 @@ import contextlib
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from IPython.core.display import display
 
 from tqdm.auto import tqdm, trange
 
@@ -645,6 +646,7 @@ class VARS(object):
         # include a column containing the dissimilarity between pairs
         self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
 
+        display(self.pair_df)
 
         # progress bar for vars analysis
         if self.report_verbose:
