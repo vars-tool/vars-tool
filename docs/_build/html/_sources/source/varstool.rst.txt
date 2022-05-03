@@ -1,6 +1,9 @@
 4. VARS-TOOL Package
 =================
 
+VARS Sensitivity Analysis Framework
+-----------------------------------
+
 .. automodule:: varstool.varstool
    :members:
    :undoc-members:
