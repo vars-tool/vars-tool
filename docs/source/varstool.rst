@@ -1,5 +1,5 @@
 4. VARS-TOOL Package
-=================
+====================
 
 .. automodule:: varstool.varstool
    :members:

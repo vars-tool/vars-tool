@@ -2,7 +2,7 @@ varstool.sensitivity_analysis package
 =====================================
 
 vars_functions
-----------
+--------------
 
 .. automodule:: varstool.sensitivity_analysis.vars_funcs
    :members:
