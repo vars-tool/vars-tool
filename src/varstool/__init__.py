@@ -12,7 +12,7 @@ finally:
 
 
 # importing core classes of the package
-from varstool.vars_sa import (
+from .varstool import (
     VARS,
     GVARS,
     DVARS,

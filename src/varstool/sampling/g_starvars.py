@@ -3,7 +3,7 @@ import numpy as np
 
 from tqdm.auto import tqdm
 
-from ..sa import gvars_funcs
+from ..sensitivity_analysis import gvars_funcs
 
 from typing import (
     Dict,
@@ -12,14 +12,14 @@ from typing import (
 )
 
 
-def star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
-         seed : int,
-         num_stars: int,
-         corr_mat: np.ndarray,
-         num_dir_samples: int,
-         num_factors: int,
-         report_verbose: bool
-         ) -> Tuple[Union[pd.DataFrame, pd.Series], Union[np.ndarray, np.ndarray], Union[np.ndarray, np.ndarray]]:
+def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
+           seed : int,
+           num_stars: int,
+           corr_mat: np.ndarray,
+           num_dir_samples: int,
+           num_factors: int,
+           report_verbose: bool
+           ) -> Tuple[Union[pd.DataFrame, pd.Series], Union[np.ndarray, np.ndarray], Union[np.ndarray, np.ndarray]]:
 
     """
     This function generates a Pandas Dataframe containing ''star_points'' based on [3]
