@@ -1,7 +1,7 @@
 2. Installation
 ===============
 
-2.1 Installing with pip (preferred)
+Installing with pip (preferred)
 -----------------------------------
 
 If you have Python3 and pip installed on your machine, then the VARS-TOOL package can be installed as following::
@@ -9,7 +9,7 @@ If you have Python3 and pip installed on your machine, then the VARS-TOOL packag
     foo@bar:~$  pip install varstool
 
 
-2.2 Installing from source code
+Installing from source code
 -------------------------------
 
 To install the lastest VARS-TOOL code from the source code, you will need to clone the github repository onto your local device using the command::
@@ -25,3 +25,4 @@ If pip is not available on your device use::
 
     foo@bar:~$ python setup.py install
 
+Note: if installation does not work due to limited permissions, add the ``--user`` option to the install commands.

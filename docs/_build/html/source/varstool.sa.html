@@ -1,70 +1,34 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>varstool.sa package &mdash; VARS-TOOL 2.1 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>varstool.sa package &mdash; VARS-TOOL 2.3.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="varstool.sampling package" href="varstool.sampling.html" />
     <link rel="prev" title="varstool.funcs.oldman package" href="varstool.funcs.oldman.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> VARS-TOOL
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -72,18 +36,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">1. Overview of VARS-TOOL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">2. Installation</a></li>
@@ -93,11 +46,11 @@
 <li class="toctree-l3"><a class="reference internal" href="varstool.funcs.html">varstool.funcs package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">varstool.sa package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-varstool.sa.dvars_funcs">varstool.sa.dvars_funcs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-varstool.sa.gvars_funcs">varstool.sa.gvars_funcs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-varstool.sa.tsvars_funcs">varstool.sa.tsvars_funcs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-varstool.sa.vars_funcs">varstool.sa.vars_funcs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-varstool.sa">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#varstool-sa-dvars-funcs-module">varstool.sa.dvars_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#varstool-sa-gvars-funcs-module">varstool.sa.gvars_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#varstool-sa-tsvars-funcs-module">varstool.sa.tsvars_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#varstool-sa-vars-funcs-module">varstool.sa.vars_funcs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="varstool.sampling.html">varstool.sampling package</a></li>
@@ -105,914 +58,88 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="varstool.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="varstool.html#module-varstool.vars_sa">varstool.vars_sa module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="varstool.html#varstool-vars-sa-module">varstool.vars_sa module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="varstool.html#module-varstool">Module contents</a></li>
 </ul>
 </li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">VARS-TOOL</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="varstool.html">varstool package</a> &raquo;</li>
-        
       <li>varstool.sa package</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/source/varstool.sa.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="varstool-sa-package">
-<h1>varstool.sa package<a class="headerlink" href="#varstool-sa-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-varstool.sa.dvars_funcs">
-<span id="varstool-sa-dvars-funcs-module"></span><h2>varstool.sa.dvars_funcs module<a class="headerlink" href="#module-varstool.sa.dvars_funcs" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-varstool.sa.gvars_funcs">
-<span id="varstool-sa-gvars-funcs-module"></span><h2>varstool.sa.gvars_funcs module<a class="headerlink" href="#module-varstool.sa.gvars_funcs" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-varstool.sa.tsvars_funcs">
-<span id="varstool-sa-tsvars-funcs-module"></span><h2>varstool.sa.tsvars_funcs module<a class="headerlink" href="#module-varstool.sa.tsvars_funcs" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.cov_section">
-<code class="sig-name descname"><span class="pre">cov_section</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_cols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_star</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.cov_section" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the sectional covariogram of the pairs of function evaluations
-that resulted from each star point. This function is specific for the time-series
-varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pair_cols</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of paired values function evaluations</p></li>
-<li><p><strong>mu_star</strong> (<em>pd.DataFrame</em>) – a Pandas DataFrame of mu star values that are calculated separately</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return cov_section_values</dt>
-<dd class="field-odd"><p>the sectional covariogram dataframe</p>
-</dd>
-<dt class="field-even">Rtype cov_section_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id1"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id2"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.covariogram">
-<code class="sig-name descname"><span class="pre">covariogram</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_cols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_overall</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.covariogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the covariogram values derived from the pairs of
-function evaluations that each resulted from each star point. This function
-is specific for the time-series varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pair_cols</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of paired values function evaluations</p></li>
-<li><p><strong>mu_overall</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of overall mu calculated on all
-function evaluation values for each time-step</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return covariogram_values</dt>
-<dd class="field-odd"><p>the covariogram dataframe</p>
-</dd>
-<dt class="field-even">Rtype covariogram_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id3"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id4"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.e_covariogram">
-<code class="sig-name descname"><span class="pre">e_covariogram</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cov_section_all</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.e_covariogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the Expected value of covariogram values derived from the pairs of
-function evaluations that each resulted from each star point. This function
-is specific for the time-series varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cov_section_all</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of sectional covariograms</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return e_covariogram_values</dt>
-<dd class="field-odd"><p>the covariogram dataframe</p>
-</dd>
-<dt class="field-even">Rtype e_covariogram_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id5"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id6"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.ivars">
-<code class="sig-name descname"><span class="pre">ivars</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variogram_array</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.ivars" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates Integrated Variogram Across a Range of Scales (IVARS) by approximating
-area using right trapezoids having width of <cite>delta_h</cite> and hights of variogram values.
-This function is specific for the time-series varying/aggregate of the VARS sensitivity
-analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>variogram_array</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of variogram values for each time-step</p></li>
-<li><p><strong>scale</strong> (<em>float</em>) – the scale for the IVARS evaluations</p></li>
-<li><p><strong>delta_h</strong> (<em>float</em>) – the resolution of star point generation</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return ivars_values</dt>
-<dd class="field-odd"><p>the Sobol Equivalent values</p>
-</dd>
-<dt class="field-even">Rtype ivars_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id7"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id8"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.morris_eq">
-<code class="sig-name descname"><span class="pre">morris_eq</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_cols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.morris_eq" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the Morris Equivalent values derived from the pairs of
-function evaluations that each resulted from each star point. This function
-is specific for the time-series varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pair_cols</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of paired values function evaluations</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return morris_eq_values</dt>
-<dd class="field-odd"><p>the morris dataframe</p>
-</dd>
-<dt class="field-even">Rtype morris_eq_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id9"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id10"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.pairs_h">
-<code class="sig-name descname"><span class="pre">pairs_h</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.pairs_h" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function gives the pairs of numbers considering their differences.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>iterable</strong> (<em>iterable</em>) – an iterable object</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return pairs</dt>
-<dd class="field-odd"><p>the returned dataframe of paired values</p>
-</dd>
-<dt class="field-even">Rtype pairs</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<p>Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.scale">
-<code class="sig-name descname"><span class="pre">scale</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function scales the sampled matrix <cite>df</cite> to the <cite>bounds</cite>
-that is a defined via a dictionary with <cite>ub</cite>, <cite>lb</cite> keys;
-the values of the dictionary are lists of the upper and lower
-bounds of the parameters/variables/factors. if (<code class="docutils literal notranslate"><span class="pre">axis</span> <span class="pre">=</span> <span class="pre">1</span></code>)
-then each row of <cite>df</cite> is selected, otherwise columns.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – a dataframe of randomly sampled values</p></li>
-<li><p><strong>bounds</strong> (<em>dict</em>) – a lower and upper bounds to scale the values</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – 0 for index, 1 for columns</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return df</dt>
-<dd class="field-odd"><p>the returned dataframe scaled using bounds</p>
-</dd>
-<dt class="field-even">Rtype df</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<p>Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.section_df">
-<code class="sig-name descname"><span class="pre">section_df</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.section_df" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function gets the paired values of each section based on index.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – a dataframe of star points</p></li>
-<li><p><strong>delta_h</strong> (<em>float</em>) – resolution of star samples</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return sample</dt>
-<dd class="field-odd"><p>the paired values for each section of star points</p>
-</dd>
-<dt class="field-even">Rtype sample</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<p>Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.sobol_eq">
-<code class="sig-name descname"><span class="pre">sobol_eq</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ecov</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.sobol_eq" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the Sobol Equivalent values derived from the variogram (<cite>gamma</cite>),
-expected values of sectional covariograms (<cite>ecov</cite>), and overall variance (<cite>variance</cite>).
-This function is specific for the time-series varying/aggregate of the VARS sensitivity
-analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>gamma</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of variogram values for each time-step</p></li>
-<li><p><strong>ecov</strong> (<em>pd.DataFrame</em>) – a Pandas DataFrame of expected values of sectional covariograms
-for each time-step</p></li>
-<li><p><strong>variance</strong> (<em>pd.Series</em>) – variance of function evaluations over all time-steps</p></li>
-<li><p><strong>delta_h</strong> (<em>float</em>) – resolution of star samples</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return sobol_eq_values</dt>
-<dd class="field-odd"><p>the Sobol Equivalent values</p>
-</dd>
-<dt class="field-even">Rtype sobol_eq_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id11"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id12"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.tsvars_funcs.variogram">
-<code class="sig-name descname"><span class="pre">variogram</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_cols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.tsvars_funcs.variogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the variogram calculated from the pairs of function evaluations
-that each resulted from each star point. This function is specific for the time-series
-varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pair_cols</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of paired values function evaluations</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return variogram_values</dt>
-<dd class="field-odd"><p>the variogram dataframe</p>
-</dd>
-<dt class="field-even">Rtype variogram_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id13"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id14"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-varstool.sa.vars_funcs">
-<span id="varstool-sa-vars-funcs-module"></span><h2>varstool.sa.vars_funcs module<a class="headerlink" href="#module-varstool.sa.vars_funcs" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.apply_unique">
-<code class="sig-name descname"><span class="pre">apply_unique</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.apply_unique" title="Permalink to this definition">¶</a></dt>
-<dd><p>Applys <cite>func</cite> to unique rows (<code class="docutils literal notranslate"><span class="pre">axis=1</span></code>) or columns (<code class="docutils literal notranslate"><span class="pre">axis=0</span></code>)
-of <cite>df</cite> in order to increase the efficiency of <cite>func</cite> evaluations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<em>Callable</em>) – the function of interest to be applied to df</p></li>
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – the Pandas DataFrame of interest</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – 0 for index, 1 for columns</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return applied_df</dt>
-<dd class="field-odd"><p>the returned dataframe with the <cite>func</cite> evaluations</p>
-</dd>
-<dt class="field-even">Rtype applied_df</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<p>Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.bootstrapping">
-<code class="sig-name descname"><span class="pre">bootstrapping</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_section_all</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_ci</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ivars_scales</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">st_factor_ranking</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ivars_factor_ranking</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_flag</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_grps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><a class="headerlink" href="#varstool.sa.vars_funcs.bootstrapping" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.cov_section">
-<code class="sig-name descname"><span class="pre">cov_section</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_cols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_star</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.cov_section" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the sectional covariogram of the pairs of function evaluations
-that resulted from each star point. This function is specific for the time-series
-varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pair_cols</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of paired values function evaluations</p></li>
-<li><p><strong>mu_star</strong> (<em>pd.DataFrame</em>) – a Pandas DataFrame of mu star values that are calculated separately</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return cov_section_values</dt>
-<dd class="field-odd"><p>the sectional covariogram dataframe</p>
-</dd>
-<dt class="field-even">Rtype cov_section_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id15"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id16"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.covariogram">
-<code class="sig-name descname"><span class="pre">covariogram</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_cols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_overall</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.covariogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the covariogram values derived from the pairs of
-function evaluations that each resulted from each star point. This function
-is specific for the time-series varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pair_cols</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of paired values function evaluations</p></li>
-<li><p><strong>mu_overall</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of overall mu calculated on all
-function evaluation values for each time-step</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return covariogram_values</dt>
-<dd class="field-odd"><p>the covariogram dataframe</p>
-</dd>
-<dt class="field-even">Rtype covariogram_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id17"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id18"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.e_covariogram">
-<code class="sig-name descname"><span class="pre">e_covariogram</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cov_section_all</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.e_covariogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the Expected value of covariogram values derived from the pairs of
-function evaluations that each resulted from each star point. This function
-is specific for the time-series varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cov_section_all</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of sectional covariograms</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return e_covariogram_values</dt>
-<dd class="field-odd"><p>the covariogram dataframe</p>
-</dd>
-<dt class="field-even">Rtype e_covariogram_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id19"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id20"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.elbow_method">
-<code class="sig-name descname"><span class="pre">elbow_method</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.sa.vars_funcs.elbow_method" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.factor_grouping">
-<code class="sig-name descname"><span class="pre">factor_grouping</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sens_idx</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_grp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.sa.vars_funcs.factor_grouping" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.factor_ranking">
-<code class="sig-name descname"><span class="pre">factor_ranking</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.sa.vars_funcs.factor_ranking" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ranks factors based on their influence (how large or small results are)
-The lowest rank corresponds to the most influential (larger) factor</p>
-<p>parameters:
-factors: an array like input that contains factors that are to be ranked</p>
-<p>returns:
-a numpy array containing the ranks of each factor in their corresponding index</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.grouping">
-<code class="sig-name descname"><span class="pre">grouping</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_bs_ivars_df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_bs_sobol</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_bs_ivars_ranking</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_bs_sobol_ranking</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_grps</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">st_factor_ranking</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ivars_factor_ranking</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><a class="headerlink" href="#varstool.sa.vars_funcs.grouping" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.ishigami">
-<code class="sig-name descname"><span class="pre">ishigami</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">collections.abc.Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="headerlink" href="#varstool.sa.vars_funcs.ishigami" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ishigami test function</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.ivars">
-<code class="sig-name descname"><span class="pre">ivars</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variogram_array</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.ivars" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates Integrated Variogram Across a Range of Scales (IVARS) by approximating
-area using right trapezoids having width of <cite>delta_h</cite> and hights of variogram values.
-This function is specific for the time-series varying/aggregate of the VARS sensitivity
-analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>variogram_array</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of variogram values for each time-step</p></li>
-<li><p><strong>scale</strong> (<em>float</em>) – the scale for the IVARS evaluations</p></li>
-<li><p><strong>delta_h</strong> (<em>float</em>) – the resolution of star point generation</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return ivars_values</dt>
-<dd class="field-odd"><p>the Sobol Equivalent values</p>
-</dd>
-<dt class="field-even">Rtype ivars_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id21"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id22"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.morris_eq">
-<code class="sig-name descname"><span class="pre">morris_eq</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_cols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.morris_eq" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the Morris Equivalent values derived from the pairs of
-function evaluations that each resulted from each star point. This function
-is specific for the time-series varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pair_cols</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of paired values function evaluations</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return morris_eq_values</dt>
-<dd class="field-odd"><p>the morris dataframe</p>
-</dd>
-<dt class="field-even">Rtype morris_eq_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id23"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id24"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.pairs_h">
-<code class="sig-name descname"><span class="pre">pairs_h</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">collections.abc.Iterable</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.pairs_h" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function gives the pairs of numbers considering their differences.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>iterable</strong> (<em>iterable</em>) – an iterable object</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return pairs</dt>
-<dd class="field-odd"><p>the returned dataframe of paired values</p>
-</dd>
-<dt class="field-even">Rtype pairs</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<p>Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.scale">
-<code class="sig-name descname"><span class="pre">scale</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.scale" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function scales the sampled matrix <cite>df</cite> to the <cite>bounds</cite>
-that is a defined via a dictionary with <cite>ub</cite>, <cite>lb</cite> keys;
-the values of the dictionary are lists of the upper and lower
-bounds of the parameters/variables/factors. if (<code class="docutils literal notranslate"><span class="pre">axis</span> <span class="pre">=</span> <span class="pre">1</span></code>)
-then each row of <cite>df</cite> is selected, otherwise columns.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – a dataframe of randomly sampled values</p></li>
-<li><p><strong>bounds</strong> (<em>dict</em>) – a lower and upper bounds to scale the values</p></li>
-<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em>) – 0 for index, 1 for columns</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return df</dt>
-<dd class="field-odd"><p>the returned dataframe scaled using bounds</p>
-</dd>
-<dt class="field-even">Rtype df</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<p>Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.section_df">
-<code class="sig-name descname"><span class="pre">section_df</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.section_df" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function gets the paired values of each section based on index.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – a dataframe of star points</p></li>
-<li><p><strong>delta_h</strong> (<em>float</em>) – resolution of star samples</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return sample</dt>
-<dd class="field-odd"><p>the paired values for each section of star points</p>
-</dd>
-<dt class="field-even">Rtype sample</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<p>Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.sobol_eq">
-<code class="sig-name descname"><span class="pre">sobol_eq</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ecov</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.sobol_eq" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the Sobol Equivalent values derived from the variogram (<cite>gamma</cite>),
-expected values of sectional covariograms (<cite>ecov</cite>), and overall variance (<cite>variance</cite>).
-This function is specific for the time-series varying/aggregate of the VARS sensitivity
-analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>gamma</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of variogram values for each time-step</p></li>
-<li><p><strong>ecov</strong> (<em>pd.DataFrame</em>) – a Pandas DataFrame of expected values of sectional covariograms
-for each time-step</p></li>
-<li><p><strong>variance</strong> (<em>pd.Series</em>) – variance of function evaluations over all time-steps</p></li>
-<li><p><strong>delta_h</strong> (<em>float</em>) – resolution of star samples</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return sobol_eq_values</dt>
-<dd class="field-odd"><p>the Sobol Equivalent values</p>
-</dd>
-<dt class="field-even">Rtype sobol_eq_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id25"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id26"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="varstool.sa.vars_funcs.variogram">
-<code class="sig-name descname"><span class="pre">variogram</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pair_cols</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#varstool.sa.vars_funcs.variogram" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function return the variogram calculated from the pairs of function evaluations
-that each resulted from each star point. This function is specific for the time-series
-varying/aggregate of the VARS sensitivity analysis.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>pair_cols</strong> (<em>pd.DataFrame</em>) – a Pandas Dataframe of paired values function evaluations</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return variogram_values</dt>
-<dd class="field-odd"><p>the variogram dataframe</p>
-</dd>
-<dt class="field-even">Rtype variogram_values</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-</dl>
-<dl class="footnote brackets">
-<dt class="label" id="id27"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Theory. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id28"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
-robust, and efficient global sensitivity analysis: 1. Application. Water
-Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
-<p>Razavi, Saman, (2017): algorithm, code in MATLAB (c)
-Matott, Shawn, (2019): code in C/++
-Keshavarz, Kasra, (2021): code in Python 3
-Blanchard, Cordell, (2021): code in Python 3</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-varstool.sa">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-varstool.sa" title="Permalink to this headline">¶</a></h2>
-</div>
-</div>
+             
+  <section id="varstool-sa-package">
+<h1>varstool.sa package<a class="headerlink" href="#varstool-sa-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="varstool-sa-dvars-funcs-module">
+<h2>varstool.sa.dvars_funcs module<a class="headerlink" href="#varstool-sa-dvars-funcs-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="varstool-sa-gvars-funcs-module">
+<h2>varstool.sa.gvars_funcs module<a class="headerlink" href="#varstool-sa-gvars-funcs-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="varstool-sa-tsvars-funcs-module">
+<h2>varstool.sa.tsvars_funcs module<a class="headerlink" href="#varstool-sa-tsvars-funcs-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="varstool-sa-vars-funcs-module">
+<h2>varstool.sa.vars_funcs module<a class="headerlink" href="#varstool-sa-vars-funcs-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="varstool.sampling.html" class="btn btn-neutral float-right" title="varstool.sampling package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="varstool.funcs.oldman.html" class="btn btn-neutral float-left" title="varstool.funcs.oldman package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="varstool.sampling.html" class="btn btn-neutral float-right" title="varstool.sampling package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Saman Razavi.
-
-    </p>
+    <p>&#169; Copyright 2021, Saman Razavi.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

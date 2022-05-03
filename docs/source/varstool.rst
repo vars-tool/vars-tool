@@ -1,32 +1,18 @@
-varstool package
-================
+4. VARS-TOOL Package
+=================
+
+.. automodule:: varstool.varstool
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
 
-   varstool.funcs
-   varstool.sa
+   varstool.example_models
+   varstool.sensitivity_analysis
    varstool.sampling
-   varstool.util
-
-Submodules
-----------
-
-varstool.vars\_sa module
-------------------------
-
-.. automodule:: varstool.vars_sa
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: varstool
-   :members:
-   :undoc-members:
-   :show-inheritance:

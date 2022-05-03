@@ -3,11 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to VARS-TOOL's documentation!
+VARS-TOOL Package Documentation
 =====================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
 
    overview   
    install

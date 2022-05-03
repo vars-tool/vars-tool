@@ -20,7 +20,6 @@ import contextlib
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from IPython.core.display import display
 
 from tqdm.auto import tqdm, trange
 
@@ -790,6 +789,11 @@ class VARS(object):
     def run_offline(self, model_df):
         """
         runs the offline version of VARS program
+
+        Parameters
+        ----------
+        model_df : array_like
+            A Pandas Dataframe that contains model ran on generated stars
         """
 
         # assign model_df to a class attribute
@@ -1492,6 +1496,11 @@ class GVARS(VARS):
     def run_offline(self, model_df):
         """
         runs offline version of GVARS program
+
+        Parameters
+        ----------
+        model_df : array_like
+            A Pandas Dataframe that contains model ran on generated stars
         """
 
         # assign dataframe with model ran on it to class attribute

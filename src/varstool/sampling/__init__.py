@@ -2,13 +2,13 @@
 
 """
 This module contains 6 different sampling methods, that are:
-1. Generalized Star‐Based (gSTAR) Sampling
-2. halton sequence
-3. lating hypercube sampling (lhs)
-4. progressive lating hypercube sampling (plhs)
-5. sobol sequence
-6. STAR sampling (starvars)
-7. symetrical latin hypercube sampling (symlhs)
+1. halton sequence
+2. lating hypercube sampling (lhs)
+3. progressive lating hypercube sampling (plhs)
+4. sobol sequence
+5. symetrical latin hypercube sampling (symlhs)
+6. Generalized Star‐Based (gSTAR) Sampling
+7. STAR sampling (starvars)
 
 """
 from .g_starvars import g_star
