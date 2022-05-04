@@ -317,6 +317,12 @@ class VARS(object):
                                     )
         elif self.sampler == 'plhs':
             from .sampling import plhs, lhs
+            # autogenerate a slice size if it is not chosen
+            if slice_size is None:
+                if self.num_stars % 2 == 0:
+                    self.slice_size = self.num_stars/2
+                else:
+                    self.slice_size = 1
             num_slices = ceil(self.num_stars/self.slice_size)
             if num_slices > 1:
                 self.star_centres = plhs(sp=self.num_stars,
@@ -1469,6 +1475,24 @@ class GVARS(VARS):
                                                                                                  self.num_grps,
                                                                                                  self.report_verbose)
 
+        # warn user if sample size is not large enough to ensure full coverage of 'h' values for directional variogram
+        nan_flag = False
+        h_locations = ""
+        nans = self.gamma.unstack().isna().any()
+        for i in range(nans.size):
+            if nans.iloc[i]:
+                nan_flag = True
+                h_locations += str(round(nans.index[i], 3)) + ","
+
+        if nan_flag:
+            warning_string = "For some or all variables there are no values inside bins of the directional variogram "\
+                             "for following h values: " + h_locations + " " \
+                             "you may want to consider increasing the sample size.\n"
+            warnings.warn(warning_string,
+                          UserWarning,
+                          stacklevel=1
+                          )
+
         # for status update
         self.run_status = True
 
@@ -1655,6 +1679,24 @@ class GVARS(VARS):
                                                                                                  self.grouping_flag,
                                                                                                  self.num_grps,
                                                                                                  self.report_verbose)
+
+        # warn user if sample size is not large enough to ensure full coverage of 'h' values for directional variogram
+        nan_flag = False
+        h_locations = ""
+        nans = self.gamma.unstack().isna().any()
+        for i in range(nans.size):
+            if nans.iloc[i]:
+                nan_flag = True
+                h_locations += str(round(nans.index[i], 3)) + ","
+
+        if nan_flag:
+            warning_string = "For some or all variables there are no values inside bins of the directional variogram "\
+                             "for following h values: " + h_locations + " " \
+                             "you may want to consider increasing the sample size.\n"
+            warnings.warn(warning_string,
+                          UserWarning,
+                          stacklevel=1
+                          )
 
         # for status update
         self.run_status = True

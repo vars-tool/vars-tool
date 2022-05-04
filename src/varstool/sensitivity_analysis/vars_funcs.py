@@ -844,9 +844,9 @@ def bootstrapping(
     result_bs_ivars_ranking = pd.DataFrame()
 
     if grouping_flag:
-        bs = tqdm(range(0, bootstrap_size), desc='bootstrapping', disable=not progress, dynamic_ncols=True)
-    else:
         bs = tqdm(range(0, bootstrap_size), desc='bootstrapping and grouping', disable=not progress, dynamic_ncols=True)
+    else:
+        bs = tqdm(range(0, bootstrap_size), desc='bootstrapping', disable=not progress, dynamic_ncols=True)
 
     for i in bs:
         # bootstrapping to get CIs
