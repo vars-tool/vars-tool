@@ -13,7 +13,7 @@
 # adding the list of directories for the autodocs
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('../src'))
 # -- Project information -----------------------------------------------------
 
 project = 'VARS-TOOL'
