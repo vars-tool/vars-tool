@@ -202,7 +202,7 @@ def rn2rx(distpair_type: List,
 
 
 def map_2_cornorm(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
-                  corr_mat: np.ndarray
+                  corr_mat: np.ndarray, progress: bool
                   ) -> np.ndarray:
     """
     Computes the fictive correlation matrix given a correlation matrix and its
@@ -214,6 +214,8 @@ def map_2_cornorm(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
         a dictionary containing parameter names and their attributes
     corr_mat : np.ndarray
         correlation matrix
+    progress : boolean
+        true if loading bar is to be shown, false otherwise
 
     Returns
     -------
@@ -238,7 +240,8 @@ def map_2_cornorm(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     param_info = list(parameters.values())
 
     corr_n = np.eye(corr_mat.shape[0], corr_mat.shape[1])
-    for i in range(0, corr_mat.shape[0] - 1):
+
+    for i in tqdm(range(0, corr_mat.shape[0] - 1), desc='building fictive matrix', disable=not progress, dynamic_ncols=True):
         for j in range(i + 1, corr_mat.shape[0]):
             # input paramter info
             corr_n[i][j] = rn2rx([param_info[i][3], param_info[j][3]],
@@ -416,7 +419,10 @@ def reorder_pairs(pair_df: pd.DataFrame,
 
     # loading bar for binning and reording pairs based on new 'h' values
     if report_verbose:
-        pairs_pbar = tqdm(desc='binning and reording pairs based on \'h\' values', total=2, dynamic_ncols=True)
+        star_centres = tqdm(range(0, num_stars), desc='binning and reording pairs based on \'h\' values')
+        star_centres.write('Note: there may be \'h\' values that do not get binned due to random sampling')
+    else:
+        star_centres = range(0, num_stars)
 
     # add new distances to dataframe
     pair_df['actual h'] = dist_list
@@ -433,16 +439,13 @@ def reorder_pairs(pair_df: pd.DataFrame,
 
     # bin pair values according to their distances 'h' for each paramter at each star centre
     binned_pairs = []
-    for star_centre in range(0, num_stars):
+    for star_centre in star_centres:
         for param in parameters.keys():
             binned_pairs.append(
                 pd.cut(pair_df.loc[star_centre, param, :]['actual h'], bins=bins, labels=labels).sort_values())
 
     # put binned pairs into a panda series
     binned_pairs = pd.concat(binned_pairs, ignore_index=False)
-
-    if report_verbose:
-        pairs_pbar.update(1)
 
     # re order pairs values according to the bins
     pair_df = pair_df.loc[binned_pairs.index]
@@ -457,10 +460,6 @@ def reorder_pairs(pair_df: pd.DataFrame,
     pair_df.set_index('actual h', append=True, inplace=True)
 
     pair_df = pair_df.reorder_levels(['centre', 'param', 'h', 'actual h', 'pair_ind'])
-
-    if report_verbose:
-        pairs_pbar.update(1)
-        pairs_pbar.close()
 
     return pair_df
 

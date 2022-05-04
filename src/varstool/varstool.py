@@ -654,32 +654,32 @@ class VARS(object):
         self.mu_star_df.index.names = ['centre', 'param']
         if self.report_verbose:
             vars_pbar.update(1)
-            # vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
+            #vars_pbar.write('Averages of model star evaluations (`mu_star`) calculated - access via .mu_star_df')
 
         # overall mean of the unique evaluated function value over all star points
         self.mu_overall = self.model_df[str(self.model)].unique().mean()
         if self.report_verbose:
             vars_pbar.update(1)
-            # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
+            #vars_pbar.write('Overall expected value of model evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
         self.var_overall = self.model_df[str(self.model)].unique().var(ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
-            # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
+            #vars_pbar.write('Overall variance of model evaluations (`var_overall`) calculated - access via .var_overall')
 
         # sectional covariogram calculation
         self.cov_section_all = vars_funcs.cov_section(self.pair_df, self.mu_star_df)
         if self.report_verbose:
             vars_pbar.update(1)
-            # vars_pbar.write('Sectional covariogram `cov_section_all` calculated - access via .cov_section_all')
+            #vars_pbar.write('Sectional covariogram `cov_section_all` calculated - access via .cov_section_all')
 
         # variogram calculation
         # MATLAB: Gamma
         self.gamma = vars_funcs.variogram(self.pair_df)
         if self.report_verbose:
             vars_pbar.update(1)
-            # vars_pbar.write('Variogram (`gamma`) calculated - access via .gamma')
+            #vars_pbar.write('Variogram (`gamma`) calculated - access via .gamma')
 
         # morris calculation
         morris_value = vars_funcs.morris_eq(self.pair_df)
@@ -687,34 +687,35 @@ class VARS(object):
         self.mee  = morris_value[1] # MATLAB: MEE
         if self.report_verbose:
             vars_pbar.update(1)
-            # vars_pbar.write('Morris MAEE and MEE (`maee` and `mee`) calculated - access via .maee and .mee')
+            #vars_pbar.write('Morris MAEE and MEE (`maee` and `mee`) calculated - access via .maee and .mee')
 
         # overall covariogram calculation
         # MATLAB: COV
         self.cov = vars_funcs.covariogram(self.pair_df, self.mu_overall)
         if self.report_verbose:
             vars_pbar.update(1)
-            # vars_pbar.write('Covariogram (`cov`) calculated - access via .cov')
+            #vars_pbar.write('Covariogram (`cov`) calculated - access via .cov')
 
         # expected value of the overall covariogram calculation
         # MATLAB: ECOV
         self.ecov = vars_funcs.e_covariogram(self.cov_section_all)
         if self.report_verbose:
             vars_pbar.update(1)
-            # vars_pbar.write('Expected value of covariogram (`ecov`) calculated - access via .ecov')
+            #vars_pbar.write('Expected value of covariogram (`ecov`) calculated - access via .ecov')
 
         # sobol calculation
         # MATLAB: ST
         self.st = vars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
         if self.report_verbose:
             vars_pbar.update(1)
-            # vars_pbar.write('Sobol ST (`st`) calculated - access via .st')
+            #vars_pbar.write('Sobol ST (`st`) calculated - access via .st')
 
         # IVARS calculation
         self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=0).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
              for scale in self.ivars_scales}, 'index')
         if self.report_verbose:
             vars_pbar.update(1)
+            #vars_pbar.write('IVARS (`ivars`) calculated - access via .ivars')
             vars_pbar.close()
 
         # progress bar for factor ranking
@@ -727,6 +728,8 @@ class VARS(object):
         self.st_factor_ranking = pd.DataFrame(data=[sobol_factor_ranking_array], columns=self.parameters.keys(), index=[''])
         if self.report_verbose:
             factor_rank_pbar.update(1)
+            #factor_rank_pbar.write('Sobol ST factor ranking (`st_factor_ranking`) calculated - '
+                                   #'access via .st_factor_ranking')
 
         # do factor ranking on IVARS results
         ivars_factor_ranking_list = []
@@ -736,6 +739,8 @@ class VARS(object):
         self.ivars_factor_ranking = pd.DataFrame(data=ivars_factor_ranking_list, columns=self.parameters.keys(), index=self.ivars_scales)
         if self.report_verbose:
             factor_rank_pbar.update(1)
+            #factor_rank_pbar.write('IVARS factor ranking (`ivars_factor_ranking`) calculated - '
+                                   #'access via .ivars_factor_ranking')
             factor_rank_pbar.close()
 
         if self.bootstrap_flag and self.grouping_flag:

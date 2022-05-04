@@ -64,15 +64,13 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
            Research, 56(3). doi: /10.1029/2019WR025436
     """
 
-    # load bar if report_verbose is true
-    if report_verbose:
-        stars_pbar = tqdm(desc='generating star points\n (note: first step will take awhile as the fictive matrix is being calculated)', total=9, dynamic_ncols=True)
-
     # Computing fictive correlation matrix
     # Note: that corr_mat and cov_mat are the same in terms of magnitude
-    cov_mat = gvars_funcs.map_2_cornorm(parameters, corr_mat)
+    cov_mat = gvars_funcs.map_2_cornorm(parameters, corr_mat, report_verbose)
+
+    # load bar if report_verbose is true
     if report_verbose:
-        stars_pbar.update(1)
+        stars_pbar = tqdm(desc='generating star points\n', total=8, dynamic_ncols=True)
 
     # Generate correlated standard normal samples
     # the amount of samples is the same as the amount of stars
