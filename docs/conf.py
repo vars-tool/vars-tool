@@ -18,7 +18,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../docs/source'))
-
+sys.path.insert(0, os.path.abspath('../src/varstool'))
 # -- Project information -----------------------------------------------------
 
 project = 'VARS-TOOL'
