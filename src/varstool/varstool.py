@@ -11,7 +11,7 @@ to  Earth and Environmental System models.
 
 import warnings
 import decimal
-import multiprocessing
+import multiprocessing as mp
 from math import ceil
 
 import joblib
@@ -760,7 +760,7 @@ class VARS(object):
                                                                                self.num_grps, self.report_verbose)
         elif self.bootstrap_flag:
             self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
-            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_starts, self.pair_df, self.model_df, self.cov_section_all,
+            self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
@@ -1425,6 +1425,25 @@ class GVARS(VARS):
             vars_pbar.update(1)
             vars_pbar.close()
 
+        # warn user if sample size is not large enough to ensure full coverage of 'h' values for directional variogram
+        nan_flag = False
+        h_locations = ""
+        nans = self.gamma.unstack().isna().any()
+        for i in range(nans.size):
+            if nans.iloc[i]:
+                nan_flag = True
+                h_locations += str(round(nans.index[i], 3)) + ","
+
+        if nan_flag:
+            warning_string = "For some or all variables there are no results for the directional variogram "\
+                             "for the following h values: " + h_locations + " " \
+                             "you may want to consider increasing the sample size.\n"
+            warnings.warn(warning_string,
+                          UserWarning,
+                          stacklevel=1
+                          )
+
+
         # progress bar for factor ranking
         if self.report_verbose:
             factor_rank_pbar = tqdm(desc='factor ranking', total=2, dynamic_ncols=True)  # only two components
@@ -1475,23 +1494,6 @@ class GVARS(VARS):
                                                                                                  self.num_grps,
                                                                                                  self.report_verbose)
 
-        # warn user if sample size is not large enough to ensure full coverage of 'h' values for directional variogram
-        nan_flag = False
-        h_locations = ""
-        nans = self.gamma.unstack().isna().any()
-        for i in range(nans.size):
-            if nans.iloc[i]:
-                nan_flag = True
-                h_locations += str(round(nans.index[i], 3)) + ","
-
-        if nan_flag:
-            warning_string = "For some or all variables there are no values inside bins of the directional variogram "\
-                             "for following h values: " + h_locations + " " \
-                             "you may want to consider increasing the sample size.\n"
-            warnings.warn(warning_string,
-                          UserWarning,
-                          stacklevel=1
-                          )
 
         # for status update
         self.run_status = True
@@ -1628,6 +1630,24 @@ class GVARS(VARS):
             vars_pbar.update(1)
             vars_pbar.close()
 
+        # warn user if sample size is not large enough to ensure full coverage of 'h' values for directional variogram
+        nan_flag = False
+        h_locations = ""
+        nans = self.gamma.unstack().isna().any()
+        for i in range(nans.size):
+            if nans.iloc[i]:
+                nan_flag = True
+                h_locations += str(round(nans.index[i], 3)) + ","
+
+        if nan_flag:
+            warning_string = "For some or all variables there are no results for the directional variogram "\
+                             "for the following h values: " + h_locations + " " \
+                             "you may want to consider increasing the sample size.\n"
+            warnings.warn(warning_string,
+                          UserWarning,
+                          stacklevel=1
+                          )
+
         # progress bar for factor ranking
         if self.report_verbose:
             factor_rank_pbar = tqdm(desc='factor ranking', total=2, dynamic_ncols=True)  # only two components
@@ -1680,23 +1700,6 @@ class GVARS(VARS):
                                                                                                  self.num_grps,
                                                                                                  self.report_verbose)
 
-        # warn user if sample size is not large enough to ensure full coverage of 'h' values for directional variogram
-        nan_flag = False
-        h_locations = ""
-        nans = self.gamma.unstack().isna().any()
-        for i in range(nans.size):
-            if nans.iloc[i]:
-                nan_flag = True
-                h_locations += str(round(nans.index[i], 3)) + ","
-
-        if nan_flag:
-            warning_string = "For some or all variables there are no values inside bins of the directional variogram "\
-                             "for following h values: " + h_locations + " " \
-                             "you may want to consider increasing the sample size.\n"
-            warnings.warn(warning_string,
-                          UserWarning,
-                          stacklevel=1
-                          )
 
         # for status update
         self.run_status = True
@@ -2187,11 +2190,11 @@ class TSVARS(VARS):
 
         if progress:
             with _tqdm_joblib(tqdm(desc="building pairs", total=len(dfGrouped), dynamic_ncols=True)) as progress_bar:
-                retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
+                retLst, top_index = zip(*Parallel(n_jobs=mp.cpu_count())\
                                             (delayed(_temp_func)(func, name, group)\
                                         for name, group in dfGrouped))
         else:
-            retLst, top_index = zip(*Parallel(n_jobs=multiprocessing.cpu_count())\
+            retLst, top_index = zip(*Parallel(n_jobs=mp.cpu_count())\
                                             (delayed(_temp_func)(func, name, group)\
                                         for name, group in dfGrouped))
 

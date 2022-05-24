@@ -420,7 +420,6 @@ def reorder_pairs(pair_df: pd.DataFrame,
     # loading bar for binning and reording pairs based on new 'h' values
     if report_verbose:
         star_centres = tqdm(range(0, num_stars), desc='binning and reording pairs based on \'h\' values')
-        star_centres.write('Note: there may be \'h\' values that do not get binned due to random sampling')
     else:
         star_centres = range(0, num_stars)
 
