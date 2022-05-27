@@ -955,10 +955,6 @@ def bootstrapping(
     maeelb.index.names = ['h']
     maeeub.index.names = ['h']
 
-    # transpose to get into correct format
-    maeelb = gammalb.transpose()
-    maeeub = gammaub.transpose()
-
 
     # calculate upper and lower confidence interval limits for sobol results in a nice looking format
     stlb = result_bs_sobol.quantile(
