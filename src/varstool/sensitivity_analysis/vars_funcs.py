@@ -937,21 +937,27 @@ def bootstrapping(
     gammalb = gammalb.transpose()
     gammaub = gammaub.transpose()
 
-    # calculate upper and lower confidence interval limits for vars-abe results
+    # calculate upper and lower confidence interval limits for variogram results
     maeelb = pd.DataFrame()
     maeeub = pd.DataFrame()
-    # itereate through each h value
+    # iterate through each h value
     for h in np.unique(result_bs_maee.index.values).tolist():
-        # find all confidence interval limits
-        maeelb = pd.concat([maeelb, result_bs_maee.loc[h].quantile((1 - 0.9) / 2).rename(h).to_frame()], axis=1)
-        maeeub = pd.concat([maeeub, result_bs_maee.loc[h].quantile(1 - ((1 - 0.9) / 2)).rename(h).to_frame()],
-                             axis=1)
+        # find all confidence interval limits for each h value
+        maeelb = pd.concat(
+            [maeelb,
+             result_bs_maee.loc[h].quantile((1 - bootstrap_ci) / 2).rename(h).to_frame()], axis=1)
+        maeeub = pd.concat(
+            [maeeub,
+             result_bs_maee.loc[h].quantile(1 - ((1 - bootstrap_ci) / 2)).rename(h).to_frame()],
+            axis=1)
 
-    maee_low = maeelb.transpose()
-    maee_upp = maeeub.transpose()
+    # index value name is h?? not sure if this should be changed later
+    maeelb.index.names = ['h']
+    maeeub.index.names = ['h']
 
-    maee_low.index.names = ['h']
-    maee_upp.index.names = ['h']
+    # transpose to get into correct format
+    maeelb = gammalb.transpose()
+    maeeub = gammaub.transpose()
 
 
     # calculate upper and lower confidence interval limits for sobol results in a nice looking format
