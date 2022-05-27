@@ -475,9 +475,9 @@ class VARS(object):
 
         return self.star_points
 
-    def plot(self, logy: bool = False):
+    def factorimportance_plot(self, logy: bool = False):
         """
-        plots the variogram results up to h=0.5, and plots the ratio of factor importance for IVARS50, VARS-TO,
+        plots the ratio of factor importance for IVARS50, VARS-TO,
         and VARS-ABE
 
         Parameters
@@ -497,16 +497,6 @@ class VARS(object):
 
         if self.run_status:
 
-            # variogram plot
-            # option to make y axis log scale so to see results more clearly
-            if logy:
-                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)',
-                                                   xlim=(0, 0.5), logy=True, marker='o')
-            else:
-                ymax = self.gamma.unstack(0).loc[0:0.6].max().max()
-                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)',
-                                                   xlim=(0, 0.5), ylim=(0, ymax), marker='o')
-
             # factor importance bar chart for vars-abe, ivars50, and vars-to
             if 0.5 in self.ivars.index:
                 # normalize data using mean normalization
@@ -520,9 +510,9 @@ class VARS(object):
 
                 # plot bar chart
                 x = np.arange(len(self.parameters.keys()))  # the label locations
-                width = 0.1  # the width of the bars
+                width = 0.2  # the width of the bars
 
-                barfig, barax = plt.subplots()
+                barfig, barax = plt.subplots(figsize=(10,5))
 
                 # if there are bootstrap results include them in bar chart
                 if self.bootstrap_flag:
@@ -531,31 +521,35 @@ class VARS(object):
                     ivars50_err_low = self.ivarslb.loc[0.5] / df3.sum()
                     sobol_err_upp = (self.stub / df2.to_numpy().sum()).to_numpy().flatten()
                     sobol_err_low = (self.stlb / df2.to_numpy().sum()).to_numpy().flatten()
+                    maee_err_upp = self.maeeub.iloc[0] / df1.sum()
+                    maee_err_low = self.maeelb.iloc[0] / df1.sum()
 
                     # subtract from normalized values so that error bars work properly
                     ivars50_err_upp = np.abs(ivars50_err_upp - normalized_ivars50)
                     ivars50_err_low = np.abs(ivars50_err_low - normalized_ivars50)
                     sobol_err_upp = np.abs(sobol_err_upp - normalized_sobol)
                     sobol_err_low = np.abs(sobol_err_low - normalized_sobol)
+                    maee_err_upp = np.abs(maee_err_upp - normalized_maee)
+                    maee_err_low = np.abs(maee_err_low - normalized_maee)
 
                     # create error array for bar charts
                     ivars50_err = np.array([ivars50_err_low, ivars50_err_upp])
                     sobol_err = np.array([sobol_err_low, sobol_err_upp])
+                    maee_err = np.array([maee_err_low, maee_err_upp])
 
-                    rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)')
-                    rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50', yerr=ivars50_err)
-                    rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)', yerr=sobol_err)
+                    rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)', yerr=maee_err, color='green')
+                    rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50', yerr=ivars50_err, color='gold')
+                    rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)', yerr=sobol_err, color='lightblue')
                 else:
                     rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)')
                     rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50')
                     rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)')
 
                 # Add some text for labels, and custom x-axis tick labels, etc.
-                barax.set_ylabel('Ratio of Factor Importance')
-                barax.set_xlabel('Factor')
+                barax.set_ylabel('Ratio of Factor Importance', fontsize=13)
                 barax.set_xticks(x)
                 barax.set_xticklabels(self.parameters.keys())
-                barax.legend()
+                barax.legend(fontsize=11)
 
                 barfig.tight_layout()
 
@@ -564,9 +558,7 @@ class VARS(object):
 
                 plt.show()
 
-                return varax, barfig, barax
-            else:
-                return varax
+                return barfig, barax
 
     def correlation_plot(self,
                          param_names: np.ndarray):
@@ -750,7 +742,7 @@ class VARS(object):
             factor_rank_pbar.close()
 
         if self.bootstrap_flag and self.grouping_flag:
-            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
             self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
@@ -759,7 +751,7 @@ class VARS(object):
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
         elif self.bootstrap_flag:
-            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
@@ -784,6 +776,8 @@ class VARS(object):
             'rnkIVARS':self.ivars_factor_ranking,
             'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
             'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
+            'MAEElb' :self.maeelb if self.bootstrap_flag is True else None,
+            'MAEEub' :self.maeeub if self.bootstrap_flag is True else None,
             'STlb':self.stlb if self.bootstrap_flag is True else None,
             'STub':self.stub if self.bootstrap_flag is True else None,
             'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
@@ -917,7 +911,7 @@ class VARS(object):
             factor_rank_pbar.close()
 
         if self.bootstrap_flag and self.grouping_flag:
-            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
             self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
@@ -926,7 +920,7 @@ class VARS(object):
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
         elif self.bootstrap_flag:
-            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
                                                                                self.model.func, self.delta_h, self.ivars_scales,
@@ -951,6 +945,8 @@ class VARS(object):
             'rnkIVARS':self.ivars_factor_ranking,
             'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
             'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
+            'MAEElb': self.maeelb if self.bootstrap_flag is True else None,
+            'MAEEub': self.maeeub if self.bootstrap_flag is True else None,
             'STlb':self.stlb if self.bootstrap_flag is True else None,
             'STub':self.stub if self.bootstrap_flag is True else None,
             'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
@@ -1182,9 +1178,9 @@ class GVARS(VARS):
 
         return self.star_points
 
-    def plot(self, logy : bool=False):
+    def factorimportance_plot(self, logy : bool=False):
         """
-        plots the variogram results up to h=0.5, and plots the ratio of factor importance for IVARS50, VARS-TO,
+        plots the ratio of factor importance for IVARS50, VARS-TO,
         and VARS-ABE
 
         Parameters
@@ -1204,16 +1200,6 @@ class GVARS(VARS):
 
         if self.run_status:
 
-            # variogram plot
-            # option to make y axis log scale so to see results more clearly
-            if logy:
-                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)', xlim=(0, 0.5),
-                                                logy=True, marker='o')
-            else:
-                ymax = self.gamma.unstack(0).loc[0:0.6].max().max()
-                varax = self.gamma.unstack(0).plot(xlabel='Perturbation Scale, h', ylabel='Variogram, $\gamma$(h)', xlim=(0, 0.5),
-                                                ylim=(0, ymax), marker='o')
-
             # factor importance bar chart for vars-abe, ivars50, and vars-to
             if 0.5 in self.ivars.index:
                 # normalize data using mean normalization
@@ -1225,12 +1211,11 @@ class GVARS(VARS):
                 normalized_sobol = df2 / df2.sum()
                 normalized_ivars50 = df3 / df3.sum()
 
-
                 # plot bar chart
                 x = np.arange(len(self.parameters.keys()))  # the label locations
-                width = 0.1  # the width of the bars
+                width = 0.2  # the width of the bars
 
-                barfig, barax = plt.subplots()
+                barfig, barax = plt.subplots(figsize=(10,5))
 
                 # if there are bootstrap results include them in bar chart
                 if self.bootstrap_flag:
@@ -1239,31 +1224,35 @@ class GVARS(VARS):
                     ivars50_err_low = self.ivarslb.loc[0.5] / df3.sum()
                     sobol_err_upp = (self.stub / df2.to_numpy().sum()).to_numpy().flatten()
                     sobol_err_low = (self.stlb / df2.to_numpy().sum()).to_numpy().flatten()
+                    maee_err_upp = self.maeeub.iloc[0] / df1.sum()
+                    maee_err_low = self.maeelb.iloc[0] / df1.sum()
 
                     # subtract from normalized values so that error bars work properly
                     ivars50_err_upp = np.abs(ivars50_err_upp - normalized_ivars50)
                     ivars50_err_low = np.abs(ivars50_err_low - normalized_ivars50)
                     sobol_err_upp = np.abs(sobol_err_upp - normalized_sobol)
                     sobol_err_low = np.abs(sobol_err_low - normalized_sobol)
+                    maee_err_upp = np.abs(maee_err_upp - normalized_maee)
+                    maee_err_low = np.abs(maee_err_low - normalized_maee)
 
                     # create error array for bar charts
                     ivars50_err = np.array([ivars50_err_low, ivars50_err_upp])
                     sobol_err = np.array([sobol_err_low, sobol_err_upp])
+                    maee_err = np.array([maee_err_low, maee_err_upp])
 
-                    rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)')
-                    rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50', yerr=ivars50_err)
-                    rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)', yerr=sobol_err)
+                    rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)', yerr=maee_err, color='green')
+                    rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50', yerr=ivars50_err, color='gold')
+                    rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)', yerr=sobol_err, color='lightblue')
                 else:
                     rects1 = barax.bar(x - width, normalized_maee, width, label='VARS-ABE (Morris)')
                     rects2 = barax.bar(x, normalized_ivars50, width, label='IVARS50')
                     rects3 = barax.bar(x + width, normalized_sobol, width, label='VARS-TO (Sobol)')
 
                 # Add some text for labels, and custom x-axis tick labels, etc.
-                barax.set_ylabel('Ratio of Factor Importance')
-                barax.set_xlabel('Factor')
+                barax.set_ylabel('Ratio of Factor Importance', fontsize=13)
                 barax.set_xticks(x)
                 barax.set_xticklabels(self.parameters.keys())
-                barax.legend()
+                barax.legend(fontsize=11)
 
                 barfig.tight_layout()
 
@@ -1272,9 +1261,7 @@ class GVARS(VARS):
 
                 plt.show()
 
-                return varax, barfig, barax
-            else:
-                return varax
+                return barfig, barax
 
     def correlation_plot(self,
                          param_names: np.ndarray):
@@ -1468,7 +1455,7 @@ class GVARS(VARS):
             factor_rank_pbar.close()
 
         if self.bootstrap_flag and self.grouping_flag:
-            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
             self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
@@ -1479,7 +1466,7 @@ class GVARS(VARS):
                                                                                self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
         elif self.bootstrap_flag:
-            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df,
                                                                                                  self.cov_section_all,
                                                                                                  self.bootstrap_size,
@@ -1512,6 +1499,8 @@ class GVARS(VARS):
             'rnkIVARS': self.ivars_factor_ranking,
             'Gammalb': self.gammalb if self.bootstrap_flag is True else None,
             'Gammaub': self.gammaub if self.bootstrap_flag is True else None,
+            'MAEElb': self.maeelb if self.bootstrap_flag is True else None,
+            'MAEEub': self.maeeub if self.bootstrap_flag is True else None,
             'STlb': self.stlb if self.bootstrap_flag is True else None,
             'STub': self.stub if self.bootstrap_flag is True else None,
             'IVARSlb': self.ivarslb if self.bootstrap_flag is True else None,
@@ -1672,7 +1661,7 @@ class GVARS(VARS):
             factor_rank_pbar.close()
 
         if self.bootstrap_flag and self.grouping_flag:
-            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
             self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df,
                                                                                self.cov_section_all,
@@ -1684,7 +1673,7 @@ class GVARS(VARS):
                                                                                self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
         elif self.bootstrap_flag:
-            self.gammalb, self.gammaub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
+            self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df,
                                                                                                  self.model_df,
                                                                                                  self.cov_section_all,
@@ -1718,6 +1707,8 @@ class GVARS(VARS):
             'rnkIVARS': self.ivars_factor_ranking,
             'Gammalb': self.gammalb if self.bootstrap_flag is True else None,
             'Gammaub': self.gammaub if self.bootstrap_flag is True else None,
+            'MAEElb': self.maeelb if self.bootstrap_flag is True else None,
+            'MAEEub': self.maeeub if self.bootstrap_flag is True else None,
             'STlb': self.stlb if self.bootstrap_flag is True else None,
             'STub': self.stub if self.bootstrap_flag is True else None,
             'IVARSlb': self.ivarslb if self.bootstrap_flag is True else None,

@@ -760,8 +760,8 @@ def bootstrapping(
     progress: bool = False
 ) -> Tuple:
     """
-    performs bootstrapping procedure to gather confidence interval limits on the variogram, Sobol, and IVARS results,
-    and the reliability estimates of the variogram, Sobol, and IVARS resuls. Also groups the Sobol and IVARS50 results
+    performs bootstrapping procedure to gather confidence interval limits on the variogram, Sobol, IVARS  and VARS-ABE results,
+    and the reliability estimates of the variogram, Sobol, IVARS, and VARS-ABE results. Also groups the Sobol and IVARS50 results
     using clustering analysis in a hierarchical order
 
     Parameters
@@ -840,6 +840,7 @@ def bootstrapping(
     result_bs_variogram = pd.DataFrame()
     result_bs_sobol = pd.DataFrame()
     result_bs_ivars_df = pd.DataFrame()
+    result_bs_maee = pd.DataFrame()
     result_bs_sobol_ranking = pd.DataFrame()
     result_bs_ivars_ranking = pd.DataFrame()
 
@@ -862,7 +863,7 @@ def bootstrapping(
         bootstrapped_cov_section_all = pd.concat(
             [cov_section_all.loc[pd.IndexSlice[i, :]] for i in bootstrap_rand])
 
-        # calculating variogram, ecovariogram, variance, mean, Sobol, and IVARS values
+        # calculating variogram, ecovariogram, variance, mean, Sobol, IVARS, and VARS-ABE values
         bootstrapped_variogram = variogram(bootstrapped_pairdf)
 
         bootstrapped_ecovariogram = e_covariogram(bootstrapped_cov_section_all)
@@ -871,6 +872,8 @@ def bootstrapping(
 
         bootstrapped_sobol = sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram,
                                       bootstrapped_var, delta_h)
+
+        bootstrapped_maee = morris_eq(bootstrapped_pairdf)[0]
 
         bootstrapped_ivars_df = pd.DataFrame.from_dict(
             {scale: bootstrapped_variogram.groupby(level=0).apply(ivars, scale=scale,
@@ -894,6 +897,9 @@ def bootstrapping(
         # unstack variogram so that results concat nicely
         bootstrapped_variogram_df = bootstrapped_variogram.unstack(level=0)
 
+        # unstack vars-abe so that results concat nicely
+        bootstrapped_maee_df = bootstrapped_maee.unstack(level=0)
+
         # swap sobol results rows and columns so that results concat nicely
         bootstrapped_sobol_df = bootstrapped_sobol.to_frame().transpose()
 
@@ -903,6 +909,7 @@ def bootstrapping(
         result_bs_sobol = pd.concat([bootstrapped_sobol_df, result_bs_sobol])
         result_bs_ivars_df = pd.concat(
             [bootstrapped_ivars_df, result_bs_ivars_df])
+        result_bs_maee = pd.concat([bootstrapped_maee_df, result_bs_maee])
         result_bs_sobol_ranking = pd.concat(
             [bootstrapped_sobol_ranking_df, result_bs_sobol_ranking])
         result_bs_ivars_ranking = pd.concat(
@@ -929,6 +936,23 @@ def bootstrapping(
     # transpose to get into correct format
     gammalb = gammalb.transpose()
     gammaub = gammaub.transpose()
+
+    # calculate upper and lower confidence interval limits for vars-abe results
+    maeelb = pd.DataFrame()
+    maeeub = pd.DataFrame()
+    # itereate through each h value
+    for h in np.unique(result_bs_maee.index.values).tolist():
+        # find all confidence interval limits
+        maeelb = pd.concat([maeelb, result_bs_maee.loc[h].quantile((1 - 0.9) / 2).rename(h).to_frame()], axis=1)
+        maeeub = pd.concat([maeeub, result_bs_maee.loc[h].quantile(1 - ((1 - 0.9) / 2)).rename(h).to_frame()],
+                             axis=1)
+
+    maee_low = maeelb.transpose()
+    maee_upp = maeeub.transpose()
+
+    maee_low.index.names = ['h']
+    maee_upp.index.names = ['h']
+
 
     # calculate upper and lower confidence interval limits for sobol results in a nice looking format
     stlb = result_bs_sobol.quantile(
@@ -987,9 +1011,9 @@ def bootstrapping(
             grouping(result_bs_ivars_df, result_bs_sobol, result_bs_ivars_ranking, result_bs_sobol_ranking,
                      num_grps, st_factor_ranking, ivars_factor_ranking, parameters, bootstrap_size)
 
-        return gammalb, gammaub, stlb, stub, ivarslb, ivarsub, rel_sobol_factor_ranking,\
+        return gammalb, gammaub, maeelb, maeeub, stlb, stub, ivarslb, ivarsub, rel_sobol_factor_ranking,\
             rel_ivars_factor_ranking, ivars50_grp, sobol_grp, reli_sobol_grp, reli_ivars50_grp
     # if grouping is not chosen to be done return only bootstrapping results
     else:
-        return gammalb, gammaub, stlb, stub, ivarslb, ivarsub, rel_sobol_factor_ranking, \
+        return gammalb, gammaub, maeelb, maeeub, stlb, stub, ivarslb, ivarsub, rel_sobol_factor_ranking, \
             rel_ivars_factor_ranking
