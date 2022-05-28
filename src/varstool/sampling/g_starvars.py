@@ -1,5 +1,8 @@
+from math import ceil
+
 import pandas as pd
 import numpy as np
+import scipy.stats as stat
 
 from tqdm.auto import tqdm
 
@@ -14,6 +17,8 @@ from typing import (
 
 def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
            seed : int,
+           sampler: str,
+           slice_size: int,
            num_stars: int,
            corr_mat: np.ndarray,
            num_dir_samples: int,
@@ -72,9 +77,81 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     if report_verbose:
         stars_pbar = tqdm(desc='generating star points\n', total=8, dynamic_ncols=True)
 
-    # Generate correlated standard normal samples
+    # Generate correlated samples
     # the amount of samples is the same as the amount of stars
-    z = np.random.default_rng(seed=seed).multivariate_normal(np.zeros(num_factors), cov=cov_mat, size=num_stars)
+    z = 0
+    j = 0
+    if sampler == 'rnd':
+        z = np.random.default_rng(seed=seed).multivariate_normal(np.zeros(num_factors), cov=cov_mat, size=num_stars)
+    elif sampler == 'lhs':
+        from lhs import lhs
+        j = lhs(sp=num_stars,
+                                params=len(parameters),
+                                seed=seed,
+                                )
+    elif sampler == 'plhs':
+        from plhs import plhs
+        from lhs import lhs
+        # autogenerate a slice size if it is not chosen
+        if slice_size is None:
+            if num_stars % 2 == 0:
+                slice_size = num_stars/2
+            else:
+                slice_size = 1
+        num_slices = ceil(num_stars/slice_size)
+        if num_slices > 1:
+            j = plhs(sp=num_stars,
+                                    params=len(parameters),
+                                    seed=seed,
+                                    slices=num_slices,
+                                     )[0]
+        else:
+            j = lhs(sp=num_stars,
+                                    params=len(parameters),
+                                    seed=seed,
+                                    )
+
+    elif sampler == 'sobol_seq':
+        from sobol_sequence import sobol_sequence
+        j = sobol_sequence(sp=num_stars,
+                                           params=len(parameters),
+                                           seed=seed,
+                                           )
+    elif sampler == 'halton_seq':
+        from halton import halton
+        j = halton(sp=num_stars,
+                                   params=len(parameters),
+                                   seed=seed,
+                                   )
+    elif sampler == 'symlhs':
+        from symlhs import symlhs
+        j = symlhs(sp=num_stars,
+                                   params=len(parameters),
+                                   seed=seed,
+                            )
+    elif sampler == None:
+        pass
+    else:
+        raise ValueError(
+            "`sampler` must be either None, or one of the following:"
+            "'rnd', 'lhs', 'plhs', 'halton_seq', 'sobol_seq', 'symlhs'"
+        )
+
+    if sampler == 'lhs' or sampler == 'plhs' or sampler == 'halton_seq' or sampler == 'sobol_seq' or sampler == 'symlhs':
+        # transform J to Y, where Y is a set of normally distributed points
+        # with no corellation
+        y = np.zeros(j.shape)
+        for i in range(j.shape[1]):
+            y[:, i] = stat.norm.ppf(j[:, i], 0, 1)
+
+        # find square root of covariance matrix using choleski method
+        c = np.linalg.cholesky(corr_mat)
+
+        # find normally distributed set of samples with correlation
+        z = np.matmul(c, np.transpose(y))
+        z = np.transpose(z)
+
+
 
     if report_verbose:
         stars_pbar.update(1)

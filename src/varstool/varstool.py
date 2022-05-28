@@ -1033,6 +1033,7 @@ class GVARS(VARS):
                  ivars_scales: Optional[Tuple[float, ...]] = (0.1, 0.3, 0.5),  # ivars scales
                  model: Model = None,  # model (function) to run for each star point
                  seed: Optional[int] = np.random.randint(1, 123456789),  # randomization state
+                 sampler: Optional[str] = None,  # one of the default random samplers of varstool
                  bootstrap_flag: Optional[bool] = False,  # bootstrapping flag
                  bootstrap_size: Optional[int] = 1000,  # bootstrapping size
                  bootstrap_ci: Optional[float] = 0.9,  # bootstrap confidence interval
@@ -1060,6 +1061,7 @@ class GVARS(VARS):
         self.corr_mat = corr_mat
         # number of parameters in users model
         self.num_factors = len(self.parameters)
+        self.sampler = sampler
 
         # default value for the number of directional samples
         if not self.num_dir_samples:
@@ -1167,6 +1169,8 @@ class GVARS(VARS):
         self.star_points, self.star_centres, self.cov_mat = g_starvars.g_star(
             self.parameters,  # parameters
             self.seed,  # seed
+            self.sampler,
+            self.slice_size,
             self.num_stars,  # number of stars
             self.corr_mat,  # correlation matrix of parameters
             self.num_dir_samples,  # number of directional samples in star points
@@ -1303,6 +1307,8 @@ class GVARS(VARS):
         self.star_points, self.star_centres, self.cov_mat = g_starvars.g_star(
             self.parameters,  # parameters
             self.seed,  # seed
+            self.sampler,
+            self.slice_size,
             self.num_stars,  # number of stars
             self.corr_mat,  # correlation matrix of parameters
             self.num_dir_samples,  # number of directional samples in star points
