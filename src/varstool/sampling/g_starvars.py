@@ -16,6 +16,7 @@ from typing import (
 
 
 def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
+           star_centres: np.ndarray,
            seed : int,
            sampler: str,
            slice_size: int,
@@ -79,19 +80,19 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
 
     # Generate correlated samples
     # the amount of samples is the same as the amount of stars
-    z = 0
-    j = 0
+    z = star_centres
+    j = star_centres
     if sampler == 'rnd':
         z = np.random.default_rng(seed=seed).multivariate_normal(np.zeros(num_factors), cov=cov_mat, size=num_stars)
     elif sampler == 'lhs':
-        from lhs import lhs
+        from ..sampling import lhs
         j = lhs(sp=num_stars,
                                 params=len(parameters),
                                 seed=seed,
                                 )
     elif sampler == 'plhs':
-        from plhs import plhs
-        from lhs import lhs
+        from ..sampling import plhs
+        from ..sampling import lhs
         # autogenerate a slice size if it is not chosen
         if slice_size is None:
             if num_stars % 2 == 0:
@@ -112,19 +113,19 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
                                     )
 
     elif sampler == 'sobol_seq':
-        from sobol_sequence import sobol_sequence
+        from ..sampling import sobol_sequence
         j = sobol_sequence(sp=num_stars,
                                            params=len(parameters),
                                            seed=seed,
                                            )
     elif sampler == 'halton_seq':
-        from halton import halton
+        from ..sampling import halton
         j = halton(sp=num_stars,
                                    params=len(parameters),
                                    seed=seed,
                                    )
     elif sampler == 'symlhs':
-        from symlhs import symlhs
+        from ..sampling import symlhs
         j = symlhs(sp=num_stars,
                                    params=len(parameters),
                                    seed=seed,

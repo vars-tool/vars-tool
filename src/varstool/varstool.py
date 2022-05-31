@@ -970,6 +970,8 @@ class GVARS(VARS):
 
     Parameters:
     -----------
+    :param star_centres: contains star centres of the analysis
+    :type star_centres: numpy.array
     :param num_stars: number of stars to generate
     :type num_stars: int, numpy.int32, numpy.int64, defaults to 100
     :param parameters: the parameters of the model including lower and
@@ -981,6 +983,12 @@ class GVARS(VARS):
     :type ivars_scales: tuple, defaults to (0.1, 0.3, 0.5)
     :param model: the model used in the sensitivity analysis
     :type model: varstool.Model
+    :param seed: the seed number used in generating star centres
+    :type seed: int, numpy.int32, numpy.int64
+    :param sampler: the type of sampler used to generate star centres
+    :type sampler: str
+    :param slice_size: slice size for "plhs" sampler
+    :type slice_size: int, numpy.int32, numpy.int64
     :param bootstrap_flag: flag to bootstrap the sensitivity analysis results
     :type bootstrap_flag: bool, defaults to False
     :param bootstrap_size: the size of bootstrapping experiment
@@ -1027,6 +1035,7 @@ class GVARS(VARS):
     # Constructors
 
     def __init__(self,
+                 star_centres: np.ndarray = np.array([]), # sampled star centres (random numbers) used to create star points
                  num_stars: Optional[int] = 100,  # number of stars
                  parameters: Dict[Union[str, int], Tuple[float, float]] = {},  # name and bounds
                  delta_h: Optional[float] = 0.1,  # delta_h for star sampling
@@ -1062,6 +1071,10 @@ class GVARS(VARS):
         # number of parameters in users model
         self.num_factors = len(self.parameters)
         self.sampler = sampler
+
+        # if there is no sampler user has chosen their own star centres
+        if sampler == None:
+            self.star_centres = star_centres
 
         # default value for the number of directional samples
         if not self.num_dir_samples:
@@ -1168,9 +1181,10 @@ class GVARS(VARS):
         # generate g_star points
         self.star_points, self.star_centres, self.cov_mat = g_starvars.g_star(
             self.parameters,  # parameters
+            self.star_centres, # star centres
             self.seed,  # seed
-            self.sampler,
-            self.slice_size,
+            self.sampler, # sample method if any
+            self.slice_size, # slice size if using plhs
             self.num_stars,  # number of stars
             self.corr_mat,  # correlation matrix of parameters
             self.num_dir_samples,  # number of directional samples in star points
@@ -1306,9 +1320,10 @@ class GVARS(VARS):
         # generate g_star points
         self.star_points, self.star_centres, self.cov_mat = g_starvars.g_star(
             self.parameters,  # parameters
+            self.star_centres, # star centres
             self.seed,  # seed
-            self.sampler,
-            self.slice_size,
+            self.sampler, # sample method if any
+            self.slice_size, # slice size for plhs
             self.num_stars,  # number of stars
             self.corr_mat,  # correlation matrix of parameters
             self.num_dir_samples,  # number of directional samples in star points
