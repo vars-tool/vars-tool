@@ -1043,6 +1043,7 @@ class GVARS(VARS):
                  model: Model = None,  # model (function) to run for each star point
                  seed: Optional[int] = np.random.randint(1, 123456789),  # randomization state
                  sampler: Optional[str] = None,  # one of the default random samplers of varstool
+                 slice_size: Optional[int] = None,  # slice size for when using "plhs" sampling
                  bootstrap_flag: Optional[bool] = False,  # bootstrapping flag
                  bootstrap_size: Optional[int] = 1000,  # bootstrapping size
                  bootstrap_ci: Optional[float] = 0.9,  # bootstrap confidence interval
@@ -1071,6 +1072,7 @@ class GVARS(VARS):
         # number of parameters in users model
         self.num_factors = len(self.parameters)
         self.sampler = sampler
+        self.slice_size = slice_size
 
         # if there is no sampler user has chosen their own star centres
         if sampler == None:
