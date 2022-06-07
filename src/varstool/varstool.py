@@ -2166,6 +2166,16 @@ class TSVARS(VARS):
         self.ecov.aggregate  = self.ecov.groupby(level=['param', 'h']).mean()
         self.ivars.aggregate = self.ivars.groupby(level=['param', 'h']).mean()
 
+        # defining time normalized values
+        self.gamma_normalized = self.gamma.unstack(level=0).div(self.gamma.unstack(level=0).sum(axis=1), axis=0)
+        self.st_normalized = self.st.unstack(level=0).div(self.st.unstack(level=0).sum(axis=1), axis=0)
+        self.maee_normalized = self.maee.unstack(level=0).div(self.maee.unstack(level=0).sum(axis=1), axis=0)
+        self.mee_normalized = self.mee.unstack(level=0).div(self.mee.unstack(level=0).sum(axis=1), axis=0)
+        self.cov_normalized = self.cov.unstack(level=0).div(self.cov.unstack(level=0).sum(axis=1), axis=0)
+        self.ecov_normalized = self.ecov.unstack(level=0).div(self.ecov.unstack(level=0).sum(axis=1), axis=0)
+        self.ivars_normalized = self.ivars.unstack(level=0).div(self.ivars.unstack(level=0).sum(axis=1), axis=0)
+
+
     @staticmethod
     def _applyParallel(
         dfGrouped: pd.DataFrame,
