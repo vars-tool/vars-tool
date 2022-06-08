@@ -354,8 +354,12 @@ class VARS(object):
                                        params=len(self.parameters),
                                        seed=self.seed,
                                 )
-        elif self.sampler == None:
-            pass
+        elif self.sampler == None: # default sampler is lhs
+            from .sampling import lhs
+            self.star_centres = lhs(sp=self.num_stars,
+                                    params=len(self.parameters),
+                                    seed=self.seed,
+                                    )
         else:
             raise ValueError(
                 "`sampler` must be either None, or one of the following:"
