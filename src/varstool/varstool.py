@@ -1074,9 +1074,9 @@ class GVARS(VARS):
         self.sampler = sampler
         self.slice_size = slice_size
 
-        # if there is no sampler user has chosen their own star centres
+        # if there is no sampler default is 'lhs'
         if sampler == None:
-            self.star_centres = star_centres
+            self.sampler = 'lhs'
 
         # default value for the number of directional samples
         if not self.num_dir_samples:
