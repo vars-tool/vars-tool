@@ -2167,14 +2167,28 @@ class TSVARS(VARS):
         self.ivars.aggregate = self.ivars.groupby(level=['param', 'h']).mean()
 
         # defining time normalized values
-        self.gamma_normalized = self.gamma.unstack(level=0).div(self.gamma.unstack(level=0).sum(axis=1), axis=0)
-        self.st_normalized = self.st.unstack(level=0).div(self.st.unstack(level=0).sum(axis=1), axis=0)
-        self.maee_normalized = self.maee.unstack(level=0).div(self.maee.unstack(level=0).sum(axis=1), axis=0)
-        self.mee_normalized = self.mee.unstack(level=0).div(self.mee.unstack(level=0).sum(axis=1), axis=0)
-        self.cov_normalized = self.cov.unstack(level=0).div(self.cov.unstack(level=0).sum(axis=1), axis=0)
-        self.ecov_normalized = self.ecov.unstack(level=0).div(self.ecov.unstack(level=0).sum(axis=1), axis=0)
-        self.ivars_normalized = self.ivars.unstack(level=0).div(self.ivars.unstack(level=0).sum(axis=1), axis=0)
+        self.gamma_normalized = self.gamma.unstack(level=1).div(self.gamma.unstack(level=1).sum(axis=1),
+                                         axis=0).stack().swaplevel().reindex_like(self.gamma)
+        self.st_normalized = self.st.unstack(level=1).div(self.st.unstack(level=1).sum(axis=1), axis=0).stack()
+        self.maee_normalized = self.maee.unstack(level=1).div(self.maee.unstack(level=1).sum(axis=1),
+                                        axis=0).stack().swaplevel().reindex_like(self.maee)
+        self.mee_normalized = self.mee.unstack(level=1).div(self.mee.unstack(level=1).sum(axis=1), axis=0).stack().swaplevel().reindex_like(
+            self.mee)
+        self.cov_normalized = self.cov.unstack(level=1).div(self.cov.unstack(level=1).sum(axis=1), axis=0).stack().swaplevel().reindex_like(
+            self.cov)
+        self.ecov_normalized = self.ecov.unstack(level=1).div(self.ecov.unstack(level=1).sum(axis=1),
+                                        axis=0).stack().swaplevel().reindex_like(self.ecov)
+        self.ivars_normalized = self.ivars.unstack(level=1).div(self.ivars.unstack(level=1).sum(axis=1),
+                                         axis=0).stack().swaplevel().reindex_like(self.ivars)
 
+        # defining time normalized aggregate values
+        self.gamma_normalized.aggregate = self.gamma_normalized.groupby(level=['param', 'h']).mean()
+        self.st_normalized.aggregate = self.st_normalized.groupby(level=['param']).mean()
+        self.maee_normalized.aggregate  = self.maee_normalized.groupby(level=['param', 'h']).mean()
+        self.mee_normalized.aggregate   = self.mee_normalized.groupby(level=['param', 'h']).mean()
+        self.cov_normalized.aggregate   = self.cov_normalized.groupby(level=['param', 'h']).mean()
+        self.ecov_normalized.aggregate  = self.ecov_normalized.groupby(level=['param', 'h']).mean()
+        self.ivars_normalized.aggregate = self.ivars_normalized.groupby(level=['param', 'h']).mean()
 
     @staticmethod
     def _applyParallel(
