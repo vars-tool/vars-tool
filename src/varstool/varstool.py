@@ -826,20 +826,20 @@ class VARS(object):
             vars_pbar = tqdm(desc='VARS Analysis', total=10, dynamic_ncols=True) # 10 steps for different components
 
         # get mu_star value
-        self.mu_star_df = self.model_df[str(self.model)].groupby(level=[0,1]).mean()
+        self.mu_star_df = self.model_df.iloc[:, -1].groupby(level=[0,1]).mean()
         self.mu_star_df.index.names = ['centre', 'param']
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
 
         # overall mean of the unique evaluated function value over all star points
-        self.mu_overall = self.model_df[str(self.model)].unique().mean()
+        self.mu_overall = self.model_df.iloc[:, -1].unique().mean()
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = self.model_df[str(self.model)].unique().var(ddof=1)
+        self.var_overall = self.model_df.iloc[:, -1].unique().var(ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
@@ -1577,20 +1577,20 @@ class GVARS(VARS):
             vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)  # 10 steps for different components
 
         # get mu_star value
-        self.mu_star_df = self.model_df[str(self.model)].groupby(level=[0, 1]).mean()
+        self.mu_star_df = self.model_df.iloc[:, -1].groupby(level=[0, 1]).mean()
         self.mu_star_df.index.names = ['centre', 'param']
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Averages of function evaluations (`mu_star`) calculated - access via .mu_star_df')
 
         # overall mean of the unique evaluated function value over all star points
-        self.mu_overall = self.model_df[str(self.model)].unique().mean()
+        self.mu_overall = self.model_df.iloc[:, -1].unique().mean()
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = self.model_df[str(self.model)].unique().var(ddof=1)
+        self.var_overall = self.model_df.iloc[:, -1].unique().var(ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
