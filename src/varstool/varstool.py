@@ -750,7 +750,7 @@ class VARS(object):
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
             self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
-                                                                               self.model.func, self.delta_h, self.ivars_scales,
+                                                                               self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
@@ -758,7 +758,7 @@ class VARS(object):
             self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
-                                                                               self.model.func, self.delta_h, self.ivars_scales,
+                                                                               self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
@@ -811,10 +811,10 @@ class VARS(object):
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
             tqdm.pandas(desc='building pairs', dynamic_ncols=True)
-            self.pair_df = self.model_df[str(self.model)].groupby(level=[0,1]).progress_apply(vars_funcs.section_df,
+            self.pair_df = self.model_df.iloc[:, -1].groupby(level=[0,1]).progress_apply(vars_funcs.section_df,
                                                                                    delta_h=self.delta_h)
         else:
-            self.pair_df = self.model_df[str(self.model)].groupby(level=[0,1]).apply(vars_funcs.section_df,
+            self.pair_df = self.model_df.iloc[:, -1].groupby(level=[0,1]).apply(vars_funcs.section_df,
                                                                           delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
@@ -919,7 +919,7 @@ class VARS(object):
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
             self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
-                                                                               self.model.func, self.delta_h, self.ivars_scales,
+                                                                               self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
@@ -927,7 +927,7 @@ class VARS(object):
             self.gammalb, self.gammaub, self.maeelb, self.maeeub, self.stlb, self.stub, self.ivarslb, self.ivarsub, \
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
-                                                                               self.model.func, self.delta_h, self.ivars_scales,
+                                                                               self.delta_h, self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking, self.grouping_flag,
                                                                                self.num_grps, self.report_verbose)
@@ -1486,7 +1486,7 @@ class GVARS(VARS):
             self.rel_st_factor_ranking, self.rel_ivars_factor_ranking, self.ivars50_grp, self.st_grp, \
             self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df, self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
-                                                                               self.model.func, self.delta_h,
+                                                                               self.delta_h,
                                                                                self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking,
@@ -1498,7 +1498,6 @@ class GVARS(VARS):
                                                                                                  self.cov_section_all,
                                                                                                  self.bootstrap_size,
                                                                                                  self.bootstrap_ci,
-                                                                                                 self.model.func,
                                                                                                  self.delta_h,
                                                                                                  self.ivars_scales,
                                                                                                  self.parameters,
@@ -1556,10 +1555,10 @@ class GVARS(VARS):
         # get paired values for each section based on 'h' - considering the progress bar if report_verbose is True
         if self.report_verbose:
             tqdm.pandas(desc='building pairs', dynamic_ncols=True)
-            self.pair_df = self.model_df[str(self.model)].groupby(level=[0, 1]).progress_apply(vars_funcs.section_df,
+            self.pair_df = self.model_df.iloc[:, -1].groupby(level=[0, 1]).progress_apply(vars_funcs.section_df,
                                                                                                delta_h=self.delta_h)
         else:
-            self.pair_df = self.model_df[str(self.model)].groupby(level=[0, 1]).apply(vars_funcs.section_df,
+            self.pair_df = self.model_df.iloc[:, -1].groupby(level=[0, 1]).apply(vars_funcs.section_df,
                                                                                       delta_h=self.delta_h)
         self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
 
@@ -1693,7 +1692,7 @@ class GVARS(VARS):
             self.reli_st_grp, self.reli_ivars50_grp = vars_funcs.bootstrapping(self.num_stars, self.pair_df, self.model_df,
                                                                                self.cov_section_all,
                                                                                self.bootstrap_size, self.bootstrap_ci,
-                                                                               self.model.func, self.delta_h,
+                                                                               self.delta_h,
                                                                                self.ivars_scales,
                                                                                self.parameters, self.st_factor_ranking,
                                                                                self.ivars_factor_ranking,
@@ -1706,7 +1705,6 @@ class GVARS(VARS):
                                                                                                  self.cov_section_all,
                                                                                                  self.bootstrap_size,
                                                                                                  self.bootstrap_ci,
-                                                                                                 self.model.func,
                                                                                                  self.delta_h,
                                                                                                  self.ivars_scales,
                                                                                                  self.parameters,
