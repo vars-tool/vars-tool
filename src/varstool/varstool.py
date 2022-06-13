@@ -1851,6 +1851,30 @@ class TSVARS(VARS):
     #-------------------------------------------
     # Core functions
 
+    def generate_star(self) -> pd.DataFrame:
+        """
+        Generate TSVARS star points
+
+        Returns
+        -------
+        star_points : pd.DataFrame
+            dataframe containing star points
+        """
+        self.star_points = starvars.star(self.star_centres, # star centres
+                                           delta_h=self.delta_h, # delta_h
+                                           parameters=[*self.parameters], # parameters dictionary keys
+                                           rettype='DataFrame',
+                                       ) # return type must be a dataframe
+        self.star_points.columns = [*self.parameters]
+
+        self.star_points = tsvars_funcs.scale(df=self.star_points, # star points must be scaled
+                                             bounds={ # bounds are created while scaling
+                                                 'lb':[val[0] for _, val in self.parameters.items()],
+                                                 'ub':[val[1] for _, val in self.parameters.items()],
+                                             }
+                                        )
+        return self.star_points
+
     def run_online(self):
         """
         runs online version of TS-VARS
@@ -1900,6 +1924,310 @@ class TSVARS(VARS):
             )
             self.star_points_eval = self.star_points.mapply(self.model, axis=1, result_type='expand')
             self.star_points_eval.index.names = ['centre', 'param', 'point']
+
+        # defining a lambda function to build pairs for each time-step
+        ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(tsvars_funcs.section_df, self.delta_h)
+
+        # VARS evaluations can be done in two modes: serial and parallel
+        if self.vars_eval_method == 'serial':
+
+            if self.vars_chunk_size:
+                warnings.warn(
+                    "Chunk size is only applicable in the parallel VARS analysis",
+                    UserWarning,
+                    stacklevel=1
+                    )
+
+            # pair_df is built serially - other functions are the same as parallel
+            if self.report_verbose: # making a progress bar
+                tqdm.pandas(desc='building pairs', dynamic_ncols=True)
+                self.pair_df = self.star_points_eval.groupby(level=0, axis=1).progress_apply(ts_pair)
+            else:
+                self.pair_df = self.star_points_eval.groupby(level=0, axis=1).apply(ts_pair)
+            self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
+            self.pair_df.columns.names = ['ts', None]
+            self.pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
+
+            vars_pbar = tqdm(desc='TSVARS analysis', total=10, dynamic_ncols=True)
+            self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+            self.mu_star_df.index.names = ['ts', 'centre', 'param']
+            if self.report_verbose:
+                vars_pbar.update(1)
+
+            self.mu_overall = self.star_points_eval.apply(lambda x: np.mean(list(np.unique(x))))
+            if self.report_verbose:
+                vars_pbar.update(1)
+
+            self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+            if self.report_verbose:
+                vars_pbar.update(1)
+
+            self.gamma = tsvars_funcs.variogram(self.pair_df)
+            if self.report_verbose:
+                vars_pbar.update(1)
+
+            self.sec_covariogram = tsvars_funcs.cov_section(self.pair_df, self.mu_star_df)
+            if self.report_verbose:
+                vars_pbar.update(1)
+
+            self.morris = tsvars_funcs.morris_eq(self.pair_df)
+            self.maee = self.morris[0]
+            self.mee  = self.morris[1]
+            if self.report_verbose:
+                vars_pbar.update(1)
+
+            self.cov = tsvars_funcs.covariogram(self.pair_df, self.mu_overall)
+            if self.report_verbose:
+                vars_pbar.update(1)
+
+            self.ecov = tsvars_funcs.e_covariogram(self.sec_covariogram)
+            if self.report_verbose:
+                vars_pbar.update(1)
+
+            self.st = tsvars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
+            if self.report_verbose:
+                vars_pbar.update(1)
+
+            self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                  for scale in self.ivars_scales}, 'index').unstack()
+            self.ivars.index.names = ['ts', 'param', 'h']
+            if self.report_verbose:
+                vars_pbar.update(1)
+                vars_pbar.close()
+
+            self.run_status = True
+
+
+        elif self.vars_eval_method == 'parallel':
+
+            if self.vars_chunk_size: # if chunk size is provided by the user
+
+                self.pair_df = pd.DataFrame()
+                self.sec_covariogram = pd.DataFrame()
+                self.gamma = pd.DataFrame()
+                self.mu_star_df = pd.DataFrame()
+                self.mu_overall = pd.DataFrame()
+                self.var_overall = pd.DataFrame()
+                self.maee = pd.DataFrame()
+                self.mee  = pd.DataFrame()
+                self.cov = pd.DataFrame()
+                self.ecov = pd.DataFrame()
+                self.st = pd.DataFrame()
+                self.ivars = pd.DataFrame()
+
+                for chunk in trange(
+                    int(self.star_points_eval.shape[1]//self.vars_chunk_size)+1,
+                    desc='chunks',
+                    dynamic_ncols=True,
+                ): # total number of chunks
+
+                    # make a chunk of the main df (result of func eval)
+                    df_temp = self.star_points_eval.iloc[:, chunk*self.vars_chunk_size:min((chunk+1)*self.vars_chunk_size, self.star_points_eval.shape[1]-1)]
+
+                    # make pairs for each chunk
+                    temp_pair_df = self._applyParallel(self.star_points_eval.groupby(level=0, axis=1), ts_pair, self.report_verbose)
+                    temp_pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
+
+                    if self.report_verbose:
+                        vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)
+
+                    self.pair_df = pd.concat([self.pair_df, temp_pair_df])
+
+                    # mu star
+                    temp_mu_star = df_temp.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+                    temp_mu_star.index.names = ['ts', 'centre', 'param']
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.mu_star_df = pd.concat([self.mu_star_df, temp_mu_star.to_frame()])
+
+                    # mu overall
+                    temp_mu_overall = df_temp.apply(lambda x: np.mean(list(np.unique(x))))
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall.to_frame()])
+
+                    #var overall
+                    temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.var_overall = pd.concat([self.var_overall, temp_var_overall.to_frame()])
+
+                    #variogram
+                    temp_gamma = tsvars_funcs.variogram(temp_pair_df)
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.gamma = pd.concat([self.gamma, temp_gamma.to_frame()])
+
+                    #sectional variogram
+                    temp_sec_covariogram = tsvars_funcs.cov_section(temp_pair_df, temp_mu_star)
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.sec_covariogram = pd.concat([self.sec_covariogram, temp_sec_covariogram.to_frame()])
+
+                    #morris
+                    temp_morris_values = tsvars_funcs.morris_eq(temp_pair_df)
+                    temp_maee = temp_morris_values[0]
+                    temp_mee  = temp_morris_values[1]
+                    self.maee = pd.concat([self.maee, temp_maee.to_frame()])
+                    self.mee = pd.concat([self.mee, temp_mee.to_frame()])
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+
+                    #covariogram
+                    temp_covariogram = tsvars_funcs.covariogram(temp_pair_df, temp_mu_overall)
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.cov = pd.concat([self.cov, temp_covariogram.to_frame()])
+
+                    #e_covariogram
+                    temp_e_covariogram = tsvars_funcs.e_covariogram(temp_sec_covariogram)
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.ecov = pd.concat([self.ecov, temp_e_covariogram.to_frame()])
+
+                    #sobol
+                    temp_sobol_values = tsvars_funcs.sobol_eq(temp_gamma, temp_e_covariogram, temp_var_overall, self.delta_h)
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    self.st = pd.concat([self.st, temp_sobol_values.to_frame()])
+
+                    #ivars
+                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                      for scale in self.ivars_scales}, 'index').unstack()
+                    if self.report_verbose:
+                        vars_pbar.update(1)
+                    temp_ivars_values.index.names = ['ts', 'param', 'h']
+                    self.ivars = pd.concat([self.ivars, temp_ivars_values.to_frame()])
+
+                    vars_pbar.close()
+
+                    self.run_status = True
+
+            else:
+                # pair_df is built serially - other functions are the same as parallel
+                self.pair_df = self._applyParallel(self.star_points_eval.groupby(level=0, axis=1), ts_pair, self.report_verbose)
+                self.pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
+
+                if self.report_verbose:
+                    vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)
+
+                self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
+                self.mu_star_df.index.names = ['ts', 'centre', 'param']
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.mu_overall = self.star_points_eval.apply(lambda x: np.mean(list(np.unique(x))))
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.gamma = tsvars_funcs.variogram(self.pair_df)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.sec_covariogram = tsvars_funcs.cov_section(self.pair_df, self.mu_star_df)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.morris = tsvars_funcs.morris_eq(self.pair_df)
+                self.maee = self.morris[0]
+                self.mee  = self.morris[1]
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.cov = tsvars_funcs.covariogram(self.pair_df, self.mu_overall)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.ecov = tsvars_funcs.e_covariogram(self.sec_covariogram)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.st = tsvars_funcs.sobol_eq(self.gamma, self.ecov, self.var_overall, self.delta_h)
+                if self.report_verbose:
+                    vars_pbar.update(1)
+
+                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                      for scale in self.ivars_scales}, 'index').unstack()
+                self.ivars.index.names = ['ts', 'param', 'h']
+                if self.report_verbose:
+                    vars_pbar.update(1)
+                    vars_pbar.close()
+
+                self.run_status = True
+
+        # output dictionary
+        self.output = {
+            'Gamma':self.gamma,
+            'ST': self.st,
+            'MAEE':self.maee,
+            'MEE':self.mee,
+            'COV':self.cov,
+            'ECOV':self.ecov,
+            'IVARS':self.ivars,
+            'IVARSid':self.ivars_scales,
+            # 'rnkST':self.st_factor_ranking,
+            # 'rnkIVARS':self.ivars_factor_ranking,
+            # 'Gammalb':self.gammalb if self.bootstrap_flag is True else None,
+            # 'Gammaub':self.gammaub if self.bootstrap_flag is True else None,
+            # 'STlb':self.stlb if self.bootstrap_flag is True else None,
+            # 'STub':self.stub if self.bootstrap_flag is True else None,
+            # 'IVARSlb':self.ivarslb if self.bootstrap_flag is True else None,
+            # 'IVARSub':self.ivarsub if self.bootstrap_flag is True else None,
+            # 'relST':self.rel_st_factor_ranking if self.bootstrap_flag is True else None,
+            # 'relIVARS':self.rel_ivars_factor_ranking if self.bootstrap_flag is True else None,
+            # 'Groups': [self.ivars50_grp, self.st_grp] if self.grouping_flag is True else None,
+            # 'relGrp': [self.reli_st_grp, self.reli_ivars50_grp] if self.grouping_flag is True else None,
+        }
+
+        # defining aggregated values
+        self.gamma.aggregate = self.gamma.groupby(level=['param', 'h']).mean()
+        self.st.aggregate = self.st.groupby(level=['param']).mean()
+        self.maee.aggregate  = self.maee.groupby(level=['param', 'h']).mean()
+        self.mee.aggregate   = self.mee.groupby(level=['param', 'h']).mean()
+        self.cov.aggregate   = self.cov.groupby(level=['param', 'h']).mean()
+        self.ecov.aggregate  = self.ecov.groupby(level=['param', 'h']).mean()
+        self.ivars.aggregate = self.ivars.groupby(level=['param', 'h']).mean()
+
+        # defining time normalized values
+        self.gamma_normalized = self.gamma.unstack(level=1).div(self.gamma.unstack(level=1).sum(axis=1),
+                                         axis=0).stack().swaplevel().reindex_like(self.gamma)
+        self.st_normalized = self.st.unstack(level=1).div(self.st.unstack(level=1).sum(axis=1), axis=0).stack()
+        self.maee_normalized = self.maee.unstack(level=1).div(self.maee.unstack(level=1).sum(axis=1),
+                                        axis=0).stack().swaplevel().reindex_like(self.maee)
+        self.mee_normalized = self.mee.unstack(level=1).div(self.mee.unstack(level=1).sum(axis=1), axis=0).stack().swaplevel().reindex_like(
+            self.mee)
+        self.cov_normalized = self.cov.unstack(level=1).div(self.cov.unstack(level=1).sum(axis=1), axis=0).stack().swaplevel().reindex_like(
+            self.cov)
+        self.ecov_normalized = self.ecov.unstack(level=1).div(self.ecov.unstack(level=1).sum(axis=1),
+                                        axis=0).stack().swaplevel().reindex_like(self.ecov)
+        self.ivars_normalized = self.ivars.unstack(level=1).div(self.ivars.unstack(level=1).sum(axis=1),
+                                         axis=0).stack().swaplevel().reindex_like(self.ivars)
+
+        # defining time normalized aggregate values
+        self.gamma_normalized.aggregate = self.gamma_normalized.groupby(level=['param', 'h']).mean()
+        self.st_normalized.aggregate = self.st_normalized.groupby(level=['param']).mean()
+        self.maee_normalized.aggregate  = self.maee_normalized.groupby(level=['param', 'h']).mean()
+        self.mee_normalized.aggregate   = self.mee_normalized.groupby(level=['param', 'h']).mean()
+        self.cov_normalized.aggregate   = self.cov_normalized.groupby(level=['param', 'h']).mean()
+        self.ecov_normalized.aggregate  = self.ecov_normalized.groupby(level=['param', 'h']).mean()
+        self.ivars_normalized.aggregate = self.ivars_normalized.groupby(level=['param', 'h']).mean()
+
+
+    def run_offline(self, star_points_eval):
+        """
+        runs the offline version of VARS program
+
+        Parameters
+        ----------
+        star_points_eval: array_like
+            A Pandas Dataframe that contains model ran on generated stars
+        """
+
+        self.star_points_eval = star_points_eval
 
         # defining a lambda function to build pairs for each time-step
         ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(tsvars_funcs.section_df, self.delta_h)
