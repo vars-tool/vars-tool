@@ -447,7 +447,11 @@ def reorder_pairs(pair_df: pd.DataFrame,
     binned_pairs = pd.concat(binned_pairs, ignore_index=False)
 
     # re order pairs values according to the bins
-    pair_df = pair_df.loc[binned_pairs.index]
+    centres = pair_df.index.get_level_values(0).to_numpy()
+    params = pair_df.index.get_level_values(1).to_numpy()
+    bps = binned_pairs.index.to_numpy()
+    new_index = pd.MultiIndex.from_arrays([centres, params, bps], names = ['centre', 'param', 'pair_ind'])
+    pair_df = pair_df.reindex(new_index)
 
     # add in new index h, according to bin ranges
     # ex.) h = 0.1 = [0-0.15], h = 0.2 = [0.15-0.25]
