@@ -196,6 +196,8 @@ def rn2rx(distpair_type: List,
         rx = newton_krylov(F=fun, xin=rnpair, x_tol=1e-5)
     except:
         print("Function could not converge, fictive matrix was not computed")
+        print("It is recommended to switch corr_flag parameter to True to assume that correlation "
+              "matrix is equal to fictive matrix")
         rx = rnpair
 
     return rx

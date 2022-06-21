@@ -24,7 +24,8 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
            corr_mat: np.ndarray,
            num_dir_samples: int,
            num_factors: int,
-           report_verbose: bool
+           report_verbose: bool,
+           corr_flag: bool
            ) -> Tuple[Union[pd.DataFrame, pd.Series], Union[np.ndarray, np.ndarray], Union[np.ndarray, np.ndarray]]:
 
     """
@@ -46,6 +47,8 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
         number of factors/parameters in model
     report_verbose : boolean
         if True will use a loading bar when generating stars, does nothing if False
+    corr_flag : boolean
+        if True will use correlation matrix as fictive matrix
 
     Returns
     -------
@@ -72,7 +75,10 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
 
     # Computing fictive correlation matrix
     # Note: that corr_mat and cov_mat are the same in terms of magnitude
-    cov_mat = gvars_funcs.map_2_cornorm(parameters, corr_mat, report_verbose)
+    if corr_flag:
+        cov_mat = corr_mat
+    else:
+        cov_mat = gvars_funcs.map_2_cornorm(parameters, corr_mat, report_verbose)
 
     # load bar if report_verbose is true
     if report_verbose:
