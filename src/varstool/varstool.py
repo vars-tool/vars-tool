@@ -1879,6 +1879,9 @@ class TSVARS(VARS):
                                                  'ub':[val[1] for _, val in self.parameters.items()],
                                              }
                                         )
+
+        self.star_points.index.names = ['centre', 'param', 'point']
+
         return self.star_points
 
     def run_online(self):
@@ -2718,6 +2721,8 @@ class TSGVARS(GVARS):
                                                  'ub':[val[1] for _, val in self.parameters.items()],
                                              }
                                         )
+        self.star_points.index.names = ['centre', 'param', 'point']
+
         return self.star_points
 
     def run_online(self):
