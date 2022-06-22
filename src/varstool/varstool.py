@@ -2803,7 +2803,7 @@ class TSGVARS(GVARS):
             self.pair_df.columns.names = ['ts', None]
             self.pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
 
-            vars_pbar = tqdm(desc='TSVARS analysis', total=10, dynamic_ncols=True)
+            vars_pbar = tqdm(desc='TSGVARS analysis', total=10, dynamic_ncols=True)
             self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
             self.mu_star_df.index.names = ['ts', 'centre', 'param']
             if self.report_verbose:
@@ -3107,7 +3107,7 @@ class TSGVARS(GVARS):
             self.pair_df.columns.names = ['ts', None]
             self.pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
 
-            vars_pbar = tqdm(desc='TSVARS analysis', total=10, dynamic_ncols=True)
+            vars_pbar = tqdm(desc='TSGVARS analysis', total=10, dynamic_ncols=True)
             self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
             self.mu_star_df.index.names = ['ts', 'centre', 'param']
             if self.report_verbose:
