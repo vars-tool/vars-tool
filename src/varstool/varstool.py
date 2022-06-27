@@ -2808,6 +2808,16 @@ class TSGVARS(GVARS):
             self.pair_df.columns.names = ['ts', None]
             self.pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
 
+            # get rid of irrelevant h values
+            self.pair_df = self.pair_df.droplevel('h')
+
+            # bin and reorder pairs according to actual 'h' values
+            xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+            self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, self.model_df,
+                                                     self.delta_h, self.report_verbose, xmax, xmin, False)
+            # include a column containing the dissimilarity between pairs
+            self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
+
             vars_pbar = tqdm(desc='TSGVARS analysis', total=10, dynamic_ncols=True)
             self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
             self.mu_star_df.index.names = ['ts', 'centre', 'param']
@@ -3111,6 +3121,16 @@ class TSGVARS(GVARS):
             self.pair_df.index.names = ['centre', 'param', 'h', 'pair_ind']
             self.pair_df.columns.names = ['ts', None]
             self.pair_df = self.pair_df.stack(level='ts').reorder_levels([-1,0,1,2,3]).sort_index()
+
+            # get rid of irrelevant h values
+            self.pair_df = self.pair_df.droplevel('h')
+
+            # bin and reorder pairs according to actual 'h' values
+            xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+            self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, self.model_df,
+                                                     self.delta_h, self.report_verbose, xmax, xmin, True)
+            # include a column containing the dissimilarity between pairs
+            self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
 
             vars_pbar = tqdm(desc='TSGVARS analysis', total=10, dynamic_ncols=True)
             self.mu_star_df = self.star_points_eval.groupby(level=['centre','param']).mean().stack().reorder_levels(order=[2,0,1]).sort_index()
