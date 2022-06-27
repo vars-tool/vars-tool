@@ -380,7 +380,7 @@ def reorder_pairs(pair_df: pd.DataFrame,
     parameters : dictionary
         dictionary containing parameter names and their attributes
     df : pd.DataFrame
-        Pandas DataFrame containing the star points, and model outputs
+        Pandas DataFrame containing the star points
     delta_h : float
         resolution of star samples
     report_verbose : boolean
