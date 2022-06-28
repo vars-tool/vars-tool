@@ -2865,7 +2865,7 @@ class TSGVARS(GVARS):
             if self.report_verbose:
                 vars_pbar.update(1)
 
-            self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+            self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                   for scale in self.ivars_scales}, 'index').unstack()
             self.ivars.index.names = ['ts', 'param', 'h']
             if self.report_verbose:
@@ -3001,7 +3001,7 @@ class TSGVARS(GVARS):
                     self.st = pd.concat([self.st, temp_sobol_values.to_frame()])
 
                     #ivars
-                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
                     if self.report_verbose:
                         vars_pbar.update(1)
@@ -3016,6 +3016,38 @@ class TSGVARS(GVARS):
                 # pair_df is built serially - other functions are the same as parallel
                 self.pair_df = self._applyParallel(self.star_points_eval.groupby(level=0, axis=1), ts_pair, self.report_verbose)
                 self.pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
+
+                # get rid of irrelevant h values
+                self.pair_df = self.pair_df.droplevel('h')
+
+                # bin and reorder pairs according to actual 'h' values
+                xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+
+                # dataframe to hold new pairs
+                new_pair_df = pd.DataFrame()
+
+                if self.report_verbose:
+                    ts_pbar = tqdm(desc='binning and reordering pairs for each time step',
+                                   total=len(self.pair_df.groupby(level=0)),
+                                   dynamic_ncols=True)
+
+                # bin and reorder pairs at each time step and insert into new pair df
+                for date, new_df in self.pair_df.groupby(level=0):
+                    if self.report_verbose:
+                        ts_pbar.update(1)
+                    reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters,
+                                                                self.star_points,
+                                                                self.delta_h, False, xmax, xmin, False)
+                    new_pair_df = pd.concat([new_pair_df, (pd.concat({date: reordered_pairs}, names=['ts']))])
+
+                if self.report_verbose:
+                    ts_pbar.close()
+
+                # set new pair_df
+                self.pair_df = new_pair_df
+
+                # include a column containing the dissimilarity between pairs
+                self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
 
                 if self.report_verbose:
                     vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)
@@ -3059,7 +3091,7 @@ class TSGVARS(GVARS):
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
                 self.ivars.index.names = ['ts', 'param', 'h']
                 if self.report_verbose:
@@ -3231,7 +3263,7 @@ class TSGVARS(GVARS):
             if self.report_verbose:
                 vars_pbar.update(1)
 
-            self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+            self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                   for scale in self.ivars_scales}, 'index').unstack()
             self.ivars.index.names = ['ts', 'param', 'h']
             if self.report_verbose:
@@ -3368,7 +3400,7 @@ class TSGVARS(GVARS):
                     self.st = pd.concat([self.st, temp_sobol_values.to_frame()])
 
                     #ivars
-                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
                     if self.report_verbose:
                         vars_pbar.update(1)
@@ -3383,6 +3415,38 @@ class TSGVARS(GVARS):
                 # pair_df is built serially - other functions are the same as parallel
                 self.pair_df = self._applyParallel(self.star_points_eval.groupby(level=0, axis=1), ts_pair, self.report_verbose)
                 self.pair_df.index.names = ['ts', 'centre', 'param', 'h', 'pair_ind']
+
+                # get rid of irrelevant h values
+                self.pair_df = self.pair_df.droplevel('h')
+
+                # bin and reorder pairs according to actual 'h' values
+                xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+
+                # dataframe to hold new pairs
+                new_pair_df = pd.DataFrame()
+
+                if self.report_verbose:
+                    ts_pbar = tqdm(desc='binning and reordering pairs for each time step',
+                                   total=len(self.pair_df.groupby(level=0)),
+                                   dynamic_ncols=True)
+
+                # bin and reorder pairs at each time step and insert into new pair df
+                for date, new_df in self.pair_df.groupby(level=0):
+                    if self.report_verbose:
+                        ts_pbar.update(1)
+                    reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters,
+                                                                self.star_points,
+                                                                self.delta_h, False, xmax, xmin, False)
+                    new_pair_df = pd.concat([new_pair_df, (pd.concat({date: reordered_pairs}, names=['ts']))])
+
+                if self.report_verbose:
+                    ts_pbar.close()
+
+                # set new pair_df
+                self.pair_df = new_pair_df
+
+                # include a column containing the dissimilarity between pairs
+                self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
 
                 if self.report_verbose:
                     vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)
@@ -3426,7 +3490,7 @@ class TSGVARS(GVARS):
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
                 self.ivars.index.names = ['ts', 'param', 'h']
                 if self.report_verbose:
