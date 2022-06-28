@@ -2812,7 +2812,7 @@ class TSGVARS(GVARS):
             for date, new_df in self.pair_df.groupby(level=0):
                 if self.report_verbose:
                     ts_pbar.update(1)
-                reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), 20, self.parameters, self.star_points,
+                reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters, self.star_points,
                                                 self.delta_h, False, xmax, xmin, False)
                 new_pair_df = pd.concat([new_pair_df, (pd.concat({date: reordered_pairs}, names=['ts']))])
 
@@ -2923,7 +2923,7 @@ class TSGVARS(GVARS):
                     for date, new_df in temp_pair_df.groupby(level=0):
                         if self.report_verbose:
                             ts_pbar.update(1)
-                        reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), 20, self.parameters,
+                        reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters,
                                                                     self.star_points,
                                                                     self.delta_h, False, xmax, xmin, False)
                         new_pair_df = pd.concat([new_pair_df, (pd.concat({date: reordered_pairs}, names=['ts']))])
@@ -3178,7 +3178,7 @@ class TSGVARS(GVARS):
             for date, new_df in self.pair_df.groupby(level=0):
                 if self.report_verbose:
                     ts_pbar.update(1)
-                reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), 20, self.parameters, self.star_points,
+                reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters, self.star_points,
                                                 self.delta_h, False, xmax, xmin, False)
                 new_pair_df = pd.concat([new_pair_df, (pd.concat({date: reordered_pairs}, names=['ts']))])
 
@@ -3289,7 +3289,7 @@ class TSGVARS(GVARS):
                     for date, new_df in temp_pair_df.groupby(level=0):
                         if self.report_verbose:
                             ts_pbar.update(1)
-                        reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), 20, self.parameters,
+                        reordered_pairs = gvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters,
                                                                     self.star_points,
                                                                     self.delta_h, False, xmax, xmin, False)
                         new_pair_df = pd.concat([new_pair_df, (pd.concat({date: reordered_pairs}, names=['ts']))])
