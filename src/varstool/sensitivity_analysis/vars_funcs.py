@@ -865,7 +865,7 @@ def bootstrapping(
 
         bootstrapped_ecovariogram = e_covariogram(bootstrapped_cov_section_all)
 
-        bootstrapped_var = bootstrapped_df.iloc[:, -1].unique().var(ddof=1)
+        bootstrapped_var = np.nanvar(bootstrapped_df.iloc[:, -1].unique(), ddof=1)
 
         bootstrapped_sobol = sobol_eq(bootstrapped_variogram, bootstrapped_ecovariogram,
                                       bootstrapped_var, delta_h)
