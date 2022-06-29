@@ -29,7 +29,7 @@ from joblib import Parallel, delayed
 
 from .sampling import starvars
 from .sampling import g_starvars
-from .sensitivity_analysis import vars_funcs
+from .sensitivity_analysis import vars_funcs, tsgvars_funcs
 from .sensitivity_analysis import gvars_funcs
 from .sensitivity_analysis import tsvars_funcs
 
@@ -2865,7 +2865,7 @@ class TSGVARS(GVARS):
             if self.report_verbose:
                 vars_pbar.update(1)
 
-            self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+            self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsgvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                   for scale in self.ivars_scales}, 'index').unstack()
             self.ivars.index.names = ['ts', 'param', 'h']
             if self.report_verbose:
@@ -3001,7 +3001,7 @@ class TSGVARS(GVARS):
                     self.st = pd.concat([self.st, temp_sobol_values.to_frame()])
 
                     #ivars
-                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(tsgvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
                     if self.report_verbose:
                         vars_pbar.update(1)
@@ -3091,7 +3091,7 @@ class TSGVARS(GVARS):
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsgvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
                 self.ivars.index.names = ['ts', 'param', 'h']
                 if self.report_verbose:
@@ -3263,7 +3263,7 @@ class TSGVARS(GVARS):
             if self.report_verbose:
                 vars_pbar.update(1)
 
-            self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+            self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsgvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                   for scale in self.ivars_scales}, 'index').unstack()
             self.ivars.index.names = ['ts', 'param', 'h']
             if self.report_verbose:
@@ -3400,7 +3400,7 @@ class TSGVARS(GVARS):
                     self.st = pd.concat([self.st, temp_sobol_values.to_frame()])
 
                     #ivars
-                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                    temp_ivars_values = pd.DataFrame.from_dict({scale: temp_gamma.groupby(level=['ts', 'param']).apply(tsgvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
                     if self.report_verbose:
                         vars_pbar.update(1)
@@ -3490,7 +3490,7 @@ class TSGVARS(GVARS):
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(vars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
+                self.ivars = pd.DataFrame.from_dict({scale: self.gamma.groupby(level=['ts', 'param']).apply(tsgvars_funcs.ivars, scale=scale, delta_h=self.delta_h) \
                       for scale in self.ivars_scales}, 'index').unstack()
                 self.ivars.index.names = ['ts', 'param', 'h']
                 if self.report_verbose:
