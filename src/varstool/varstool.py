@@ -2226,7 +2226,7 @@ class TSVARS(VARS):
         self.ivars_normalized.aggregate = self.ivars_normalized.groupby(level=['param', 'h']).mean()
 
 
-    def run_offline(self, star_points_eval):
+    def run_offline(self, star_points_eval, star_points: Optional):
         """
         runs the offline version of VARS program
 
@@ -2234,9 +2234,14 @@ class TSVARS(VARS):
         ----------
         star_points_eval: array_like
             A Pandas Dataframe that contains model ran on generated stars
+        star_points: array_like
+            A Pandas Dataframe that contains the generated stars
         """
 
         self.star_points_eval = star_points_eval
+
+        if star_points:
+            self.star_points = star_points
 
         # defining a lambda function to build pairs for each time-step
         ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(tsvars_funcs.section_df, self.delta_h)
@@ -3158,7 +3163,7 @@ class TSGVARS(GVARS):
         self.ivars_normalized.aggregate = self.ivars_normalized.groupby(level=['param', 'h']).mean()
 
 
-    def run_offline(self, star_points_eval):
+    def run_offline(self, star_points_eval, star_points: Optional):
         """
         runs the offline version of TSGVARS program
 
@@ -3166,9 +3171,14 @@ class TSGVARS(GVARS):
         ----------
         star_points_eval: array_like
             A Pandas Dataframe that contains model ran on generated stars
+        star_points: array_like
+            A Pandas Dataframe that contains generated stars
         """
 
         self.star_points_eval = star_points_eval
+
+        if star_points:
+            self.star_points = star_points
 
         # defining a lambda function to build pairs for each time-step
         ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(tsvars_funcs.section_df, self.delta_h)
