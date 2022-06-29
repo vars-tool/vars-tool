@@ -43,7 +43,7 @@ def ivars(
 
     # calculate interpolated values for both x (h) and y (variogram)
     if x_int[-1] < scale:
-        x_int.append(scale)
+        x_int = np.append(x_int, scale)
     y_bench = [0] + variogram_array.to_list()
 
     y_int = np.interp(x=x_int, xp=x_bench, fp=y_bench)
