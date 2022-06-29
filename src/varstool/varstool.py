@@ -665,7 +665,7 @@ class VARS(object):
             #vars_pbar.write('Overall expected value of model evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = self.model_df[str(self.model)].unique().var(ddof=1)
+        self.var_overall = np.nanvar(self.model_df[str(self.model)].unique(), ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             #vars_pbar.write('Overall variance of model evaluations (`var_overall`) calculated - access via .var_overall')
@@ -839,7 +839,7 @@ class VARS(object):
             # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = self.model_df.iloc[:, -1].unique().var(ddof=1)
+        self.var_overall = np.nanvar(self.model_df.iloc[:, -1].unique(), ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
@@ -1390,7 +1390,7 @@ class GVARS(VARS):
             # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = self.model_df[str(self.model)].unique().var(ddof=1)
+        self.var_overall = np.nanvar(self.model_df[str(self.model)].unique(), ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
@@ -1596,7 +1596,7 @@ class GVARS(VARS):
             # vars_pbar.write('Overall expected value of function evaluations (`mu_overall`) calculated - access via .mu_overall')
 
         # overall variance of the unique evaluated function over all star points
-        self.var_overall = self.model_df.iloc[:, -1].unique().var(ddof=1)
+        self.var_overall = np.nanvar(self.model_df.iloc[:, -1].unique(),ddof=1)
         if self.report_verbose:
             vars_pbar.update(1)
             # vars_pbar.write('Overall variance of function evaluations (`var_overall`) calculated - access via .var_overall')
@@ -1967,7 +1967,7 @@ class TSVARS(VARS):
             if self.report_verbose:
                 vars_pbar.update(1)
 
-            self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+            self.var_overall = self.star_points_eval.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
             if self.report_verbose:
                 vars_pbar.update(1)
 
@@ -2056,7 +2056,7 @@ class TSVARS(VARS):
                     self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall.to_frame()])
 
                     #var overall
-                    temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                    temp_var_overall = df_temp.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
                     if self.report_verbose:
                         vars_pbar.update(1)
                     self.var_overall = pd.concat([self.var_overall, temp_var_overall.to_frame()])
@@ -2129,7 +2129,7 @@ class TSVARS(VARS):
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                self.var_overall = self.star_points_eval.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
                 if self.report_verbose:
                     vars_pbar.update(1)
 
@@ -2276,7 +2276,7 @@ class TSVARS(VARS):
             if self.report_verbose:
                 vars_pbar.update(1)
 
-            self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+            self.var_overall = self.star_points_eval.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
             if self.report_verbose:
                 vars_pbar.update(1)
 
@@ -2365,7 +2365,7 @@ class TSVARS(VARS):
                     self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall.to_frame()])
 
                     #var overall
-                    temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                    temp_var_overall = df_temp.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
                     if self.report_verbose:
                         vars_pbar.update(1)
                     self.var_overall = pd.concat([self.var_overall, temp_var_overall.to_frame()])
@@ -2438,7 +2438,7 @@ class TSVARS(VARS):
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                self.var_overall = self.star_points_eval.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
                 if self.report_verbose:
                     vars_pbar.update(1)
 
@@ -2840,7 +2840,7 @@ class TSGVARS(GVARS):
             if self.report_verbose:
                 vars_pbar.update(1)
 
-            self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+            self.var_overall = self.star_points_eval.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
             if self.report_verbose:
                 vars_pbar.update(1)
 
@@ -2961,7 +2961,7 @@ class TSGVARS(GVARS):
                     self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall.to_frame()])
 
                     #var overall
-                    temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                    temp_var_overall = df_temp.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
                     if self.report_verbose:
                         vars_pbar.update(1)
                     self.var_overall = pd.concat([self.var_overall, temp_var_overall.to_frame()])
@@ -3066,7 +3066,7 @@ class TSGVARS(GVARS):
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                self.var_overall = self.star_points_eval.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
                 if self.report_verbose:
                     vars_pbar.update(1)
 
@@ -3243,7 +3243,7 @@ class TSGVARS(GVARS):
             if self.report_verbose:
                 vars_pbar.update(1)
 
-            self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+            self.var_overall = self.star_points_eval.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
             if self.report_verbose:
                 vars_pbar.update(1)
 
@@ -3365,7 +3365,7 @@ class TSGVARS(GVARS):
                     self.mu_overall = pd.concat([self.mu_overall, temp_mu_overall.to_frame()])
 
                     #var overall
-                    temp_var_overall = df_temp.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                    temp_var_overall = df_temp.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
                     if self.report_verbose:
                         vars_pbar.update(1)
                     self.var_overall = pd.concat([self.var_overall, temp_var_overall.to_frame()])
@@ -3470,7 +3470,7 @@ class TSGVARS(GVARS):
                 if self.report_verbose:
                     vars_pbar.update(1)
 
-                self.var_overall = self.star_points_eval.apply(lambda x: np.var(list(np.unique(x)), ddof=1))
+                self.var_overall = self.star_points_eval.apply(lambda x: np.nanvar(list(np.unique(x)), ddof=1))
                 if self.report_verbose:
                     vars_pbar.update(1)
 
