@@ -54,3 +54,46 @@ def ivars(
         ivars_values += 0.5 * (y_int[i + 1] + y_int[i]) * (x_int[i + 1] - x_int[i])
 
     return ivars_values
+
+
+def find_boundaries(parameters):
+    """
+    finds maximum and minimum boundary of each parameter.
+
+    Parameters
+    ----------
+    parameters : Dictionary
+        dictionary containing parameters names and attributes
+
+    Returns
+    -------
+    xmin : array_like
+        the lower boundaries of each parameter
+    xmax : array_like
+        the upper boundaries of each parameter
+    """
+
+    # store the max and min values of each parameter in arrays
+    xmin = []
+    xmax = []
+    for param in sorted(parameters.keys()):
+        if parameters[param][3] == 'unif':
+            xmin.append(parameters[param][0])  # lower bound
+            xmax.append(parameters[param][1])  # upper bound
+        elif parameters[param][3] == 'triangle':
+            xmin.append(parameters[param][0]) # lower bound
+            xmax.append(parameters[param][1])  # upper bound
+        elif parameters[param][3] == 'norm':
+            xmin.append(parameters[param][0] - 3 * parameters[param][1])
+            xmax.append(parameters[param][0] + 3 * parameters[param][1])
+        elif parameters[param][3] == 'lognorm':
+            xmin.append(1)
+            xmax.append(1.25)
+        elif parameters[param][3] == 'expo':
+            xmin.append(0)  # change this
+            xmax.append(0)  # change this
+        elif parameters[param][3] == 'gev':
+            xmin.append(0)  # change this
+            xmax.append(0)  # change this
+
+    return xmin, xmax

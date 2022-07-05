@@ -1374,7 +1374,7 @@ class GVARS(VARS):
 
         # progress bar for vars analysis
         if self.report_verbose:
-            vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)  # 10 steps for different components
+            vars_pbar = tqdm(desc='GVARS analysis', total=10, dynamic_ncols=True)  # 10 steps for different components
 
         # get mu_star value
         self.mu_star_df = self.model_df[str(self.model)].groupby(level=[0, 1]).mean()
@@ -1580,7 +1580,7 @@ class GVARS(VARS):
 
         # progress bar for vars analysis
         if self.report_verbose:
-            vars_pbar = tqdm(desc='VARS analysis', total=10, dynamic_ncols=True)  # 10 steps for different components
+            vars_pbar = tqdm(desc='GVARS analysis', total=10, dynamic_ncols=True)  # 10 steps for different components
 
         # get mu_star value
         self.mu_star_df = self.model_df.iloc[:, -1].groupby(level=[0, 1]).mean()
@@ -2804,7 +2804,7 @@ class TSGVARS(GVARS):
             self.pair_df = self.pair_df.droplevel('h')
 
             # bin and reorder pairs according to actual 'h' values
-            xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+            xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
 
             # dataframe to hold new pairs
             new_pair_df = pd.DataFrame()
@@ -2914,7 +2914,7 @@ class TSGVARS(GVARS):
                     temp_pair_df = temp_pair_df.droplevel('h')
 
                     # bin and reorder pairs according to actual 'h' values
-                    xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+                    xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
 
                     # dataframe to hold new pairs
                     new_pair_df = pd.DataFrame()
@@ -3026,7 +3026,7 @@ class TSGVARS(GVARS):
                 self.pair_df = self.pair_df.droplevel('h')
 
                 # bin and reorder pairs according to actual 'h' values
-                xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+                xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
 
                 # dataframe to hold new pairs
                 new_pair_df = pd.DataFrame()
@@ -3207,7 +3207,7 @@ class TSGVARS(GVARS):
             self.pair_df = self.pair_df.droplevel('h')
 
             # bin and reorder pairs according to actual 'h' values
-            xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+            xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
 
             # dataframe to hold new pairs
             new_pair_df = pd.DataFrame()
@@ -3317,7 +3317,7 @@ class TSGVARS(GVARS):
                     temp_pair_df = temp_pair_df.droplevel('h')
 
                     # bin and reorder pairs according to actual 'h' values
-                    xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+                    xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
 
                     # dataframe to hold new pairs
                     new_pair_df = pd.DataFrame()
@@ -3430,7 +3430,7 @@ class TSGVARS(GVARS):
                 self.pair_df = self.pair_df.droplevel('h')
 
                 # bin and reorder pairs according to actual 'h' values
-                xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+                xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
 
                 # dataframe to hold new pairs
                 new_pair_df = pd.DataFrame()
