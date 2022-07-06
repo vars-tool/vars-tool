@@ -2,6 +2,17 @@
 import pandas as pd
 import numpy as np
 
+from tqdm.auto import tqdm
+
+from src.varstool.sensitivity_analysis.gvars_funcs import pairs_h
+
+from typing import (
+    List,
+    Tuple,
+    Dict,
+    Union
+)
+
 
 def ivars(
     variogram_array: pd.DataFrame,
@@ -97,3 +108,115 @@ def find_boundaries(parameters):
             xmax.append(0)  # change this
 
     return xmin, xmax
+
+def reorder_pairs(pair_df: pd.DataFrame,
+                  num_stars: int,
+                  parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
+                  df: pd.DataFrame,
+                  delta_h: float,
+                  report_verbose: bool,
+                  xmax: np.ndarray,
+                  xmin: np.ndarray,
+                  offline_mode: bool
+                  ) -> pd.DataFrame:
+
+    """
+    Calculates the differences('h') between the pairings of the star points, and
+    bins and reorders the pair dataframe according to the calculated 'h' values
+
+    Parameters
+    ----------
+    pair_df : pd.DataFrame
+        Pandas DataFrame containing the paired star points values with the model outputs
+    num_stars : int
+        number of star samples
+    parameters : dictionary
+        dictionary containing parameter names and their attributes
+    df : pd.DataFrame
+        Pandas DataFrame containing the star points
+    delta_h : float
+        resolution of star samples
+    report_verbose : boolean
+        if True will use a loading bar when generating stars, does nothing if False
+    xmax : arraylike
+        array containing max boundary of each parameter
+    xmin : arraylike
+        array containing min boundary of each parameter
+    offline_mode : boolean
+        if True GVARS analysis is in offline mode, if False it is in online mode
+
+    Returns
+    -------
+    pair_df : array_like
+        the returned dataframe of paired values
+    """
+
+    # for loading bar when calculating differences in values 'h'
+    if report_verbose:
+        star_centres = tqdm(range(0, num_stars), desc='calculating \'h\' values')
+    else:
+        star_centres = range(0, num_stars)
+
+    # gather the actual 'h' differences between each star point value for every pair
+    # possibly find a faster way to do this later
+    dist_list = []
+    param_names = sorted(list(parameters.keys()))
+    for star_centre in star_centres:
+        param_num=0
+        for param in sorted(parameters.keys()):
+            pairs = pairs_h(df.loc[star_centre, param][param_names[param_num]].index.get_level_values(-1))
+            for ignore, idx in pairs.items():
+                for idx_tup in idx:
+                    dist_list.append(np.abs((df.loc[star_centre, param][param_names[param_num]][idx_tup[0]] -
+                                             df.loc[star_centre, param][param_names[param_num]][idx_tup[1]]) / (
+                                                xmax[param_num]-xmin[param_num])))
+            param_num = param_num + 1
+
+    # loading bar for binning and reording pairs based on new 'h' values
+    if report_verbose:
+        star_centres = tqdm(range(0, num_stars), desc='binning and reording pairs based on \'h\' values')
+    else:
+        star_centres = range(0, num_stars)
+
+    # add new distances to dataframe
+    pair_df['actual h'] = dist_list
+
+    # create bin ranges
+    num_bins = int(1 / delta_h)  # the number of bins created by delta h
+    bins = np.zeros(num_bins + 1)
+    bins[1:] = np.arange(start=delta_h / 2, step=delta_h, stop=1)  # create middle bin ranges
+
+    # create labels for the bin ranges which will be the actual delta h values
+    labels = np.zeros(num_bins)
+    labels[0] = delta_h / 4
+    labels[1:] = np.arange(start=delta_h, step=delta_h, stop=1)
+
+    # bin pair values according to their distances 'h' for each paramter at each star centre
+    binned_pairs = []
+    for star_centre in star_centres:
+        for param in sorted(parameters.keys()):
+            binned_pairs.append(
+                pd.cut(pair_df.loc[star_centre, param, :]['actual h'], bins=bins, labels=labels).sort_values())
+
+    # put binned pairs into a panda series
+    binned_pairs = pd.concat(binned_pairs, ignore_index=False)
+
+    # re order pairs values according to the bins
+    centres = pair_df.index.get_level_values(0).to_numpy()
+    params = pair_df.index.get_level_values(1).to_numpy()
+    bps = binned_pairs.index.to_numpy()
+    new_index = pd.MultiIndex.from_arrays([centres, params, bps], names = ['centre', 'param', 'pair_ind'])
+    pair_df = pair_df.reindex(new_index)
+
+    # add in new index h, according to bin ranges
+    # ex.) h = 0.1 = [0-0.15], h = 0.2 = [0.15-0.25]
+    h = list(binned_pairs.values)
+    pair_df['h'] = h
+
+    # format data frame so that it works properly with variogram analsysis functions
+    pair_df.set_index('h', append=True, inplace=True)
+    pair_df.set_index('actual h', append=True, inplace=True)
+
+    pair_df = pair_df.reorder_levels(['centre', 'param', 'h', 'actual h', 'pair_ind'])
+
+    return pair_df
