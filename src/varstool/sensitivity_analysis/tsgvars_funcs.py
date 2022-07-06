@@ -1,18 +1,40 @@
 # -*- coding: utf-8 -*-
+from itertools import combinations
+
 import pandas as pd
 import numpy as np
 
 from tqdm.auto import tqdm
 
-from src.varstool.sensitivity_analysis.gvars_funcs import pairs_h
-
 from typing import (
     List,
     Tuple,
     Dict,
-    Union
+    Union, Iterable
 )
 
+def pairs_h(
+    iterable: Iterable
+) -> pd.DataFrame:
+    """Give the pairs of numbers considering their differences.
+
+    Parameters
+    ----------
+    iterable : iterable
+        an iterable object
+
+    Returns
+    -------
+    pairs : array_like
+        the returned dataframe of paired values
+    """
+
+    # gives the pairs of numbers considering their differences
+    interval = range(min(iterable), max(iterable) - min(iterable))
+    pairs = {key + 1: [j for j in combinations(iterable, 2) if np.abs(
+        j[0] - j[1]) == key + 1] for key in interval}
+
+    return pairs
 
 def ivars(
     variogram_array: pd.DataFrame,
