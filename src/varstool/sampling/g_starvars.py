@@ -11,7 +11,7 @@ from ..sensitivity_analysis import gvars_funcs
 from typing import (
     Dict,
     Tuple,
-    Union,
+    Union, Optional,
 )
 
 
@@ -25,7 +25,8 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
            num_dir_samples: int,
            num_factors: int,
            report_verbose: bool,
-           corr_flag: bool
+           corr_flag: bool,
+           filename: Optional[str] = None
            ) -> Tuple[Union[pd.DataFrame, pd.Series], Union[np.ndarray, np.ndarray], Union[np.ndarray, np.ndarray]]:
 
     """
@@ -49,6 +50,8 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
         if True will use a loading bar when generating stars, does nothing if False
     corr_flag : boolean
         if True will use correlation matrix as fictive matrix
+    filename : str
+        file name of file containing custom distribution data
 
     Returns
     -------
@@ -164,8 +167,11 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
         stars_pbar.update(1)
 
     # Generate Nstar actual multivariate samples x
-    param_info = list(parameters.values())  # store dictionary values in a list
-    x = gvars_funcs.n2x_transform(z, param_info)
+    if filename:
+        x = gvars_funcs.n2x_transform(z, parameters, filename)
+    else:
+        x = gvars_funcs.n2x_transform(z, parameters)
+
     if report_verbose:
         stars_pbar.update(1)
 

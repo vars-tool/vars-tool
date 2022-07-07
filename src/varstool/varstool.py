@@ -1010,7 +1010,9 @@ class GVARS(VARS):
     :param num_dir_samples: number of directional samples in each star sample
     :type num_dir_samples: int, 50
     :param corr_flag: flag that sets if correlation matrix it to be used in place of fictive matrix
-    :type corr_flag: bool, Flase
+    :type corr_flag: bool, False
+    :param filename: file name that contains custom distribution data
+    :type filename: str, None
     
 
 
@@ -1058,7 +1060,8 @@ class GVARS(VARS):
                  report_verbose: Optional[bool] = False,  # reporting verbose
                  corr_mat: np.ndarray = np.array([]),  # correlation matrix
                  num_dir_samples: int = 50,  # number of directional samples
-                 corr_flag: Optional[bool] = False # if flag is true correlation matrix will be used in place of fictive matrix
+                 corr_flag: Optional[bool] = False, # if flag is true correlation matrix will be used in place of fictive matrix
+                 filename: Optional[str] = None
                  ):
 
         # initialize values
@@ -1081,10 +1084,17 @@ class GVARS(VARS):
         self.sampler = sampler
         self.slice_size = slice_size
         self.corr_flag = corr_flag
+        self.filename = filename
 
         # if there is no sampler default is 'lhs'
         if sampler == None:
             self.sampler = 'lhs'
+
+        # check if there is a custom distribution
+        # for now we will set corr flag to true
+        for info in self.parameters.values():
+            if info[3] == 'custom':
+                self.corr_flag = True
 
         # default value for the number of directional samples
         if not self.num_dir_samples:
@@ -1200,7 +1210,8 @@ class GVARS(VARS):
             self.num_dir_samples,  # number of directional samples in star points
             self.num_factors,  # number of parameters
             self.report_verbose,  # loading bar boolean value
-            self.corr_flag
+            self.corr_flag,
+            self.filename
         )
 
         self.star_points.columns = self.parameters.keys()
@@ -1340,7 +1351,8 @@ class GVARS(VARS):
             self.num_dir_samples,  # number of directional samples in star points
             self.num_factors,  # number of parameters
             self.report_verbose,  # loading bar boolean value
-            self.corr_flag
+            self.corr_flag,
+            self.filename
         )
 
         self.star_points.columns = self.parameters.keys()
@@ -2715,7 +2727,8 @@ class TSGVARS(GVARS):
             self.num_dir_samples,  # number of directional samples in star points
             self.num_factors,  # number of parameters
             self.report_verbose, # loading bar boolean value
-            self.corr_flag
+            self.corr_flag,
+            self.filename
         )
 
         self.star_points.columns = self.parameters.keys()
@@ -2741,7 +2754,8 @@ class TSGVARS(GVARS):
             self.num_dir_samples,  # number of directional samples in star points
             self.num_factors,  # number of parameters
             self.report_verbose, # loading bar boolean value
-            self.corr_flag
+            self.corr_flag,
+            self.filename
         )
 
         self.star_points.columns = self.parameters.keys()

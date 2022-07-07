@@ -128,6 +128,9 @@ def find_boundaries(parameters):
         elif parameters[param][3] == 'gev':
             xmin.append(0)  # change this
             xmax.append(0)  # change this
+        elif parameters[param][3] == 'custom':
+            xmin.append(parameters[param][0])
+            xmax.append(parameters[param][1])
 
     return xmin, xmax
 

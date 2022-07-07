@@ -16,7 +16,7 @@ from typing import (
     List,
     Tuple,
     Dict,
-    Union
+    Union, Optional
 )
 
 from tqdm.auto import tqdm
@@ -255,7 +255,8 @@ def map_2_cornorm(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
 
 
 def n2x_transform(norm_vectors: np.ndarray,
-                  param_info: List
+                  parameters: Dict,
+                  filename: Optional[str] = None
                   ) -> np.ndarray:
     """
     transforms multivariate normal samples into parameters original distributions
@@ -264,8 +265,10 @@ def n2x_transform(norm_vectors: np.ndarray,
     ----------
     norm_vectors : np.ndarray
         multivariate normal samples
-    param_info : list
-        a list containing parameter information (bounds, distributions, etc.)
+    parameters : dict
+        a dictionary containing parameter information (name: bounds, distributions, etc.)
+    filename : String
+        name of file that contains custom distribution data, optional only for users with custom distributions
 
     Returns
     -------
@@ -288,24 +291,24 @@ def n2x_transform(norm_vectors: np.ndarray,
 
     # Transform from correlated standard normal to original distributions
 
-    k = norm_vectors.shape[1]
     x = np.zeros(norm_vectors.shape)
+    i = 0
 
-    for i in range(0, k):
-        if param_info[i][3] == 'unif':
-            lb = param_info[i][0]
-            ub = param_info[i][1]
+    for param in parameters.keys():
+        if parameters[param][3] == 'unif':
+            lb = parameters[param][0]
+            ub = parameters[param][1]
 
             x[:, i] = lb + (ub - lb) * stat.norm.cdf(norm_vectors[:, i], 0, 1)
-        elif param_info[i][3] == 'norm':
-            mu = param_info[i][0]
-            std = param_info[i][1]
+        elif parameters[param][3] == 'norm':
+            mu = parameters[param][0]
+            std = parameters[param][1]
 
             x[:, i] = stat.norm.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), mu, std)
-        elif param_info[i][3] == 'triangle':
-            a = param_info[i][0]
-            b = param_info[i][1]
-            c = param_info[i][2]
+        elif parameters[param][3] == 'triangle':
+            a = parameters[param][0]
+            b = parameters[param][1]
+            c = parameters[param][2]
             mid = (c - a) / (b - a)
             term1 = (b - a) * (c - a)
             term2 = (b - a) * (b - c)
@@ -313,21 +316,24 @@ def n2x_transform(norm_vectors: np.ndarray,
             x[:, i] = (a + np.sqrt(term1) * np.sqrt(x_norm)) * ((x_norm >= 0).astype(int)) * (
                 (x_norm < mid).astype(int)) + (b - np.sqrt(term2) * np.sqrt((1 - x_norm))) * (
                           (x_norm >= mid).astype(int)) * ((x_norm < 1).astype(int))
-        elif param_info[i][3] == 'lognorm':
-            mu = param_info[i][0]
-            std = param_info[i][1]
+        elif parameters[param][3] == 'lognorm':
+            mu = parameters[param][0]
+            std = parameters[param][1]
             term1 = std / mu ** 2
-            m = np.log(mu / (np.sqrt(1 + term1)))
-            v = np.sqrt(np.log(1 + term1))
-            x[:, i] = stat.lognorm.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), scale=np.exp(mu), s=std, loc=0)
-        elif param_info[i][3] == 'expo':
-            mu = param_info[i][0]
+            x[:, i] = np.lognorm.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), scale=np.exp(mu), s=std, loc=0)
+        elif parameters[param][3] == 'expo':
+            mu = parameters[param][0]
             x[:, i] = np.expon.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), scale=mu)
-        elif param_info[i][3] == 'gev':
-            mu = param_info[i][0]  # location
-            sigma = param_info[i][1]  # scale
-            k = -1 * param_info[i][2]  # shape
+        elif parameters[param][3] == 'gev':
+            mu = parameters[param][0]  # location
+            sigma = parameters[param][1]  # scale
+            k = -1 * parameters[param][2]  # shape
             x[:, i] = stat.genextreme.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), c=k, scale=sigma, loc=mu)
+        elif parameters[param][3] == 'custom':
+            cdp = custom_distribution_probabilites(filename, param)
+            x[:, i] = np.interp(stat.norm.cdf(norm_vectors[:, i], 0, 1), cdp['Probabilities'], cdp[param])
+
+        i += 1
 
     return x
 
@@ -510,5 +516,39 @@ def find_boundaries(parameters):
         elif param_info[i][3] == 'gev':
             xmin[i] = 0  # change this
             xmax[i] = 0  # change this
+        elif param_info[i][3] == 'custom':
+            xmin[i] = param_info[i][0]
+            xmax[i] = param_info[i][1]
 
     return xmin, xmax
+
+
+def custom_distribution_probabilites(filename: Optional[str], param):
+    """
+    finds empirical cdf for custom probability distribution and puts it in a dataframe.
+
+    Parameters
+    ----------
+    filename : str
+        string name of .csv file containing custom distribution data
+    param : String
+        name of parameter
+
+    Returns
+    -------
+    cdp : array_like
+        df containing custom distributions and empirical cdf
+    """
+
+    cdp = pd.read_csv(filename)
+
+    # get just the singular parameter distribution
+    cdp = cdp[param].to_frame().dropna(how='all').reset_index(drop=True)
+
+    # sort data from smallest to largest
+    cdp.sort_values(by=param, ignore_index=True, inplace=True)
+
+    # find empirical cdf for all parameters
+    cdp['Probabilities'] = (cdp.index + 1) / (cdp.shape[0] + 1)
+
+    return cdp
