@@ -1457,24 +1457,6 @@ class GVARS(VARS):
             vars_pbar.update(1)
             vars_pbar.close()
 
-        # warn user if sample size is not large enough to ensure full coverage of 'h' values for directional variogram
-        nan_flag = False
-        h_locations = ""
-        nans = self.gamma.unstack().isna().any()
-        for i in range(nans.size):
-            if nans.iloc[i]:
-                nan_flag = True
-                h_locations += str(round(nans.index[i], 3)) + ","
-
-        if nan_flag:
-            warning_string = "For some or all variables there are no results for the directional variogram "\
-                             "for the following h values: " + h_locations + " " \
-                             "you may want to consider increasing the sample size.\n"
-            warnings.warn(warning_string,
-                          UserWarning,
-                          stacklevel=1
-                          )
-
 
         # progress bar for factor ranking
         if self.report_verbose:
@@ -1662,24 +1644,6 @@ class GVARS(VARS):
         if self.report_verbose:
             vars_pbar.update(1)
             vars_pbar.close()
-
-        # warn user if sample size is not large enough to ensure full coverage of 'h' values for directional variogram
-        nan_flag = False
-        h_locations = ""
-        nans = self.gamma.unstack().isna().any()
-        for i in range(nans.size):
-            if nans.iloc[i]:
-                nan_flag = True
-                h_locations += str(round(nans.index[i], 3)) + ","
-
-        if nan_flag:
-            warning_string = "For some or all variables there are no results for the directional variogram "\
-                             "for the following h values: " + h_locations + " " \
-                             "you may want to consider increasing the sample size.\n"
-            warnings.warn(warning_string,
-                          UserWarning,
-                          stacklevel=1
-                          )
 
         # progress bar for factor ranking
         if self.report_verbose:
