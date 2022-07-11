@@ -232,9 +232,14 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
     tmp1 = []
     xi_on_xnoti_and_xnoti_temp = []
     xi_on_xnoti_and_xnoti = []
+
+    # to ensure n2x transform function works properly
+    param_keys = list(parameters.keys())
+    param_info = list(parameters.values())
+
     for j in range(0, num_dir_samples):
         for i in range(0, len(parameters)):
-            tmp1.append(gvars_funcs.n2x_transform(np.array([all_section_cond_z[j][i]]).transpose(), [param_info[i]]).flatten())
+            tmp1.append(gvars_funcs.n2x_transform(np.array([all_section_cond_z[j][i]]).transpose(), {param_keys[i]: param_info[i]}, filename).flatten())
             tmp2 = x.copy()
             tmp2[:, i] = tmp1[i]
             xi_on_xnoti_and_xnoti_temp.append(tmp2.copy())
