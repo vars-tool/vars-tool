@@ -196,7 +196,7 @@ def rn2rx(distpair_type: List,
         rx = newton_krylov(F=fun, xin=rnpair, x_tol=1e-5)
     except:
         print("Function could not converge, fictive matrix was not computed")
-        print("It is recommended to switch corr_flag parameter to True to assume that correlation "
+        print("It is recommended to switch fictive_mat_flag parameter to False to assume that correlation "
               "matrix is equal to fictive matrix")
         rx = rnpair
 
@@ -256,7 +256,7 @@ def map_2_cornorm(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
 
 def n2x_transform(norm_vectors: np.ndarray,
                   parameters: Dict,
-                  filename: Optional[str] = None
+                  dist_sample_file: Optional[str] = None
                   ) -> np.ndarray:
     """
     transforms multivariate normal samples into parameters original distributions
@@ -267,7 +267,7 @@ def n2x_transform(norm_vectors: np.ndarray,
         multivariate normal samples
     parameters : dict
         a dictionary containing parameter information (name: bounds, distributions, etc.)
-    filename : String
+    dist_sample_file : String
         name of file that contains custom distribution data, optional only for users with custom distributions
 
     Returns
@@ -330,7 +330,7 @@ def n2x_transform(norm_vectors: np.ndarray,
             k = -1 * parameters[param][2]  # shape
             x[:, i] = stat.genextreme.ppf(stat.norm.cdf(norm_vectors[:, i], 0, 1), c=k, scale=sigma, loc=mu)
         elif parameters[param][3] == 'custom':
-            cdp = custom_distribution_probabilites(filename, param)
+            cdp = custom_distribution_probabilites(dist_sample_file, param)
             x[:, i] = np.interp(stat.norm.cdf(norm_vectors[:, i], 0, 1), cdp['Probabilities'], cdp[param])
 
         i += 1
@@ -475,7 +475,7 @@ def reorder_pairs(pair_df: pd.DataFrame,
     return pair_df
 
 
-def find_boundaries(parameters):
+def find_boundaries(parameters, dist_sample_file: Optional[str] = None):
     """
     finds maximum and minimum boundary of each parameter.
 
@@ -483,6 +483,8 @@ def find_boundaries(parameters):
     ----------
     parameters : Dictionary
         dictionary containing parameters names and attributes
+    dist_sample_file : str
+        name of file containing distributions data
 
     Returns
     -------
@@ -491,45 +493,51 @@ def find_boundaries(parameters):
     xmax : array_like
         the upper boundaries of each parameter
     """
-    # store parameter info in a list
-    param_info = list(parameters.values())
+
+    # store distributions in dataframe
+    distributions_df = pd.DataFrame()
+    if dist_sample_file:
+        distributions_df = pd.read_csv(dist_sample_file)
 
     # store the max and min values of each paramter in arrays
     xmin = np.zeros(len(parameters))
     xmax = np.zeros(len(parameters))
-    for i in range(0, len(parameters)):
-        if param_info[i][3] == 'unif':
-            xmin[i] = param_info[i][0]  # lower bound
-            xmax[i] = param_info[i][1]  # upper bound
-        elif param_info[i][3] == 'triangle':
-            xmin[i] = param_info[i][0]  # lower bound
-            xmax[i] = param_info[i][1]  # upper bound
-        elif param_info[i][3] == 'norm':
-            xmin[i] = param_info[i][0] - 3 * param_info[i][1]
-            xmax[i] = param_info[i][0] + 3 * param_info[i][1]
-        elif param_info[i][3] == 'lognorm':
-            xmin[i] = 1
-            xmax[i] = 1.25
-        elif param_info[i][3] == 'expo':
-            xmin[i] = 0  # change this
-            xmax[i] = 0  # change this
-        elif param_info[i][3] == 'gev':
-            xmin[i] = 0  # change this
-            xmax[i] = 0  # change this
-        elif param_info[i][3] == 'custom':
-            xmin[i] = param_info[i][0]
-            xmax[i] = param_info[i][1]
+    index = 0
+    for param in parameters.keys():
+        if parameters[param][3] == 'unif':
+            xmin[index] = parameters[param][0]  # lower bound
+            xmax[index] = parameters[param][1]  # upper bound
+        elif parameters[param][3] == 'triangle':
+            xmin[index] = parameters[param][0]  # lower bound
+            xmax[index] = parameters[param][1]  # upper bound
+        elif parameters[param][3] == 'norm':
+            xmin[index] = parameters[param][0] - 3 * parameters[param][1]
+            xmax[index] = parameters[param][0] + 3 * parameters[param][1]
+        elif parameters[param][3] == 'lognorm':
+            xmin[index] = 1
+            xmax[index] = 1.25
+        elif parameters[param][3] == 'expo':
+            xmin[index] = 0  # change this
+            xmax[index] = 0  # change this
+        elif parameters[param][3] == 'gev':
+            xmin[index] = 0  # change this
+            xmax[index] = 0  # change this
+        elif parameters[param][3] == 'custom':
+            # read in file and find min and max
+            xmin[index] = distributions_df[param].min()
+            xmax[index] = distributions_df[param].max()
+        index += 1
 
     return xmin, xmax
 
 
-def custom_distribution_probabilites(filename: Optional[str], param):
+def custom_distribution_probabilites(dist_sample_file: Optional[str], param):
     """
     finds empirical cdf for custom probability distribution and puts it in a dataframe.
 
     Parameters
     ----------
-    filename : str
+    dist_sample_file : str
         string name of .csv file containing custom distribution data
     param : String
         name of parameter
@@ -540,7 +548,7 @@ def custom_distribution_probabilites(filename: Optional[str], param):
         df containing custom distributions and empirical cdf
     """
 
-    cdp = pd.read_csv(filename)
+    cdp = pd.read_csv(dist_sample_file)
 
     # get just the singular parameter distribution
     cdp = cdp[param].to_frame().dropna(how='all').reset_index(drop=True)

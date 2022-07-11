@@ -89,7 +89,7 @@ def ivars(
     return ivars_values
 
 
-def find_boundaries(parameters):
+def find_boundaries(parameters, dist_sample_file):
     """
     finds maximum and minimum boundary of each parameter.
 
@@ -97,6 +97,8 @@ def find_boundaries(parameters):
     ----------
     parameters : Dictionary
         dictionary containing parameters names and attributes
+    dist_sample_file : str
+        name of file containing distributions data
 
     Returns
     -------
@@ -105,6 +107,11 @@ def find_boundaries(parameters):
     xmax : array_like
         the upper boundaries of each parameter
     """
+
+    # store distributions in dataframe
+    distributions_df = pd.DataFrame()
+    if dist_sample_file:
+        distributions_df = pd.read_csv(dist_sample_file)
 
     # store the max and min values of each parameter in arrays
     xmin = []
@@ -129,8 +136,8 @@ def find_boundaries(parameters):
             xmin.append(0)  # change this
             xmax.append(0)  # change this
         elif parameters[param][3] == 'custom':
-            xmin.append(parameters[param][0])
-            xmax.append(parameters[param][1])
+            xmin.append(distributions_df[param].min())
+            xmax.append(distributions_df[param].max())
 
     return xmin, xmax
 

@@ -1009,10 +1009,10 @@ class GVARS(VARS):
     :type corr_mat: np.ndarray, np.array([])
     :param num_dir_samples: number of directional samples in each star sample
     :type num_dir_samples: int, 50
-    :param corr_flag: flag that sets if correlation matrix it to be used in place of fictive matrix
-    :type corr_flag: bool, False
-    :param filename: file name that contains custom distribution data
-    :type filename: str, None
+    :param fictive_mat_flag: flag that sets if correlation matrix it to be used in place of fictive matrix
+    :type fictive_mat_flag: bool, False
+    :param dist_sample_file: file name that contains custom distribution data
+    :type dist_sample_file: str, None
     
 
 
@@ -1060,8 +1060,8 @@ class GVARS(VARS):
                  report_verbose: Optional[bool] = False,  # reporting verbose
                  corr_mat: np.ndarray = np.array([]),  # correlation matrix
                  num_dir_samples: int = 50,  # number of directional samples
-                 corr_flag: Optional[bool] = False, # if flag is true correlation matrix will be used in place of fictive matrix
-                 filename: Optional[str] = None
+                 fictive_mat_flag: Optional[bool] = True, # if flag is false correlation matrix will be used in place of fictive matrix
+                 dist_sample_file: Optional[str] = None # name of file carrying custom distributions
                  ):
 
         # initialize values
@@ -1083,8 +1083,8 @@ class GVARS(VARS):
         self.num_factors = len(self.parameters)
         self.sampler = sampler
         self.slice_size = slice_size
-        self.corr_flag = corr_flag
-        self.filename = filename
+        self.fictive_mat_flag = fictive_mat_flag
+        self.dist_sample_file = dist_sample_file
 
         # if there is no sampler default is 'lhs'
         if sampler == None:
@@ -1094,7 +1094,7 @@ class GVARS(VARS):
         # for now we will set corr flag to true
         for info in self.parameters.values():
             if info[3] == 'custom':
-                self.corr_flag = True
+                self.fictive_mat_flag = False
 
         # default value for the number of directional samples
         if not self.num_dir_samples:
@@ -1210,8 +1210,8 @@ class GVARS(VARS):
             self.num_dir_samples,  # number of directional samples in star points
             self.num_factors,  # number of parameters
             self.report_verbose,  # loading bar boolean value
-            self.corr_flag,
-            self.filename
+            self.fictive_mat_flag,
+            self.dist_sample_file
         )
 
         self.star_points.columns = self.parameters.keys()
@@ -1351,8 +1351,8 @@ class GVARS(VARS):
             self.num_dir_samples,  # number of directional samples in star points
             self.num_factors,  # number of parameters
             self.report_verbose,  # loading bar boolean value
-            self.corr_flag,
-            self.filename
+            self.fictive_mat_flag,
+            self.dist_sample_file
         )
 
         self.star_points.columns = self.parameters.keys()
@@ -1379,7 +1379,7 @@ class GVARS(VARS):
         self.pair_df = self.pair_df.droplevel('h')
 
         # bin and reorder pairs according to actual 'h' values
-        xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+        xmin, xmax = gvars_funcs.find_boundaries(self.parameters, self.dist_sample_file)
         self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, self.model_df, self.delta_h, self.report_verbose, xmax, xmin, False)
         # include a column containing the dissimilarity between pairs
         self.pair_df['dissimilarity'] = 0.5 * (self.pair_df[0] - self.pair_df[1]).pow(2)
@@ -1584,7 +1584,7 @@ class GVARS(VARS):
         self.pair_df = self.pair_df.droplevel('h')
 
         # bin and reorder pairs according to actual 'h' values
-        xmin, xmax = gvars_funcs.find_boundaries(self.parameters)
+        xmin, xmax = gvars_funcs.find_boundaries(self.parameters, self.dist_sample_file)
         self.pair_df = gvars_funcs.reorder_pairs(self.pair_df, self.num_stars, self.parameters, self.model_df,
                                                  self.delta_h, self.report_verbose, xmax, xmin, True)
         # include a column containing the dissimilarity between pairs
@@ -2619,7 +2619,8 @@ class TSGVARS(GVARS):
         report_verbose: Optional[bool] = False,  # reporting verbose
         corr_mat: np.ndarray = np.array([]),  # correlation matrix
         num_dir_samples: int = 50,  # number of directional samples
-        corr_flag: Optional[bool] = False, # set if corr_mat is to be used in place of fictive matrix
+        fictive_mat_flag: Optional[bool] = True, # set if corr_mat is to be used in place of fictive matrix
+        dist_sample_file: Optional[str] = None, # file name containing distribution data
         func_eval_method: Optional[str] = 'serial', # the method to evaluate the model or function
         vars_eval_method: Optional[str] = 'serial', # the method to make pair_df dataframe
         vars_chunk_size: Optional[int] = None, # the chunk size to make pair_dfs to save memory
@@ -2643,7 +2644,8 @@ class TSGVARS(GVARS):
             report_verbose=report_verbose,
             corr_mat=corr_mat,
             num_dir_samples=num_dir_samples,
-            corr_flag=corr_flag
+            fictive_mat_flag=fictive_mat_flag,
+            dist_sample_file=dist_sample_file
         ) # main instance variables are just the same as GVARS
 
         # defining the TSGVARS specific instance variables
@@ -2727,8 +2729,8 @@ class TSGVARS(GVARS):
             self.num_dir_samples,  # number of directional samples in star points
             self.num_factors,  # number of parameters
             self.report_verbose, # loading bar boolean value
-            self.corr_flag,
-            self.filename
+            self.fictive_mat_flag,
+            self.dist_sample_file
         )
 
         self.star_points.columns = self.parameters.keys()
@@ -2754,8 +2756,8 @@ class TSGVARS(GVARS):
             self.num_dir_samples,  # number of directional samples in star points
             self.num_factors,  # number of parameters
             self.report_verbose, # loading bar boolean value
-            self.corr_flag,
-            self.filename
+            self.fictive_mat_flag,
+            self.dist_sample_file
         )
 
         self.star_points.columns = self.parameters.keys()
@@ -2818,7 +2820,7 @@ class TSGVARS(GVARS):
             self.pair_df = self.pair_df.droplevel('h')
 
             # bin and reorder pairs according to actual 'h' values
-            xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
+            xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters, self.dist_sample_file)
 
             # dataframe to hold new pairs
             new_pair_df = pd.DataFrame()
@@ -2928,7 +2930,7 @@ class TSGVARS(GVARS):
                     temp_pair_df = temp_pair_df.droplevel('h')
 
                     # bin and reorder pairs according to actual 'h' values
-                    xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
+                    xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters, self.dist_sample_file)
 
                     # dataframe to hold new pairs
                     new_pair_df = pd.DataFrame()
@@ -3040,7 +3042,7 @@ class TSGVARS(GVARS):
                 self.pair_df = self.pair_df.droplevel('h')
 
                 # bin and reorder pairs according to actual 'h' values
-                xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
+                xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters, self.dist_sample_file)
 
                 # dataframe to hold new pairs
                 new_pair_df = pd.DataFrame()
@@ -3221,7 +3223,7 @@ class TSGVARS(GVARS):
             self.pair_df = self.pair_df.droplevel('h')
 
             # bin and reorder pairs according to actual 'h' values
-            xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
+            xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters, self.dist_sample_file)
 
             # dataframe to hold new pairs
             new_pair_df = pd.DataFrame()
@@ -3331,7 +3333,7 @@ class TSGVARS(GVARS):
                     temp_pair_df = temp_pair_df.droplevel('h')
 
                     # bin and reorder pairs according to actual 'h' values
-                    xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
+                    xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters, self.dist_sample_file)
 
                     # dataframe to hold new pairs
                     new_pair_df = pd.DataFrame()
@@ -3444,7 +3446,7 @@ class TSGVARS(GVARS):
                 self.pair_df = self.pair_df.droplevel('h')
 
                 # bin and reorder pairs according to actual 'h' values
-                xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters)
+                xmin, xmax = tsgvars_funcs.find_boundaries(self.parameters, self.dist_sample_file)
 
                 # dataframe to hold new pairs
                 new_pair_df = pd.DataFrame()

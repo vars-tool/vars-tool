@@ -25,8 +25,8 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
            num_dir_samples: int,
            num_factors: int,
            report_verbose: bool,
-           corr_flag: bool,
-           filename: Optional[str] = None
+           fictive_mat_flag: bool,
+           dist_sample_file: Optional[str] = None
            ) -> Tuple[Union[pd.DataFrame, pd.Series], Union[np.ndarray, np.ndarray], Union[np.ndarray, np.ndarray]]:
 
     """
@@ -48,9 +48,9 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
         number of factors/parameters in model
     report_verbose : boolean
         if True will use a loading bar when generating stars, does nothing if False
-    corr_flag : boolean
-        if True will use correlation matrix as fictive matrix
-    filename : str
+    fictive_mat_flag : boolean
+        if False will use correlation matrix as fictive matrix
+    dist_sample_file : str
         file name of file containing custom distribution data
 
     Returns
@@ -78,7 +78,7 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
 
     # Computing fictive correlation matrix
     # Note: that corr_mat and cov_mat are the same in terms of magnitude
-    if corr_flag:
+    if not fictive_mat_flag:
         cov_mat = corr_mat
     else:
         cov_mat = gvars_funcs.map_2_cornorm(parameters, corr_mat, report_verbose)
@@ -167,8 +167,8 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
         stars_pbar.update(1)
 
     # Generate Nstar actual multivariate samples x
-    if filename:
-        x = gvars_funcs.n2x_transform(z, parameters, filename)
+    if dist_sample_file:
+        x = gvars_funcs.n2x_transform(z, parameters, dist_sample_file)
     else:
         x = gvars_funcs.n2x_transform(z, parameters)
 
@@ -239,7 +239,7 @@ def g_star(parameters: Dict[Union[str, int], Tuple[Union[float, str]]],
 
     for j in range(0, num_dir_samples):
         for i in range(0, len(parameters)):
-            tmp1.append(gvars_funcs.n2x_transform(np.array([all_section_cond_z[j][i]]).transpose(), {param_keys[i]: param_info[i]}, filename).flatten())
+            tmp1.append(gvars_funcs.n2x_transform(np.array([all_section_cond_z[j][i]]).transpose(), {param_keys[i]: param_info[i]}, dist_sample_file).flatten())
             tmp2 = x.copy()
             tmp2[:, i] = tmp1[i]
             xi_on_xnoti_and_xnoti_temp.append(tmp2.copy())
