@@ -2791,11 +2791,12 @@ class TSGVARS(GVARS):
 
             # bin and reorder pairs at each time step and insert into new pair df
             binning_flag = True # used to ensure binning is calculated once
-            binned_pairs = [] # contains the binned pairs in order
+            binned_pairs = pd.Series() # contains the binned pairs in order
+            dist_list = [] # contains actual 'h' values
             for date, new_df in self.pair_df.groupby(level=0):
                 if binning_flag:
                     # get the binned pairs (only needs to be calculated once)
-                    binned_pairs = tsgvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters, self.star_points,
+                    binned_pairs, dist_list = tsgvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters, self.star_points,
                                                     self.delta_h, self.report_verbose, xmax, xmin)
                     binning_flag = False
 
@@ -2804,12 +2805,16 @@ class TSGVARS(GVARS):
                                        total=len(self.pair_df.groupby(level=0)),
                                        dynamic_ncols=True)
 
+                # drop the date for now
+                new_df = new_df.droplevel(0)
+                new_df['actual h'] = dist_list
+
                 # re order pairs values according to the bins
-                centres = new_df.droplevel(0).index.get_level_values(0).to_numpy()
-                params = new_df.droplevel(0).index.get_level_values(1).to_numpy()
+                centres = new_df.index.get_level_values(0).to_numpy()
+                params = new_df.index.get_level_values(1).to_numpy()
                 bps = binned_pairs.index.to_numpy()
                 new_index = pd.MultiIndex.from_arrays([centres, params, bps], names=['centre', 'param', 'pair_ind'])
-                new_df = new_df.droplevel(0).reindex(new_index)
+                new_df = new_df.reindex(new_index)
 
                 # add in new index h, according to bin ranges
                 # ex.) h = 0.1 = [0-0.15], h = 0.2 = [0.15-0.25]

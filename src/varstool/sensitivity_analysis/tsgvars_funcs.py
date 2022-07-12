@@ -232,4 +232,4 @@ def reorder_pairs(pair_df: pd.DataFrame,
     # put binned pairs into a panda series
     binned_pairs = pd.concat(binned_pairs, ignore_index=False)
 
-    return binned_pairs
+    return binned_pairs, dist_list
