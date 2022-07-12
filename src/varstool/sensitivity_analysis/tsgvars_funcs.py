@@ -148,8 +148,7 @@ def reorder_pairs(pair_df: pd.DataFrame,
                   delta_h: float,
                   report_verbose: bool,
                   xmax: np.ndarray,
-                  xmin: np.ndarray,
-                  offline_mode: bool
+                  xmin: np.ndarray
                   ) -> pd.DataFrame:
 
     """
@@ -206,7 +205,7 @@ def reorder_pairs(pair_df: pd.DataFrame,
 
     # loading bar for binning and reording pairs based on new 'h' values
     if report_verbose:
-        star_centres = tqdm(range(0, num_stars), desc='binning and reording pairs based on \'h\' values')
+        star_centres = tqdm(range(0, num_stars), desc='binning pairs based on \'h\' values')
     else:
         star_centres = range(0, num_stars)
 
@@ -233,22 +232,4 @@ def reorder_pairs(pair_df: pd.DataFrame,
     # put binned pairs into a panda series
     binned_pairs = pd.concat(binned_pairs, ignore_index=False)
 
-    # re order pairs values according to the bins
-    centres = pair_df.index.get_level_values(0).to_numpy()
-    params = pair_df.index.get_level_values(1).to_numpy()
-    bps = binned_pairs.index.to_numpy()
-    new_index = pd.MultiIndex.from_arrays([centres, params, bps], names = ['centre', 'param', 'pair_ind'])
-    pair_df = pair_df.reindex(new_index)
-
-    # add in new index h, according to bin ranges
-    # ex.) h = 0.1 = [0-0.15], h = 0.2 = [0.15-0.25]
-    h = list(binned_pairs.values)
-    pair_df['h'] = h
-
-    # format data frame so that it works properly with variogram analsysis functions
-    pair_df.set_index('h', append=True, inplace=True)
-    pair_df.set_index('actual h', append=True, inplace=True)
-
-    pair_df = pair_df.reorder_levels(['centre', 'param', 'h', 'actual h', 'pair_ind'])
-
-    return pair_df
+    return binned_pairs

@@ -2789,17 +2789,42 @@ class TSGVARS(GVARS):
             # dataframe to hold new pairs
             new_pair_df = pd.DataFrame()
 
-            if self.report_verbose:
-                ts_pbar = tqdm(desc='binning and reordering pairs for each time step', total=len(self.pair_df.groupby(level=0)),
-                               dynamic_ncols=True)
-
             # bin and reorder pairs at each time step and insert into new pair df
+            binning_flag = True # used to ensure binning is calculated once
+            binned_pairs = [] # contains the binned pairs in order
             for date, new_df in self.pair_df.groupby(level=0):
+                if binning_flag:
+                    # get the binned pairs (only needs to be calculated once)
+                    binned_pairs = tsgvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters, self.star_points,
+                                                    self.delta_h, self.report_verbose, xmax, xmin)
+                    binning_flag = False
+
+                    if self.report_verbose:
+                        ts_pbar = tqdm(desc='reordering pairs at each time step',
+                                       total=len(self.pair_df.groupby(level=0)),
+                                       dynamic_ncols=True)
+
+                # re order pairs values according to the bins
+                centres = new_df.droplevel(0).index.get_level_values(0).to_numpy()
+                params = new_df.droplevel(0).index.get_level_values(1).to_numpy()
+                bps = binned_pairs.index.to_numpy()
+                new_index = pd.MultiIndex.from_arrays([centres, params, bps], names=['centre', 'param', 'pair_ind'])
+                new_df = new_df.droplevel(0).reindex(new_index)
+
+                # add in new index h, according to bin ranges
+                # ex.) h = 0.1 = [0-0.15], h = 0.2 = [0.15-0.25]
+                h = list(binned_pairs.values)
+                new_df['h'] = h
+
+                # format data frame so that it works properly with variogram analsysis functions
+                new_df.set_index('h', append=True, inplace=True)
+                new_df.set_index('actual h', append=True, inplace=True)
+
+                new_df = new_df.reorder_levels(['centre', 'param', 'h', 'actual h', 'pair_ind'])
+                new_pair_df = pd.concat([new_pair_df, (pd.concat({date: new_df}, names=['ts']))])
+
                 if self.report_verbose:
                     ts_pbar.update(1)
-                reordered_pairs = tsgvars_funcs.reorder_pairs(new_df.droplevel(0), self.num_stars, self.parameters, self.star_points,
-                                                self.delta_h, False, xmax, xmin, False)
-                new_pair_df = pd.concat([new_pair_df, (pd.concat({date: reordered_pairs}, names=['ts']))])
 
             if self.report_verbose:
                 ts_pbar.close()
