@@ -53,14 +53,7 @@ The documentation of the project is located on [readthedocs](https://vars-tool.r
 
 ## 4. Examples and Tutorials
 
-* 4.1. **Quick Start**: Here is an overview of the VARS-TOOL main components and a simple example using ishigami and wavy6d models: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=tutorial%2FQuickStart-Tutorial.ipynb)
-
-* 4.2. **Real-World Example Using HBV-SASK (Using TSVARS)**: Sensitivity analysis of a real-world hydrological model producing time-series results: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool/master?filepath=%2Ftutorial%2FTSVARS-Tutorial.ipynb)
-	
-* 4.3. **Handling Correlated Factors Using Generalized VARS (GVARS)**: Sensitivity analysis using correlated factors that belong to specific distributions: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vars-tool/vars-tool.git/master?filepath=tutorial%2FGVARS-Tutorial.ipynb)
-
-	
-* 4.4. **Data-Driven Sensitivity Analysis (DVARS)**: under progress...
+You can find examples/tutorials on how to use various aspects of the vars-tool in the [tutorials](https://github.com/vars-tool/vars-tool/tree/master/tutorials) folder of the github repository. These can be used by cloning the repository to your own device and opening the jupyter notebook tutorials there.
 
 
 ## 5. Your Contributions
