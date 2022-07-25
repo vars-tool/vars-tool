@@ -159,7 +159,7 @@ def calc_phi_opt(simulation_df: pd.DataFrame,
                        f"'{outvarname}' covariances...")
 
     res = minimize(L_runner, phi0s, args=(X, Y, verbose), bounds=bounds,
-                   tol=tol, method='L-BFGS-B', options={'disp': verbose})
+                   tol=tol, method='L-BFGS-B')
 
     if verbose:
         print('Done calculating optimal hyperparameters')
