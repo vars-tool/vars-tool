@@ -3868,7 +3868,7 @@ class DVARS(object):
 
 
         ninvars = self.simulation_df.shape[1] - 1
-        if 0 < len(ninvars) < 2:
+        if 0 < ninvars < 2:
             raise ValueError(
                 "the number of parameters in a sensitivity analysis problem"
                 "must be greater than 1"
