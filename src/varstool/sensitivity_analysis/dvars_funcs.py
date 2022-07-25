@@ -154,8 +154,15 @@ def calc_phi_opt(simulation_df: pd.DataFrame,
     X = np.array(simulation_df.iloc[:, simulation_df.columns != outvarname])
     Y = np.reshape(np.array(simulation_df[outvarname]), (nobvs + 1, 1))
 
-    res = minimize(L_runner, phi0s, args=(X, Y), bounds=bounds,
+    if verbose:
+        print('Calculating optimal hyperparameters Φ for ' +
+                       f"'{outvarname}' covariances...")
+
+    res = minimize(L_runner, phi0s, args=(X, Y, verbose), bounds=bounds,
                    tol=tol, method='L-BFGS-B', options={'disp': verbose})
+
+    if verbose:
+        print('Done calculating optimal hyperparameters')
 
 
     phi_opt = res.x
@@ -208,6 +215,7 @@ def calc_Gammaj(Hj: float,
 def L_runner(phi: np.ndarray,
              X: np.ndarray,
              Y: np.ndarray,
+             verbose: bool
              ) -> float:
     """
     A wrapper function for calculating the negative log-likelihood cost.
@@ -220,14 +228,18 @@ def L_runner(phi: np.ndarray,
         The state matrix for all the input variables percentiles.
     Y : numpy.ndarray
         The state matrix for the output variables nums.
+    verbose: bool, default False
+        whether to print diagnostic information or not
 
     Returns
     -------
     L : float
         The negative log-likelihood cost.
     """
-
     L = calc_L(phi, X, Y)
+
+    if verbose:
+        print(f'L = {L:0.4f}, Φ = {phi}')
     return L
 
 

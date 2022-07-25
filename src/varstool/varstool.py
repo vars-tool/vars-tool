@@ -3907,4 +3907,6 @@ class DVARS(object):
                                               self.phi0, self.correlation_func_type,
                                               self.report_verbose)
 
+        self.run_status = True # for reporting
+
         return self.sensitivities, self.ratios
