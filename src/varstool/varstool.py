@@ -3860,11 +3860,11 @@ class DVARS(object):
         if not isinstance(report_verbose, bool):
             warnings.warn(
                 "`report_verbose` must be either `True` or `False`."
-                "default value of `True` will be considered.",
+                "default value of `False` will be considered.",
                 UserWarning,
                 stacklevel=1
             )
-            self.report_verbose = True
+            self.report_verbose = False
 
 
         ninvars = self.simulation_df.shape[1] - 1
@@ -3880,7 +3880,7 @@ class DVARS(object):
         """shows the status of VARS analysis"""
 
         status_verbose  = "Verbose: " + ("On" if self.report_verbose else "Off")
-        status_analysis = "VARS Analysis: " + ("Done" if self.run_status else "Not Done")
+        status_analysis = "DVARS Analysis: " + ("Done" if self.run_status else "Not Done")
 
         status_report_list = [status_verbose, status_analysis]
 

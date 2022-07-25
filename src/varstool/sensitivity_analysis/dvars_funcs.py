@@ -154,16 +154,9 @@ def calc_phi_opt(simulation_df: pd.DataFrame,
     X = np.array(simulation_df.iloc[:, simulation_df.columns != outvarname])
     Y = np.reshape(np.array(simulation_df[outvarname]), (nobvs + 1, 1))
 
-    # progress bar for L_runner
-    dvars_pbar = None
-    if verbose:
-        dvars_pbar = tqdm(desc='DVARS analysis')
+    res = minimize(L_runner, phi0s, args=(X, Y), bounds=bounds,
+                   tol=tol, method='L-BFGS-B', options={'disp': verbose})
 
-    res = minimize(L_runner, phi0s, args=(X, Y, dvars_pbar), bounds=bounds,
-                   tol=tol, method='L-BFGS-B')
-
-    if verbose:
-        dvars_pbar.close()
 
     phi_opt = res.x
 
@@ -215,7 +208,6 @@ def calc_Gammaj(Hj: float,
 def L_runner(phi: np.ndarray,
              X: np.ndarray,
              Y: np.ndarray,
-             dvars_pbar : Optional[object] = None,
              ) -> float:
     """
     A wrapper function for calculating the negative log-likelihood cost.
@@ -228,16 +220,12 @@ def L_runner(phi: np.ndarray,
         The state matrix for all the input variables percentiles.
     Y : numpy.ndarray
         The state matrix for the output variables nums.
-    dvars_pbar : object
-        tqdm bar for displaying progress of minimize function
 
     Returns
     -------
     L : float
         The negative log-likelihood cost.
     """
-    if dvars_pbar:
-        dvars_pbar.update()
 
     L = calc_L(phi, X, Y)
     return L
