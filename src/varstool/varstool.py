@@ -32,6 +32,7 @@ from .sampling import g_starvars
 from .sensitivity_analysis import vars_funcs, tsgvars_funcs
 from .sensitivity_analysis import gvars_funcs
 from .sensitivity_analysis import tsvars_funcs
+from .sensitivity_analysis import dvars_funcs
 
 from typing import (
     Dict,
@@ -3778,6 +3779,132 @@ class TSGVARS(GVARS):
         return pd.concat(retLst, keys=top_index)
 
 
-class DVARS(VARS):
-    def __init__(self, ):
-        super().__init__()
+class DVARS(object):
+    """
+    Description:
+    ------------
+    The Python implementation of the Data Driven Variogram Analysis of Response
+    Surfaces (DVARS) first introduced in Razavi and Gupta (2020) (see [3]_).
+
+
+
+    Parameters:
+    ----------
+    simulation_file : pd.DataFrame
+        The file name of file containing input and output data.
+    outvarname : str
+        The name of the output variable to calculate sensitivities for. Note
+        that the output variable must be scalar.
+    Hj : float, default: 0.5
+        The fraction of the total parameter space to integrate over. Note that
+        the linear correlation function only has one hyperparameter, so as the
+        Reference notes it is unable to distinguish variogram effects at varying
+        length scales.
+    tol : float, default 1e-6
+        The convergence tolerance for scipy's minimize function acting on the
+        negative log likelihood function.
+    verbose : bool, default False
+        Whether to print diagnostic information.
+
+
+    References:
+    -----------
+    .. [1] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Theory. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558
+    .. [2] Razavi, S., & Gupta, H. V. (2016). A new framework for comprehensive,
+           robust, and efficient global sensitivity analysis: 1. Application. Water
+           Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559
+    .. [3] Sheikholeslami, R., & Razavi, S. (2020). A Fresh Look at Variography:
+           Measuring Dependence and Possible Sensitivities Across Geophysical
+           Systems From Any Given Data. Geophysical Research Letters, 47(20).
+           https://doi.org/10.1029/2020gl089829
+
+
+    Contributors:
+    -------------
+    Razavi, Saman, (2015): algorithm, code in MATALB (c)
+    Blanchard, Cordell, (2022): code in Python 3
+    Shambaugh, Scott, (2022): code in Python 3
+    """
+
+    #-------------------------------------------
+    # Constructors
+
+    def __init__(
+        self,
+        simulation_file: str,
+        outvarname: str,
+        Hj: Optional[float] = 0.5,
+        tol: Optional[float] = 1e-6,
+        phi_max: Optional[float]= 1e6,
+        phi0: Optional[float] = 1,
+        correlation_func_type: Optional[str] = 'linear',
+        report_verbose: Optional[bool] = False,  # reporting verbose
+    ) -> None:
+
+        # initialize values
+        self.simulation_df = pd.read_csv(simulation_file)
+        self.outvarname = outvarname
+        self.Hj = Hj
+        self.tol = tol
+        self.phi_max = phi_max
+        self.report_verbose = report_verbose
+        self.phi0 = phi0
+        self.correlation_func_type = correlation_func_type
+        # analysis stage is set to False before running anything
+        self.run_status = False
+
+        # Check input arguments
+        # default value for bootstrap_flag
+        if not isinstance(report_verbose, bool):
+            warnings.warn(
+                "`report_verbose` must be either `True` or `False`."
+                "default value of `True` will be considered.",
+                UserWarning,
+                stacklevel=1
+            )
+            self.report_verbose = True
+
+
+        ninvars = self.simulation_df.shape[1] - 1
+        if 0 < len(ninvars) < 2:
+            raise ValueError(
+                "the number of parameters in a sensitivity analysis problem"
+                "must be greater than 1"
+            )
+
+    # -------------------------------------------
+    # Representators
+    def __repr__(self) -> str:
+        """shows the status of VARS analysis"""
+
+        status_verbose  = "Verbose: " + ("On" if self.report_verbose else "Off")
+        status_analysis = "VARS Analysis: " + ("Done" if self.run_status else "Not Done")
+
+        status_report_list = [status_verbose, status_analysis]
+
+        return "\n".join(status_report_list)
+
+    def __str__(self) -> str:
+        """shows the instance name of the VARS analysis experiment"""
+
+        return self.__class__.__name__
+
+
+    # -------------------------------------------
+    # Core functions
+
+    def run(self):
+        """
+        Runs DVARS analysis.
+
+        """
+
+        # run dvars to get sensitivites and ratios
+        self.sensitivities, self.ratios = dvars_funcs.calc_sensitivities(self.simulation_df, self.outvarname,
+                                              self.Hj, self.tol, self.phi_max,
+                                              self.phi0, self.correlation_func_type,
+                                              self.report_verbose)
+
+        return self.sensitivities, self.ratios
