@@ -3906,8 +3906,8 @@ class DVARS(object):
                                                                          self.report_verbose)
 
         # turn results into a dataframe
-        self.sensitivities = pd.DataFrame(self.sensitivities, index=self.ivars_range, columns=self.data_df.columns)
-        self.ratios = pd.DataFrame(self.ratios, index=self.ivars_range, columns=self.data_df.columns)
+        self.sensitivities = pd.DataFrame([self.sensitivities], index=self.ivars_range, columns=self.data_df.columns)
+        self.ratios = pd.DataFrame([self.ratios], index=self.ivars_range, columns=self.data_df.columns)
 
         self.run_status = True # for reporting
 
