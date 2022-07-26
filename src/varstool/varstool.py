@@ -3910,5 +3910,3 @@ class DVARS(object):
         self.ratios = pd.DataFrame([self.ratios], index=[self.ivars_range], columns=self.data_df.columns[self.data_df.columns != self.outvarname])
 
         self.run_status = True # for reporting
-
-        return self.sensitivities, self.ratios
