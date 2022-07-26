@@ -22,7 +22,6 @@ Cordell Blanchard 7/25/2022: made DVARS work with pandas dataframes instead of t
 def calc_sensitivities(simulation_df: pd.DataFrame,
                        outvarname: str,
                        Hj: float = 0.5,
-                       tol: float = 1e-6,
                        phi_max: float = 1e6,
                        phi0: float = 1.0,
                        correlation_func_type: str = 'Linear',
@@ -92,7 +91,7 @@ def calc_sensitivities(simulation_df: pd.DataFrame,
     simulation_df = simulation_df.div(simulation_df.sum(axis=0), axis=1)
 
     # calculate optimal phi vaalues
-    phi_opt = calc_phi_opt(simulation_df, ninvars, nobvs, outvarname, tol, phi_max, phi0, verbose)
+    phi_opt = calc_phi_opt(simulation_df, ninvars, nobvs, outvarname, phi_max, phi0, verbose)
 
     variance = np.var([simulation_df[outvarname]])
 
@@ -108,7 +107,6 @@ def calc_phi_opt(simulation_df: pd.DataFrame,
                  ninvars: int,
                  nobvs: int,
                  outvarname: str,
-                 tol: float = 1e-6,
                  phi_max: float = 1e6,
                  phi0: float = 1.0,
                  verbose: bool = False
@@ -146,6 +144,7 @@ def calc_phi_opt(simulation_df: pd.DataFrame,
         The learned hyperparameters for the covariance functions.
     """
     phi_min = 0
+    tol = 1e-6
     # replicate for # of dimensions
     phi0s = phi0 * np.ones(ninvars)
     bounds = [(phi_min, phi_max)] * ninvars

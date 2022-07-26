@@ -3833,10 +3833,9 @@ class DVARS(object):
 
     def __init__(
         self,
-        simulation_file: str,
+        data_file: str,
         outvarname: str,
-        Hj: Optional[float] = 0.5,
-        tol: Optional[float] = 1e-6,
+        ivars_range: Optional[float] = 0.5,
         phi_max: Optional[float]= 1e6,
         phi0: Optional[float] = 1,
         correlation_func_type: Optional[str] = 'linear',
@@ -3844,10 +3843,9 @@ class DVARS(object):
     ) -> None:
 
         # initialize values
-        self.simulation_df = pd.read_csv(simulation_file)
+        self.data_df = pd.read_csv(data_file)
         self.outvarname = outvarname
-        self.Hj = Hj
-        self.tol = tol
+        self.ivars_range = ivars_range
         self.phi_max = phi_max
         self.report_verbose = report_verbose
         self.phi0 = phi0
@@ -3867,7 +3865,7 @@ class DVARS(object):
             self.report_verbose = False
 
 
-        ninvars = self.simulation_df.shape[1] - 1
+        ninvars = self.data_df.shape[1] - 1
         if 0 < ninvars < 2:
             raise ValueError(
                 "the number of parameters in a sensitivity analysis problem"
@@ -3902,10 +3900,14 @@ class DVARS(object):
         """
 
         # run dvars to get sensitivites and ratios
-        self.sensitivities, self.ratios = dvars_funcs.calc_sensitivities(self.simulation_df, self.outvarname,
-                                              self.Hj, self.tol, self.phi_max,
-                                              self.phi0, self.correlation_func_type,
-                                              self.report_verbose)
+        self.sensitivities, self.ratios = dvars_funcs.calc_sensitivities(self.data_df, self.outvarname,
+                                                                         self.ivars_range, self.phi_max,
+                                                                         self.phi0, self.correlation_func_type,
+                                                                         self.report_verbose)
+
+        # turn results into a dataframe
+        self.sensitivities = pd.DataFrame(self.sensitivities, index=self.ivars_range, columns=self.data_df.columns)
+        self.ratios = pd.DataFrame(self.ratios, index=self.ivars_range, columns=self.data_df.columns)
 
         self.run_status = True # for reporting
 
