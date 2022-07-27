@@ -25,8 +25,9 @@ def calc_sensitivities(simulation_df: pd.DataFrame,
                        phi_max: float = 1e6,
                        phi0: float = 1.0,
                        correlation_func_type: str = 'Linear',
+                       tol: float = 1e-6,
                        verbose: bool = False,
-                       ) -> tuple[np.ndarray, np.ndarray]:
+                       ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
     Calculates the global sensitivity indices and ratios for a specific output
     variable to each of a simulation's input variables.
@@ -72,6 +73,10 @@ def calc_sensitivities(simulation_df: pd.DataFrame,
         The global sensitivity ratios for the output variable for each of the
         sim's input variables, essentially the fraction of each input variable's
         ability to explain the output variance.
+    phi_opt : numpy.ndarray
+        the optimal phi values used to calculate the sensitivity indices
+    variance : float
+        the variance value of the outvar
 
     References
     ----------
@@ -87,11 +92,11 @@ def calc_sensitivities(simulation_df: pd.DataFrame,
     ninvars = simulation_df.shape[1] - 1  # the number of invars is equal to the number of columns - 1
     nobvs = simulation_df.shape[0] - 1  # number of observations is equal to the number of rows - 1
 
-    # normalize input variables and output
-    simulation_df = simulation_df.div(simulation_df.sum(axis=0), axis=1)
+    # scale values between 0 and 1
+    simulation_df = (simulation_df-simulation_df.min())/(simulation_df.max()-simulation_df.min())
 
     # calculate optimal phi vaalues
-    phi_opt = calc_phi_opt(simulation_df, ninvars, nobvs, outvarname, phi_max, phi0, verbose)
+    phi_opt = calc_phi_opt(simulation_df, ninvars, nobvs, outvarname, phi_max, phi0, tol, verbose)
 
     variance = np.var([simulation_df[outvarname]])
 
@@ -100,7 +105,7 @@ def calc_sensitivities(simulation_df: pd.DataFrame,
         sensitivities[j] = calc_Gammaj(Hj, phi_opt[j], variance, correlation_func_type)
     ratios = sensitivities / sum(sensitivities)
 
-    return sensitivities, ratios
+    return sensitivities, ratios, phi_opt, variance
 
 
 def calc_phi_opt(simulation_df: pd.DataFrame,
@@ -109,6 +114,7 @@ def calc_phi_opt(simulation_df: pd.DataFrame,
                  outvarname: str,
                  phi_max: float = 1e6,
                  phi0: float = 1.0,
+                 tol: float = 1e-6,
                  verbose: bool = False
                  ) -> np.ndarray:
     """
@@ -144,7 +150,6 @@ def calc_phi_opt(simulation_df: pd.DataFrame,
         The learned hyperparameters for the covariance functions.
     """
     phi_min = 0
-    tol = 1e-6
     # replicate for # of dimensions
     phi0s = phi0 * np.ones(ninvars)
     bounds = [(phi_min, phi_max)] * ninvars
@@ -369,7 +374,7 @@ def calc_rj(hj: float,
     rj = 0 # initialize rj
 
     if correlation_func_type == 'linear':
-        rj = max(0, 1 - phij * abs(hj))  # linear covariance function
+        rj = max(0, 1.0 - (phij * abs(hj)))  # linear covariance function
     elif correlation_func_type == 'exponential':
         rj = np.exp(-(abs(hj)/phij))  # exponential covariance function
     elif correlation_func_type == 'square':

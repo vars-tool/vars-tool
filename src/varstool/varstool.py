@@ -3839,6 +3839,7 @@ class DVARS(object):
         phi_max: Optional[float]= 1e6,
         phi0: Optional[float] = 1,
         correlation_func_type: Optional[str] = 'linear',
+        tol: Optional[float] = 1e-6,
         report_verbose: Optional[bool] = False,  # reporting verbose
     ) -> None:
 
@@ -3849,6 +3850,7 @@ class DVARS(object):
         self.phi_max = phi_max
         self.report_verbose = report_verbose
         self.phi0 = phi0
+        self.tol = tol # tolerance for optimizing phi values
         self.correlation_func_type = correlation_func_type
         # analysis stage is set to False before running anything
         self.run_status = False
@@ -3900,13 +3902,13 @@ class DVARS(object):
         """
 
         # run dvars to get sensitivites and ratios
-        self.sensitivities, self.ratios = dvars_funcs.calc_sensitivities(self.data_df, self.outvarname,
+        self.ivars, self.ratios, self.phi_opt, self.variance = dvars_funcs.calc_sensitivities(self.data_df, self.outvarname,
                                                                          self.ivars_range, self.phi_max,
-                                                                         self.phi0, self.correlation_func_type,
+                                                                         self.phi0, self.correlation_func_type, self.tol,
                                                                          self.report_verbose)
 
         # turn results into a dataframe
-        self.sensitivities = pd.DataFrame([self.sensitivities], index=[self.ivars_range], columns=self.data_df.columns[self.data_df.columns != self.outvarname])
+        self.ivars = pd.DataFrame([self.ivars], index=[self.ivars_range], columns=self.data_df.columns[self.data_df.columns != self.outvarname])
         self.ratios = pd.DataFrame([self.ratios], index=[self.ivars_range], columns=self.data_df.columns[self.data_df.columns != self.outvarname])
 
         self.run_status = True # for reporting
