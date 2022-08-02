@@ -2203,7 +2203,7 @@ class TSVARS(VARS):
         self.ivars_normalized.aggregate = self.ivars_normalized.groupby(level=['param', 'h']).mean()
 
 
-    def run_offline(self, star_points_eval, star_points: Optional):
+    def run_offline(self, star_points_eval, star_points: Optional = None):
         """
         runs the offline version of VARS program
 
@@ -3235,7 +3235,7 @@ class TSGVARS(GVARS):
         self.ivars_normalized.aggregate = self.ivars_normalized.groupby(level=['param', 'h']).mean()
 
 
-    def run_offline(self, star_points_eval, star_points: Optional):
+    def run_offline(self, star_points_eval, star_points: Optional = None):
         """
         runs the offline version of TSGVARS program
 
