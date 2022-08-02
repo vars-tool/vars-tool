@@ -2217,7 +2217,7 @@ class TSVARS(VARS):
 
         self.star_points_eval = star_points_eval
 
-        if star_points != None:
+        if isinstance(star_points, pd.DataFrame):
             self.star_points = star_points
 
         # defining a lambda function to build pairs for each time-step
@@ -3249,7 +3249,7 @@ class TSGVARS(GVARS):
 
         self.star_points_eval = star_points_eval
 
-        if star_points != None:
+        if isinstance(star_points, pd.DataFrame):
             self.star_points = star_points
 
         # defining a lambda function to build pairs for each time-step
