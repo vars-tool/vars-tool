@@ -1,7 +1,7 @@
 setuptools>=63
 wheel
 numpy>=1.2
-pandas>=1.4.2
+pandas>=1.3.5
 matplotlib>=3.3.4
 scipy>=1.8.1
 mapply>=0.1.7
