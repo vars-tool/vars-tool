@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>varstool.sampling package &mdash; VARS-TOOL 2.3.1 documentation</title>
+  <title>varstool.sampling package &mdash; VARS-TOOL 2.3.4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -41,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">1. Overview of VARS-TOOL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../install.html">2. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">3. Examples and Tutorials</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="varstool.html">VARS-TOOL Package</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="varstool.html">4. VARS-TOOL Package</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="varstool.html#vars-sensitivity-anlaysis-framework">VARS Sensitivity Anlaysis Framework</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="varstool.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="varstool.example_models.html">varstool.example_models package</a></li>
@@ -72,7 +73,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="varstool.html">VARS-TOOL Package</a> &raquo;</li>
+          <li><a href="varstool.html">4. VARS-TOOL Package</a> &raquo;</li>
       <li>varstool.sampling package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/source/varstool.sampling.rst.txt" rel="nofollow"> View page source</a>
@@ -84,9 +85,9 @@
            <div itemprop="articleBody">
              
   <section id="varstool-sampling-package">
-<h1>varstool.sampling package<a class="headerlink" href="#varstool-sampling-package" title="Permalink to this headline"></a></h1>
+<h1>varstool.sampling package<a class="headerlink" href="#varstool-sampling-package" title="Permalink to this heading"></a></h1>
 <section id="module-varstool.sampling">
-<span id="general-sampling-functions"></span><h2>general sampling functions<a class="headerlink" href="#module-varstool.sampling" title="Permalink to this headline"></a></h2>
+<span id="general-sampling-functions"></span><h2>general sampling functions<a class="headerlink" href="#module-varstool.sampling" title="Permalink to this heading"></a></h2>
 <p>This module contains 6 different sampling methods, that are:
 1. halton sequence
 2. lating hypercube sampling (lhs)
@@ -97,7 +98,7 @@
 7. STAR sampling (starvars)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="varstool.sampling.halton">
-<span class="sig-name descname"><span class="pre">halton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scramble</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leap</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">101</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="headerlink" href="#varstool.sampling.halton" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">halton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scramble</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">101</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#varstool.sampling.halton" title="Permalink to this definition"></a></dt>
 <dd><p>Generate quasi-random halton sequence numbers.</p>
 <p>This function generates (scrambled) quasi-random halton sequence.
 In brief, it generalizes the Van der Corput’s sequence for multiple
@@ -105,7 +106,7 @@ dimensions. The Halton sequence uses the base-two Van der Corput
 sequence for the first dimension, base-three for its second and
 base-<span class="math notranslate nohighlight">\(n\)</span> for its <span class="math notranslate nohighlight">\(n^{th}\)</span>-dimension.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sp</strong> (<em>int</em>) – the number of sampling points</p></li>
 <li><p><strong>params</strong> (<em>int</em>) – the number of parameters/factors/variables</p></li>
@@ -115,30 +116,32 @@ base-<span class="math notranslate nohighlight">\(n\)</span> for its <span class
 <li><p><strong>leap</strong> (<em>int</em><em>, </em><em>optional</em>) – the interval of picking values, defaults to <code class="docutils literal notranslate"><span class="pre">101</span></code></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>halton_seq</strong> – the halton sequence array</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array_like</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id1"><span class="brackets">1</span></dt>
-<dd><p><a class="reference external" href="https://github.com/scipy/scipy/scipy/stats/_qmc.py">scipy.stats._qmc module</a></p>
-</dd>
-<dt class="label" id="id2"><span class="brackets">2</span></dt>
-<dd><p><a class="reference external" href="https://github.com/scipy/scipy/scipy/stats/_sobol.pyx">scipy.stats._sobol module</a></p>
-</dd>
-<dt class="label" id="id3"><span class="brackets">3</span></dt>
-<dd><p>Halton, J.H. On the efficiency of certain quasi-random sequences of
+<aside class="footnote brackets" id="id1" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/scipy/scipy/scipy/stats/_qmc.py">scipy.stats._qmc module</a></p>
+</aside>
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/scipy/scipy/scipy/stats/_sobol.pyx">scipy.stats._sobol module</a></p>
+</aside>
+<aside class="footnote brackets" id="id3" role="note">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>Halton, J.H. On the efficiency of certain quasi-random sequences of
 points in evaluating multi-dimensional integrals. Numer. Math. 2,
 84–90 (1960). <a class="reference external" href="https://doi.org/10.1007/BF01386213">https://doi.org/10.1007/BF01386213</a></p>
-</dd>
-<dt class="label" id="id4"><span class="brackets">4</span></dt>
-<dd><p>Owen, A.B. A randomized Halton algorithm in R (2017). arXiv:1706.02808v2</p>
-</dd>
-</dl>
+</aside>
+<aside class="footnote brackets" id="id4" role="note">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<p>Owen, A.B. A randomized Halton algorithm in R (2017). arXiv:1706.02808v2</p>
+</aside>
 </dd></dl>
 
 <dl class="py function">
@@ -146,7 +149,7 @@ points in evaluating multi-dimensional integrals. Numer. Math. 2,
 <span class="sig-name descname"><span class="pre">lhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.sampling.lhs" title="Permalink to this definition"></a></dt>
 <dd><p>Generate a latin-hypercube design.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<em>int</em>) – the number of factors to generate samples for</p></li>
 <li><p><strong>samples</strong> (<em>int</em>) – the number of samples to generate for each factor,
@@ -158,12 +161,12 @@ If no value given, the design is simply randomized.</p></li>
 correlations algorithms, default to 5</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>H</strong> – An n-by-samples design matrix that has
 been normalized so factor values
 are uniformly spaced between zero and one.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array_like</p>
 </dd>
 </dl>
@@ -212,13 +215,13 @@ as possible (within 10 iterations):</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="varstool.sampling.plhs">
-<span class="sig-name descname"><span class="pre">plhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slices</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'maximin'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#varstool.sampling.plhs" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">plhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'maximin'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#varstool.sampling.plhs" title="Permalink to this definition"></a></dt>
 <dd><p>Optimize SLHS samples based on [1] and [2]</p>
 <p>This function is a Progressive Latin Hypercube Sampling (PLHS)
 using an optimal Sliced Lating Hypercube Sampling design (SLHS)
 in the frame of a greedy approach.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sp</strong> (<em>int</em>) – number of sampling points</p></li>
 <li><p><strong>params</strong> (<em>int</em>) – number of parameters/factors/variables</p></li>
@@ -230,35 +233,35 @@ the available options are: ‘maximin’ and ‘correlation’,
 defaults to <code class="docutils literal notranslate"><span class="pre">'maximin'</span></code></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>plhs_sample_x</strong> – the final slhs sample array based on <code class="docutils literal notranslate"><span class="pre">criterion</span></code></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array_like</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id5"><span class="brackets">1</span></dt>
-<dd><p>Ba, S., Myers, W.R., Brenneman, W.A., 2015. Optimal sliced Latin
+<aside class="footnote brackets" id="id5" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Ba, S., Myers, W.R., Brenneman, W.A., 2015. Optimal sliced Latin
 hypercube designs. Technometrics 57 (4), 479e487.
 <a class="reference external" href="http://dx.doi.org/10.1080/00401706.2014.957867">http://dx.doi.org/10.1080/00401706.2014.957867</a></p>
-</dd>
-<dt class="label" id="id6"><span class="brackets">2</span></dt>
-<dd><p>Sheikholeslami, R., &amp; Razavi, S. (2017). Progressive Latin Hypercube
+</aside>
+<aside class="footnote brackets" id="id6" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p>Sheikholeslami, R., &amp; Razavi, S. (2017). Progressive Latin Hypercube
 Sampling: An efficient approach for robust sampling-based analysis of
 environmental models. Environmental modelling &amp; software, 93, 109-126</p>
-</dd>
-</dl>
+</aside>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="varstool.sampling.sobol_sequence">
-<span class="sig-name descname"><span class="pre">sobol_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scramble</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leap</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">101</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="headerlink" href="#varstool.sampling.sobol_sequence" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sobol_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scramble</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">101</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#varstool.sampling.sobol_sequence" title="Permalink to this definition"></a></dt>
 <dd><p>Sobol’ sequences are low-discrepancy, quasi-random numbers. The
 code is taken from the <cite>scipy dev-1.7</cite> [1].</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sp</strong> (<em>int</em>) – the number of sampling points</p></li>
 <li><p><strong>params</strong> (<em>int</em>) – the number of parameters/factors/variables</p></li>
@@ -268,10 +271,10 @@ code is taken from the <cite>scipy dev-1.7</cite> [1].</p>
 <li><p><strong>leap</strong> (<em>int</em><em>, </em><em>optional</em>) – the interval of picking values, defaults to <code class="docutils literal notranslate"><span class="pre">101</span></code></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>sobol_seq</strong> – the sobol sequence</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array_like</p>
 </dd>
 </dl>
@@ -282,34 +285,36 @@ the maximum number of dimension is 21201. The direction numbers have been
 precomputed with search criterion 6 and can be retrieved at
 <a class="reference external" href="https://web.maths.unsw.edu.au/~fkuo/sobol/">https://web.maths.unsw.edu.au/~fkuo/sobol/</a></p>
 <p class="rubric">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id7"><span class="brackets">1</span></dt>
-<dd><p><a class="reference external" href="https://github.com/scipy/scipy/stats/_qmc.py">scipy.stats._qmcs</a></p>
-</dd>
-<dt class="label" id="id8"><span class="brackets">2</span></dt>
-<dd><p><a class="reference external" href="https://scipy.github.io/devdocs/generated/scipy.stats.qmc.Sobol.html">scipy.stats.qmc.Sobol</a></p>
-</dd>
-<dt class="label" id="id9"><span class="brackets">3</span></dt>
-<dd><p>I. M. Sobol. The distribution of points in a cube
+<aside class="footnote brackets" id="id7" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/scipy/scipy/stats/_qmc.py">scipy.stats._qmcs</a></p>
+</aside>
+<aside class="footnote brackets" id="id8" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://scipy.github.io/devdocs/generated/scipy.stats.qmc.Sobol.html">scipy.stats.qmc.Sobol</a></p>
+</aside>
+<aside class="footnote brackets" id="id9" role="note">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>I. M. Sobol. The distribution of points in a cube
 and the accurate evaluation of integrals. Zh. Vychisl.
 Mat. i Mat. Phys., 7:784-802, 1967.</p>
-</dd>
-<dt class="label" id="id10"><span class="brackets">4</span></dt>
-<dd><p>S. Joe and F. Y. Kuo. Constructing sobol sequences with better
+</aside>
+<aside class="footnote brackets" id="id10" role="note">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<p>S. Joe and F. Y. Kuo. Constructing sobol sequences with better
 two-dimensional projections. SIAM Journal on Scientific Computing,
 30(5):2635-2654, 2008.</p>
-</dd>
-</dl>
+</aside>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="varstool.sampling.symlhs">
-<span class="sig-name descname"><span class="pre">symlhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'maximin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="headerlink" href="#varstool.sampling.symlhs" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">symlhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'maximin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#varstool.sampling.symlhs" title="Permalink to this definition"></a></dt>
 <dd><p>Generate symmetrical LHS of <code class="docutils literal notranslate"><span class="pre">sp</span></code>
 datapoints in the <code class="docutils literal notranslate"><span class="pre">params</span></code>-dimensional hypercube
 of [0,1]; developed based on [1].</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sp</strong> (<em>int</em>) – the number of sampling points</p></li>
 <li><p><strong>params</strong> (<em>int</em>) – the number of parameters/variables/factors</p></li>
@@ -321,33 +326,32 @@ and <code class="docutils literal notranslate"><span class="pre">'correlation'</
 sampled array, defaults to <code class="docutils literal notranslate"><span class="pre">10</span></code></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>symlhs_sample</strong> – the returned symmetrical LHS sampled array</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array_like</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id11"><span class="brackets">1</span></dt>
-<dd><p>K.Q. Ye, W. Li, A. Sudjianto
+<aside class="footnote brackets" id="id11" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>K.Q. Ye, W. Li, A. Sudjianto
 Algorithmic construction of optimal symmetric Latin hypercube designs
 J. Stat. Plan. Infer., 90 (1) (2000), pp. 145-159,
 doi: 10.1016/S0378-3758(00)00105-1</p>
-</dd>
-</dl>
+</aside>
 </dd></dl>
 
 </section>
 <section id="module-varstool.sampling.g_starvars">
-<span id="generalized-star-based-gstar-sampling-functions"></span><h2>generalized star-based (gSTAR) sampling functions<a class="headerlink" href="#module-varstool.sampling.g_starvars" title="Permalink to this headline"></a></h2>
+<span id="generalized-star-based-gstar-sampling-functions"></span><h2>generalized star-based (gSTAR) sampling functions<a class="headerlink" href="#module-varstool.sampling.g_starvars" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="varstool.sampling.g_starvars.g_star">
-<span class="sig-name descname"><span class="pre">g_star</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_stars</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corr_mat</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_dir_samples</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_factors</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_verbose</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><a class="headerlink" href="#varstool.sampling.g_starvars.g_star" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">g_star</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">star_centres</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_stars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corr_mat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_dir_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_factors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fictive_mat_flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_sample_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#varstool.sampling.g_starvars.g_star" title="Permalink to this definition"></a></dt>
 <dd><p>This function generates a Pandas Dataframe containing ‘’star_points’’ based on [3]</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parameters</strong> (<em>dictionary</em>) – dictionary containing parameter names, and their attributes</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – the seed number used in generating star points</p></li>
@@ -356,9 +360,11 @@ doi: 10.1016/S0378-3758(00)00105-1</p>
 <li><p><strong>num_dir_samples</strong> (<em>int</em>) – number of directional samples per star point</p></li>
 <li><p><strong>num_factors</strong> (<em>int</em>) – number of factors/parameters in model</p></li>
 <li><p><strong>report_verbose</strong> (<em>boolean</em>) – if True will use a loading bar when generating stars, does nothing if False</p></li>
+<li><p><strong>fictive_mat_flag</strong> (<em>boolean</em>) – if False will use correlation matrix as fictive matrix</p></li>
+<li><p><strong>dist_sample_file</strong> (<em>str</em>) – file name of file containing custom distribution data</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>star_points_df</strong> (<em>array_like</em>) – Pandas DataFrame containing the GVARS star points</p></li>
 <li><p><strong>x</strong> (<em>array_like</em>) – numpy array containing correlated star centres</p></li>
@@ -368,35 +374,36 @@ doi: 10.1016/S0378-3758(00)00105-1</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id12"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
+<aside class="footnote brackets" id="id12" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
 robust, and efficient global sensitivity analysis: 1. Theory. Water
 Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id13"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
+</aside>
+<aside class="footnote brackets" id="id13" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework for comprehensive,
 robust, and efficient global sensitivity analysis: 1. Application. Water
 Resources Research, 52(1), 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-<dt class="label" id="id14"><span class="brackets">3</span></dt>
-<dd><p>Razavi, S., &amp; Do, C. N. (2020). Correlation Effects? A Major but Often
+</aside>
+<aside class="footnote brackets" id="id14" role="note">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>Razavi, S., &amp; Do, C. N. (2020). Correlation Effects? A Major but Often
 Neglected Component in Sensitivity and Uncertainty Analysis. Water Resources
 Research, 56(3). doi: /10.1029/2019WR025436</p>
-</dd>
-</dl>
+</aside>
 </dd></dl>
 
 </section>
 <section id="module-varstool.sampling.starvars">
-<span id="star-sampling-starvars-functions"></span><h2>STAR sampling (starvars) functions<a class="headerlink" href="#module-varstool.sampling.starvars" title="Permalink to this headline"></a></h2>
+<span id="star-sampling-starvars-functions"></span><h2>STAR sampling (starvars) functions<a class="headerlink" href="#module-varstool.sampling.starvars" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="varstool.sampling.starvars.rangef">
 <span class="sig-name descname"><span class="pre">rangef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fround</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#varstool.sampling.starvars.rangef" title="Permalink to this definition"></a></dt>
 <dd><p>Yields sequence of numbers from start (inclusive) to stop (inclusive)
 by step (increment) with rounding set to n digits.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>start</strong> (<em>float</em><em> or </em><em>int</em>) – start of sequence</p></li>
 <li><p><strong>stop</strong> (<em>float</em><em> or </em><em>int</em>) – end of sequence</p></li>
@@ -404,7 +411,7 @@ by step (increment) with rounding set to n digits.</p>
 <li><p><strong>fround</strong> (<em>int</em>) – float rounding, n decimal places, defaults to 5</p></li>
 </ul>
 </dd>
-<dt class="field-even">Yields</dt>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><em>int</em> – yielding the next value of the <cite>range</cite> sequence</p></li>
 <li><p><em>Source</em></p></li>
@@ -418,7 +425,7 @@ by step (increment) with rounding set to n digits.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="varstool.sampling.starvars.star">
-<span class="sig-name descname"><span class="pre">star</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">star_centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rettype</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'dict'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="headerlink" href="#varstool.sampling.starvars.star" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">star</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">star_centres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rettype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dict'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#varstool.sampling.starvars.star" title="Permalink to this definition"></a></dt>
 <dd><p>STAR sampling algorithm</p>
 <p>This function generates <code class="docutils literal notranslate"><span class="pre">star_points</span></code> based on [1] for each
 sample set (i.e., each row consisting of <code class="docutils literal notranslate"><span class="pre">star_centres</span></code>).
@@ -427,7 +434,7 @@ the <cite>star_points</cite> are generated. The resolution of sampling is
 <span class="math notranslate nohighlight">\(\Delta h\)</span> (<code class="docutils literal notranslate"><span class="pre">delta_h</span></code>). This appraoch is a structured
 sampling straregy; read more in [2] and [3].</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>star_centres</strong> (<em>array_like</em>) – the 2d array (n, m) containing sample sets,
 <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of sample sets and
@@ -439,38 +446,39 @@ variables</p></li>
 <li><p><strong>precision</strong> (<em>int</em><em>, </em><em>optional</em>) – the number of digits after the precision point, defaults to <code class="docutils literal notranslate"><span class="pre">10</span></code></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>star_points</strong> – np.array of star points, each element of this 4d
 array is a 3d np.array with each 2d array containing
 star points along each parameter/factor/variable.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array_like</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
-<dl class="footnote brackets">
-<dt class="label" id="id15"><span class="brackets">1</span></dt>
-<dd><p>Razavi, S., Sheikholeslami, R., Gupta, H. V., &amp;
+<aside class="footnote brackets" id="id15" role="note">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Razavi, S., Sheikholeslami, R., Gupta, H. V., &amp;
 Haghnegahdar, A. (2019). VARS-TOOL: A toolbox for
 comprehensive, efficient, and robust sensitivity
 and uncertainty analysis. Environmental modelling
 &amp; software, 112, 95-107.
 doi: 10.1016/j.envsoft.2018.10.005</p>
-</dd>
-<dt class="label" id="id16"><span class="brackets">2</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework
+</aside>
+<aside class="footnote brackets" id="id16" role="note">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework
 for comprehensive, robust, and efficient global sensitivity
 analysis: 1. Theory. Water Resources Research, 52(1), 423-439.
 doi: 10.1002/2015WR017558</p>
-</dd>
-<dt class="label" id="id17"><span class="brackets">3</span></dt>
-<dd><p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework
+</aside>
+<aside class="footnote brackets" id="id17" role="note">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>Razavi, S., &amp; Gupta, H. V. (2016). A new framework
 for comprehensive, robust, and efficient global sensitivity
 analysis: 2. Application. Water Resources Research, 52(1),
 423-439. doi: 10.1002/2015WR017559</p>
-</dd>
-</dl>
+</aside>
 </dd></dl>
 
 </section>
