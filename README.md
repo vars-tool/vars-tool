@@ -45,6 +45,8 @@ foo@bar:~$ python setup.py install
 | :point_up:    | If installation does not work due to limited permissions, add the `--user` option to the install commands.|
 |---------------|:----------------------------------------------------------------------------------------------------------|
 
+***If you do not have anaconda or git installed, there is a guide on how to install them located [here](https://github.com/vars-tool/vars-tool/blob/master/Preinstallations_guide.pdf)***
+
 
 ## 3. Documentation
 
