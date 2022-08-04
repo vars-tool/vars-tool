@@ -2205,7 +2205,7 @@ class TSVARS(VARS):
 
     def run_offline(self, star_points_eval, star_points: Optional = None):
         """
-        runs the offline version of VARS program
+        runs the offline version of TSVARS program
 
         Parameters
         ----------
@@ -2219,6 +2219,14 @@ class TSVARS(VARS):
 
         if isinstance(star_points, pd.DataFrame):
             self.star_points = star_points
+        # if star points isnt inputted and it is not currently in the system warn the user
+        elif not isinstance(self.star_points, pd.DataFrame):
+            warnings.warn(
+                "You did not input any star points, please input them or program will crash.",
+                UserWarning,
+                stacklevel=1
+            )
+
 
         # defining a lambda function to build pairs for each time-step
         ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(tsvars_funcs.section_df, self.delta_h)
@@ -3251,6 +3259,13 @@ class TSGVARS(GVARS):
 
         if isinstance(star_points, pd.DataFrame):
             self.star_points = star_points
+        # if star points isnt inputted and it is not currently in the system warn the user
+        elif not isinstance(self.star_points, pd.DataFrame):
+            warnings.warn(
+                "You did not input any star points, please input them or program will crash.",
+                UserWarning,
+                stacklevel=1
+            )
 
         # defining a lambda function to build pairs for each time-step
         ts_pair = lambda ts: ts.groupby(level=['centre', 'param']).apply(tsvars_funcs.section_df, self.delta_h)
