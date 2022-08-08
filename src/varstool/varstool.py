@@ -211,6 +211,7 @@ class VARS(object):
         self.sampler = sampler  # one of the default sampling algorithms or None
         # analysis stage is set to False before running anything
         self.slice_size = slice_size
+        self.model = model
         self.run_status = False
 
         # Check input arguments
