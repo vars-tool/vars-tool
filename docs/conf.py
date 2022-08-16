@@ -21,7 +21,7 @@ copyright = '2021, Saman Razavi'
 author = 'Saman Razavi'
 
 # The full version, including alpha/beta/rc tags
-release = '2.3.4'
+release = '2.3.5'
 
 
 # -- General configuration ---------------------------------------------------
